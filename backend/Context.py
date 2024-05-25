@@ -1,4 +1,5 @@
 from . import Affinity_strategy
+from typing import List
 
 class Context():
     def __init__(self, strategy: Affinity_strategy) -> None:
@@ -12,6 +13,6 @@ class Context():
     def strategy(self, strategy: Affinity_strategy) -> None:
         self.affinity_strategy = strategy
 
-    def use_affinity_algorithm(self):
-        return self.affinity_strategy.compute_affinity()
+    def use_affinity_algorithm(self, data: List):
+        return self.affinity_strategy.compute_affinity(data)
     

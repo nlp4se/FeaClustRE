@@ -19,4 +19,8 @@ class TfIdfEuclideanAffinity(AffinityStrategy):
     def compute_affinity(self, data: List):
         return None
 
+class BERTEmbeddingAffinity(AffinityStrategy):
+    def compute_affinity(self, data: List):
+        return None
+
     
