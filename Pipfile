@@ -6,3 +6,5 @@ name = "pypi"
 [packages]
 flask = ">=2.0,<3.0"
 stanza = "*"
+joblib = "*"
+scikit-learn = "*"

@@ -1,4 +1,4 @@
-from flask import Blueprint, request, make_response
+from flask import Blueprint, request, make_response, send_file
 from . import dendogram_service
 bp = Blueprint('dendogram', __name__, url_prefix='/dendogram')
 
@@ -12,6 +12,7 @@ def generate_dendogram():
     if features is None:
         return make_response("No features", 400)
     
-    dendogram_service.generate_dendogram(preprocessing, affinity, features)
+    dendogram_file = dendogram_service.generate_dendogram(preprocessing, affinity, features)
+    return send_file(dendogram_file, as_attachment=True)
     
 
