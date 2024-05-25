@@ -9,23 +9,25 @@ def generate_dendogram(preprocessing, embedding, features):
     if preprocessing: 
         features = preprocess_features(features)
     context = None
-    
+    model_file_name = None
     if embedding == 'levenshtein' or embedding == 'all':
         context = Context(Affinity_strategy.TfIdfCosineAffinity())
-        context.use_affinity_algorithm(features)
+        model_file_name = context.use_affinity_algorithm(features)
     
     if embedding == 'tf-idf-cosine' or embedding == 'all':
         context = Context(Affinity_strategy.TfIdfCosineAffinity())
-        context.use_affinity_algorithm(features)
+        model_file_name = context.use_affinity_algorithm(features)
 
     if embedding == 'tf-idf-euclidean' or embedding == 'all':
         context = Context(Affinity_strategy.TfIdfEuclideanAffinity())
-        context.use_affinity_algorithm(features)
+        model_file_name = context.use_affinity_algorithm(features)
 
     if embedding == 'bert-embedding' or embedding == 'all':
         context = Context(Affinity_strategy.BERTEmbeddingAffinity())
-        context.use_affinity_algorithm(features)
-    
+        model_file_name = context.use_affinity_algorithm(features)
+        
+    return model_file_name
+
 def preprocess_features(features):
     nlp_pipeline = stanza.Pipeline(lang='en', processors='tokenize,mwt,pos,lemma')
     preprocessed_features = []
