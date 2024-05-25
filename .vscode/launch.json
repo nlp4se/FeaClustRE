@@ -17,7 +17,8 @@
                 "run",
                 "--no-debugger",
                 "--no-reload",
-                "--port "
+                "--port",
+                "3008"
             ],
             "jinja": true,
             "autoStartBrowser": false
