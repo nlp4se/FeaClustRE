@@ -22,5 +22,6 @@ def preprocess_features(features):
         for word in doc.sentences[0].words:
             lemmatized_feature = lemmatized_feature + word.lemma + " "
         preprocessed_features.append(lemmatized_feature[:len(lemmatized_feature) - 1])
+    return preprocess_features
 
 
