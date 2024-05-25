@@ -3,7 +3,7 @@ from flask import Blueprint, request, make_response
 bp = Blueprint('dendogram', __name__, url_prefix='/dendogram')
 
 
-bp.route('/generate')
+@bp.route('/generate', methods=['POST'])
 def generate_dendogram():
     preprocessing = request.args.get('preprocessing', 'false')
     embedding = request.args.get('embedding', 'levenshtein')
