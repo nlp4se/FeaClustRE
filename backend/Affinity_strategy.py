@@ -11,11 +11,12 @@ class LevenshteinAffinity(AffinityStrategy):
     def compute_affinity(self, data: List):
         return None
     
-class TfIdfAffinity(AffinityStrategy):
+class TfIdfCosineAffinity(AffinityStrategy):
     def compute_affinity(self, data: List):
         return None
-    
-class CosineAffinity(AffinityStrategy):
+
+class TfIdfEuclideanAffinity(AffinityStrategy):
     def compute_affinity(self, data: List):
-        return super().compute_affinity(data)
+        return None
+
     
