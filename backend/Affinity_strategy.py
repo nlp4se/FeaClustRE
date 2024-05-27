@@ -7,6 +7,7 @@ import os
 import joblib
 
 MODEL_DIRECTORY_PATH = 'static'
+
 class AffinityStrategy():
     @abstractmethod
     def compute_affinity(self, data: List):
@@ -24,9 +25,15 @@ class TfIdfCosineAffinity(AffinityStrategy):
         
         model = AgglomerativeClustering(n_clusters=None, linkage='complete', distance_threshold=0)
         model.fit(dense_data_array)
+        model_info = {
+            'affinity': 'TF-IDF Cosine',
+            'model': model,
+            'labels': data
+        }
+        
         file_name = 'tf_idf_cosine_agglomerative_model.pkl'
         file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
-        joblib.dump(model, file_path)
+        joblib.dump(model_info, file_path)
         return file_path
 
 class TfIdfEuclideanAffinity(AffinityStrategy):
