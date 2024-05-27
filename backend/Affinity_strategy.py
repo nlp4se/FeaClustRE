@@ -1,7 +1,7 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import List
-from sklearn.feature_extraction.text import TfidfVectorizer
+from .tf_idf_utils import get_dense_data_array
 from sklearn.cluster import AgglomerativeClustering
 import os
 import joblib
@@ -19,11 +19,11 @@ class LevenshteinAffinity(AffinityStrategy):
     
 class TfIdfCosineAffinity(AffinityStrategy):
     def compute_affinity(self, data: List): 
-        tfidf_vectorizer = TfidfVectorizer()
-        tf_idf_data_vector = tfidf_vectorizer.fit_transform(data)
-        dense_data_array = tf_idf_data_vector.toarray()
-        
-        model = AgglomerativeClustering(n_clusters=None, linkage='complete', distance_threshold=0)
+        dense_data_array = get_dense_data_array(data=data)
+        model = AgglomerativeClustering(n_clusters=None, 
+                                        linkage='complete', 
+                                        distance_threshold=0,
+                                        metric="cosine")
         model.fit(dense_data_array)
         model_info = {
             'affinity': 'TF-IDF Cosine',
@@ -37,8 +37,23 @@ class TfIdfCosineAffinity(AffinityStrategy):
         return file_path
 
 class TfIdfEuclideanAffinity(AffinityStrategy):
-    def compute_affinity(self, data: List):
-        return None
+    def compute_affinity(self, data: List): 
+            dense_data_array = get_dense_data_array(data)
+            model = AgglomerativeClustering(n_clusters=None, 
+                                            linkage='average', 
+                                            distance_threshold=0,
+                                            metric="euclidean")
+            model.fit(dense_data_array)
+            model_info = {
+                'affinity': 'TF-IDF Euclidean',
+                'model': model,
+                'labels': data
+            }
+            
+            file_name = 'tf_idf_euclidean_agglomerative_model.pkl'
+            file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
+            joblib.dump(model_info, file_path)
+            return file_path
 
 class BERTEmbeddingAffinity(AffinityStrategy):
     def compute_affinity(self, data: List):

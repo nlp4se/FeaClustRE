@@ -26,11 +26,14 @@ def plot_dendrogram(model, labels, **kwargs):
     labels = add_line_breaks(labels=labels)
     dendrogram(linkage_matrix,
                labels=labels,
-               **kwargs,
-               show_leaf_counts=True,
-               orientation='bottom',
-               truncate_mode='level',
-               p=10)
+               **kwargs)
+    '''
+    for i, d, c in zip(linkage_matrix[:, 0], linkage_matrix[:, 1], linkage_matrix[:, 2]):
+        x = 0
+        y = c
+        plt.annotate('%.2f' % c, (x, y), xytext=(550, 0),
+                     textcoords='offset points', va='top', ha='center')
+    '''
     plt.xticks(rotation=90, fontsize=10)
 
 
@@ -40,17 +43,18 @@ def show_dendrogram(model_file):
     affinity = file['affinity']
     labels = file['labels']
     if hasattr(model, 'children_'):
-        plt.figure(figsize=(10, 6))
+        plt.figure(figsize=(15, 8))
         plot_dendrogram(model, labels=labels)
-        # TODO dynamic name
         plt.title(affinity)
-        plt.xlabel('Features')
-        plt.ylabel('Distance')
+        plt.xlabel('Features', fontsize=12)
+        plt.ylabel('Distance', fontsize=12)
+        plt.xticks(rotation=90, fontsize=8)
+        plt.tight_layout()
         plt.show()
     else:
         raise ValueError("The provided model is not AgglomerativeClustering.")
 
 
 if __name__ == "__main__":
-    model_file = 'static/tf_idf_cosine_agglomerative_model.pkl'
+    model_file = 'static/tf_idf_euclidean_agglomerative_model.pkl'
     show_dendrogram(model_file)
