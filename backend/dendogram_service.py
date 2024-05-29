@@ -94,11 +94,16 @@ def lemmatize_stanza(feature):
     lemmatized_feature = ' '.join([word.lemma for sent in doc.sentences for word in sent.words])
     return lemmatized_feature
 
-def spell_check(text):
+def spell_check(feature):
     spell = SpellChecker()
-    corrected_text = []
-    for word in text.split():
+    corrected_feature = []
+    for word in feature.split():
         corrected_word = spell.correction(word)
-        corrected_text.append(corrected_word)
-    return " ".join(corrected_text)
+        if corrected_word is not None:
+            corrected_feature.append(corrected_word)
+        else:
+            corrected_feature.append(word)
+    if corrected_feature is None:
+        return ""   
+    return " ".join(corrected_feature)
 
