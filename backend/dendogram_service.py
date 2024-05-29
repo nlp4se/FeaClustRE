@@ -4,6 +4,7 @@ import contractions
 import re
 import string
 import spacy
+from spellchecker import SpellChecker
 from .Context import Context
 from . import Affinity_strategy
 
@@ -40,12 +41,13 @@ def preprocess_features(features):
 
 def preprocess_feature(feature):
     feature = remove_mentions_and_tags(feature)
-    feature = remove_special_characters(feature)
     feature = remove_numbers(feature)
-    feature = remove_punctuation(feature)
     feature = camel_case_to_words(feature)
     feature = expand_contractions(feature)
+    feature = remove_special_characters(feature)
+    feature = remove_punctuation(feature)
     feature = standarize_accents(feature)
+    feature = spell_check(feature)
     feature = lemmatize_spacy(feature)
     # feature = lemmatize_stanza(feature)    
     return feature
@@ -89,8 +91,14 @@ def lemmatize_stanza(feature):
     stanza.download('en')
     nlp = stanza.Pipeline(lang='en', processors='tokenize,mwt,pos,lemma')
     doc = nlp(feature)
-    lemmatized_feature = ''
-    for word in doc.sentences[0].words:
-        lemmatized_feature = lemmatized_feature + word.lemma + ' '
-        lemmatized_feature = lemmatized_feature[:len(lemmatized_feature) - 1]
+    lemmatized_feature = ' '.join([word.lemma for sent in doc.sentences for word in sent.words])
     return lemmatized_feature
+
+def spell_check(text):
+    spell = SpellChecker()
+    corrected_text = []
+    for word in text.split():
+        corrected_word = spell.correction(word)
+        corrected_text.append(corrected_word)
+    return " ".join(corrected_text)
+
