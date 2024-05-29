@@ -11,20 +11,23 @@ import torch
 
 MODEL_DIRECTORY_PATH = 'static'
 
+
 class AffinityStrategy():
     @abstractmethod
     def compute_affinity(self, data: List):
         pass
-    
+
+
 class LevenshteinAffinity(AffinityStrategy):
     def compute_affinity(self, data: List):
         return None
-    
+
+
 class TfIdfCosineAffinity(AffinityStrategy):
-    def compute_affinity(self, data: List): 
+    def compute_affinity(self, data: List):
         dense_data_array = get_dense_data_array(data=data)
-        model = AgglomerativeClustering(n_clusters=None, 
-                                        linkage='complete', 
+        model = AgglomerativeClustering(n_clusters=None,
+                                        linkage='complete',
                                         distance_threshold=0,
                                         metric="cosine")
         model.fit(dense_data_array)
@@ -33,30 +36,32 @@ class TfIdfCosineAffinity(AffinityStrategy):
             'model': model,
             'labels': data
         }
-        
+
         file_name = 'tf_idf_cosine_complete.pkl'
         file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
         joblib.dump(model_info, file_path)
         return file_path
 
+
 class TfIdfEuclideanAffinity(AffinityStrategy):
-    def compute_affinity(self, data: List): 
-            dense_data_array = get_dense_data_array(data)
-            model = AgglomerativeClustering(n_clusters=None, 
-                                            linkage='average', 
-                                            distance_threshold=0,
-                                            metric="euclidean")
-            model.fit(dense_data_array)
-            model_info = {
-                'affinity': 'TF-IDF Euclidean Average',
-                'model': model,
-                'labels': data
-            }
-            
-            file_name = 'tf_idf_euclidean_average.pkl'
-            file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
-            joblib.dump(model_info, file_path)
-            return file_path
+    def compute_affinity(self, data: List):
+        dense_data_array = get_dense_data_array(data)
+        model = AgglomerativeClustering(n_clusters=None,
+                                        linkage='average',
+                                        distance_threshold=0,
+                                        metric="euclidean")
+        model.fit(dense_data_array)
+        model_info = {
+            'affinity': 'TF-IDF Euclidean Average',
+            'model': model,
+            'labels': data
+        }
+
+        file_name = 'tf_idf_euclidean_average.pkl'
+        file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
+        joblib.dump(model_info, file_path)
+        return file_path
+
 
 class BERTCosineEmbeddingAffinity(AffinityStrategy):
     def compute_affinity(self, data: List):
@@ -78,17 +83,17 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
 
         dense_data_array = sparse_matrix.toarray()
 
-        model = AgglomerativeClustering(n_clusters=None, 
-                                         linkage='complete', 
-                                         distance_threshold=0,
-                                         metric="cosine")
+        model = AgglomerativeClustering(n_clusters=None,
+                                        linkage='complete',
+                                        distance_threshold=0,
+                                        metric="cosine")
         model.fit(dense_data_array)
         model_info = {
-                'affinity': 'BERT Cosine Complete',
-                'model': model,
-                'labels': data
-            }
-            
+            'affinity': 'BERT Cosine Complete',
+            'model': model,
+            'labels': data
+        }
+
         file_name = 'bert_cosine_complete.pkl'
         file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
         joblib.dump(model_info, file_path)
@@ -115,21 +120,18 @@ class BERTEuclideanEmbeddingAffinity(AffinityStrategy):
 
         dense_data_array = sparse_matrix.toarray()
 
-        model = AgglomerativeClustering(n_clusters=None, 
-                                         linkage='average', 
-                                         distance_threshold=0,
-                                         metric="euclidean")
+        model = AgglomerativeClustering(n_clusters=None,
+                                        linkage='average',
+                                        distance_threshold=0,
+                                        metric="euclidean")
         model.fit(dense_data_array)
         model_info = {
-                'affinity': 'BERT Euclidean Average',
-                'model': model,
-                'labels': data
-            }
-            
+            'affinity': 'BERT Euclidean Average',
+            'model': model,
+            'labels': data
+        }
+
         file_name = 'bert_euclidean_average.pkl'
         file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
         joblib.dump(model_info, file_path)
         return file_path
-
-
-    
