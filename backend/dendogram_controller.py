@@ -6,7 +6,7 @@ bp = Blueprint('dendogram', __name__, url_prefix='/dendogram')
 @bp.route('/generate', methods=['POST'])
 def generate_dendogram():
     preprocessing = request.args.get('preprocessing', 'false')
-    affinity = request.args.get('affinity', 'levenshtein')
+    affinity = request.args.get('affinity', 'bert-embedding-cosine')
     
     features = request.get_json()
     if features is None:
