@@ -33,7 +33,6 @@ def generate_dendogram(preprocessing, embedding, features):
     return model_file_name
 
 def preprocess_features(features):
-    stanza.download('en')
     preprocessed_features = []
     for feature in features:
         preprocessed_features.append(preprocess_feature(feature))
@@ -48,7 +47,9 @@ def preprocess_feature(feature):
     feature = expand_contractions(feature)
     feature = standarize_accents(feature)
     feature = lemmatize_spacy(feature)
-    # feature = lemmatize_stanza(feature)
+    # feature = lemmatize_stanza(feature)    
+    return feature
+
 
 def expand_contractions(feature):
     expanded_words = []
@@ -79,11 +80,13 @@ def camel_case_to_words(camel_case_str):
     return words
 
 def lemmatize_spacy(feature):
+    spacy.prefer_gpu()
     nlp = spacy.load('en_core_web_sm', disable = ['parser','ner']) 
     doc = nlp(feature)
     return " ".join([token.lemma_ for token in doc])
 
 def lemmatize_stanza(feature):
+    stanza.download('en')
     nlp = stanza.Pipeline(lang='en', processors='tokenize,mwt,pos,lemma')
     doc = nlp(feature)
     lemmatized_feature = ''
