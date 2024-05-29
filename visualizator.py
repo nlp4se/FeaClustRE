@@ -56,5 +56,5 @@ def show_dendrogram(model_file):
 
 
 if __name__ == "__main__":
-    model_file = 'static/tf_idf_euclidean_agglomerative_model.pkl'
+    model_file = 'static/bert_cosine_complete.pkl'
     show_dendrogram(model_file)

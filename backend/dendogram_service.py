@@ -18,6 +18,14 @@ def generate_dendogram(preprocessing, embedding, features):
     if embedding == 'tf-idf-euclidean' or embedding == 'all':
         context = Context(Affinity_strategy.TfIdfEuclideanAffinity())
         model_file_name = context.use_affinity_algorithm(features)
+
+    if embedding == 'bert-embedding-euclidean' or embedding == 'all':
+        context = Context(Affinity_strategy.BERTEuclideanEmbeddingAffinity())
+        model_file_name = context.use_affinity_algorithm(features)
+
+    if embedding == 'bert-embedding-cosine' or embedding == 'all':
+        context = Context(Affinity_strategy.BERTCosineEmbeddingAffinity())
+        model_file_name = context.use_affinity_algorithm(features)
     '''
     if embedding == 'levenshtein' or embedding == 'all':
         context = Context(Affinity_strategy.TfIdfCosineAffinity())
