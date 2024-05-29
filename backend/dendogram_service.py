@@ -79,7 +79,7 @@ def camel_case_to_words(camel_case_str):
     return words
 
 def lemmatize_spacy(feature):
-    nlp = spacy.load('en', disable = ['parser','ner']) 
+    nlp = spacy.load('en_core_web_sm', disable = ['parser','ner']) 
     doc = nlp(feature)
     return " ".join([token.lemma_ for token in doc])
 
