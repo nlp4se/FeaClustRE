@@ -4,6 +4,7 @@ import contractions
 import re
 import string
 import spacy
+from logging import Logger
 from spellchecker import SpellChecker
 from .Context import Context
 from . import Affinity_strategy
