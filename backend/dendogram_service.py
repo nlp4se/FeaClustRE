@@ -32,6 +32,13 @@ def generate_dendogram(preprocessing, embedding, features):
         context = Context(Affinity_strategy.BERTCosineEmbeddingAffinity())
         model_file_name = context.use_affinity_algorithm(features)
 
+    if embedding == 'paraphrase-MiniLM-cosine' or embedding == 'all':
+        context = Context(Affinity_strategy.ParaphraseMiniLMCosineEmbeddingAffinity())
+        model_file_name = context.use_affinity_algorithm(features)
+    
+    if embedding == 'paraphrase-MiniLM-euclidean' or embedding == 'all':
+        context = Context(Affinity_strategy.ParaphraseMiniLMEuclideanEmbeddingAffinity())
+        model_file_name = context.use_affinity_algorithm(features)
     return model_file_name
 
 def preprocess_features(features):
