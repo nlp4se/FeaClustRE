@@ -165,7 +165,7 @@ class ParaphraseMiniLMEuclideanEmbeddingAffinity(AffinityStrategy):
                                         metric="euclidean")
         model.fit(dense_data_array)
         model_info = {
-            'affinity': 'Paraphrase MiniLM Euclidean',
+            'affinity': 'Paraphrase MiniLM Euclidean Average',
             'model': model,
             'labels': data
         }
@@ -204,7 +204,7 @@ class ParaphraseMiniLMCosineEmbeddingAffinity(AffinityStrategy):
                                         metric="cosine")
         model.fit(dense_data_array)
         model_info = {
-            'affinity': 'Paraphrase MiniLM Cosine',
+            'affinity': 'Paraphrase MiniLM Cosine Average',
             'model': model,
             'labels': data
         }
