@@ -26,7 +26,7 @@ def plot_dendrogram(model, labels, **kwargs):
     labels = add_line_breaks(labels=labels)
     dendrogram(linkage_matrix,
                labels=labels,
-               **kwargs)
+                      ** kwargs)
     '''
     for i, d, c in zip(linkage_matrix[:, 0], linkage_matrix[:, 1], linkage_matrix[:, 2]):
         x = 0
@@ -42,10 +42,19 @@ def show_dendrogram(model_file):
     model = file['model']
     affinity = file['affinity']
     labels = file['labels']
+    try:
+        verb_weight = file['verb_weight']
+    except KeyError:
+        verb_weight = 'N/A'
+    try: 
+        object_weight = file['object_weight']
+    except KeyError:
+        object_weight = 'N/A'
+
     if hasattr(model, 'children_'):
         plt.figure(figsize=(15, 8))
         plot_dendrogram(model, labels=labels)
-        plt.title(affinity)
+        plt.title(affinity + ' | Verb Weight: ' + verb_weight + ' | Object weight: ' + object_weight)
         plt.xlabel('Features', fontsize=12)
         plt.ylabel('Distance', fontsize=12)
         plt.xticks(rotation=90, fontsize=8)
