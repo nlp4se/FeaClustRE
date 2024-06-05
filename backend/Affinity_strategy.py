@@ -118,6 +118,7 @@ class BERTEuclideanEmbeddingAffinity(AffinityStrategy):
     def compute_affinity(self, data: List):
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
         model = BertModel.from_pretrained('bert-base-uncased')
+        nlp = spacy.load("en_core_web_sm")
 
         tokenized_sentences = [tokenizer.encode(sent, add_special_tokens=True) for sent in data]
         max_len = max(len(sent) for sent in tokenized_sentences)
@@ -129,7 +130,16 @@ class BERTEuclideanEmbeddingAffinity(AffinityStrategy):
             outputs = model(input_ids)
 
         embeddings = outputs.last_hidden_state[:, 0, :]
-
+        tagged_data = [nlp(sent) for sent in data]
+        verb_weight = 0.5
+        obj_weight = 1.5
+        
+        for i, doc in enumerate(tagged_data):
+            for token in doc:
+                if token.pos_ == 'VERB':
+                    embeddings[i] += verb_weight * embeddings[i]
+                elif token.pos_ == 'NOUN':
+                    embeddings[i] += obj_weight * embeddings[i]
         sparse_matrix = csr_matrix(embeddings.numpy())
 
         dense_data_array = sparse_matrix.toarray()
@@ -142,7 +152,9 @@ class BERTEuclideanEmbeddingAffinity(AffinityStrategy):
         model_info = {
             'affinity': 'BERT Euclidean Average',
             'model': model,
-            'labels': data
+            'labels': data,
+            'verb_weight': verb_weight,
+            'object_weight': obj_weight
         }
 
         file_name = 'bert_euclidean_average.pkl'
@@ -155,6 +167,7 @@ class BERTEuclideanEmbeddingAffinity(AffinityStrategy):
 class ParaphraseMiniLMEuclideanEmbeddingAffinity(AffinityStrategy):
     def compute_affinity(self, data: List):
         tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/paraphrase-MiniLM-L6-v2')
+        nlp = spacy.load("en_core_web_sm")
 
         model = AutoModel.from_pretrained('sentence-transformers/paraphrase-MiniLM-L6-v2')
 
@@ -168,7 +181,16 @@ class ParaphraseMiniLMEuclideanEmbeddingAffinity(AffinityStrategy):
             outputs = model(input_ids)
 
         embeddings = outputs.last_hidden_state[:, 0, :]
-
+        tagged_data = [nlp(sent) for sent in data]
+        verb_weight = 0.5
+        obj_weight = 1.5
+        
+        for i, doc in enumerate(tagged_data):
+            for token in doc:
+                if token.pos_ == 'VERB':
+                    embeddings[i] += verb_weight * embeddings[i]
+                elif token.pos_ == 'NOUN':
+                    embeddings[i] += obj_weight * embeddings[i]
         sparse_matrix = csr_matrix(embeddings.numpy())
 
         dense_data_array = sparse_matrix.toarray()
@@ -181,7 +203,9 @@ class ParaphraseMiniLMEuclideanEmbeddingAffinity(AffinityStrategy):
         model_info = {
             'affinity': 'Paraphrase MiniLM Euclidean Average',
             'model': model,
-            'labels': data
+            'labels': data,
+            'verb_weight': verb_weight,
+            'object_weight': obj_weight
         }
 
         file_name = 'paraphrase_minilm_average_euclidean.pkl'
@@ -194,6 +218,7 @@ class ParaphraseMiniLMEuclideanEmbeddingAffinity(AffinityStrategy):
 class ParaphraseMiniLMCosineEmbeddingAffinity(AffinityStrategy):
     def compute_affinity(self, data: List):
         tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/paraphrase-MiniLM-L6-v2')
+        nlp = spacy.load("en_core_web_sm")
 
         model = AutoModel.from_pretrained('sentence-transformers/paraphrase-MiniLM-L6-v2')
 
@@ -207,7 +232,16 @@ class ParaphraseMiniLMCosineEmbeddingAffinity(AffinityStrategy):
             outputs = model(input_ids)
 
         embeddings = outputs.last_hidden_state[:, 0, :]
-
+        tagged_data = [nlp(sent) for sent in data]
+        verb_weight = 0.5
+        obj_weight = 1.5
+        
+        for i, doc in enumerate(tagged_data):
+            for token in doc:
+                if token.pos_ == 'VERB':
+                    embeddings[i] += verb_weight * embeddings[i]
+                elif token.pos_ == 'NOUN':
+                    embeddings[i] += obj_weight * embeddings[i]
         sparse_matrix = csr_matrix(embeddings.numpy())
 
         dense_data_array = sparse_matrix.toarray()
@@ -220,7 +254,9 @@ class ParaphraseMiniLMCosineEmbeddingAffinity(AffinityStrategy):
         model_info = {
             'affinity': 'Paraphrase MiniLM Cosine Average',
             'model': model,
-            'labels': data
+            'labels': data,
+            'verb_weight': verb_weight,
+            'object_weight': obj_weight
         }
 
         file_name = 'paraphrase_minilm_average_cosine.pkl'
