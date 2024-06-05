@@ -5,6 +5,7 @@ from .tf_idf_utils import get_dense_data_array
 from sklearn.cluster import AgglomerativeClustering
 from transformers import BertTokenizer, BertModel, AutoTokenizer, AutoModel
 from scipy.sparse import csr_matrix
+import spacy
 import os
 import joblib
 import torch
@@ -67,6 +68,7 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
     def compute_affinity(self, data: List):
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
         model = BertModel.from_pretrained('bert-base-uncased')
+        nlp = spacy.load("en_core_web_sm")
 
         tokenized_sentences = [tokenizer.encode(sent, add_special_tokens=True) for sent in data]
         max_len = max(len(sent) for sent in tokenized_sentences)
@@ -78,6 +80,16 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
             outputs = model(input_ids)
 
         embeddings = outputs.last_hidden_state[:, 0, :]
+        tagged_data = [nlp(sent) for sent in data]
+        verb_weight = 0.5
+        obj_weight = 1.5
+        
+        for i, doc in enumerate(tagged_data):
+            for token in doc:
+                if token.pos_ == 'VERB':
+                    embeddings[i] += verb_weight * embeddings[i]
+                elif token.pos_ == 'NOUN':
+                    embeddings[i] += obj_weight * embeddings[i]
 
         sparse_matrix = csr_matrix(embeddings.numpy())
 
@@ -91,7 +103,9 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
         model_info = {
             'affinity': 'BERT Cosine Complete',
             'model': model,
-            'labels': data
+            'labels': data,
+            'verb_weight': verb_weight,
+            'object_weight': obj_weight
         }
 
         file_name = 'bert_cosine_complete.pkl'
