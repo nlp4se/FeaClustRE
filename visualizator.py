@@ -54,7 +54,7 @@ def show_dendrogram(model_file):
     if hasattr(model, 'children_'):
         plt.figure(figsize=(15, 8))
         plot_dendrogram(model, labels=labels)
-        plt.title(affinity + ' | Verb Weight: ' + verb_weight + ' | Object weight: ' + object_weight)
+        plt.title(affinity + ' | Verb Weight: ' + str(verb_weight) + ' | Object weight: ' + str(object_weight))
         plt.xlabel('Features', fontsize=12)
         plt.ylabel('Distance', fontsize=12)
         plt.xticks(rotation=90, fontsize=8)
