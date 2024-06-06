@@ -2,7 +2,7 @@ FROM python:3.9
 
 WORKDIR /wsgi
 
-COPY Pipfile Pipfile.lock /wsgi/
+COPY Pipfile /wsgi/
 
 RUN pip install pipenv
 
