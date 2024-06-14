@@ -13,3 +13,6 @@ transformers = "*"
 contractions = "*"
 spacy = "*"
 pyspellchecker = "*"
+
+[requires]
+python_version = "3.9"
