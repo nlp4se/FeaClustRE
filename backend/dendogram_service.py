@@ -41,10 +41,29 @@ def generate_dendogram(preprocessing, embedding, features):
         model_file_name = context.use_affinity_algorithm(features)
     return model_file_name
 
+
+def is_english(text):
+    pattern = re.compile(r'^[a-zA-Z\s.,?!\'"-]+$')
+    return bool(pattern.match(text))
+
+def is_emoji_only(text):
+    emoji_pattern = re.compile(
+        "[\U00010000-\U0010FFFF]",
+        flags=re.UNICODE
+    )
+    return bool(emoji_pattern.fullmatch(text))
+
+def contains_weird_characters(text):
+    weird_characters_pattern = re.compile(r'[^a-zA-Z0-9\s.,?!\'"-]')
+    return bool(weird_characters_pattern.search(text))
+
 def preprocess_features(features):
     preprocessed_features = []
     for feature in features:
-        preprocessed_features.append(preprocess_feature(feature))
+        if (is_english(feature) and
+            not is_emoji_only(feature) and
+            not contains_weird_characters(feature)):
+            preprocessed_features.append(preprocess_feature(feature))
     return preprocessed_features
 
 def preprocess_feature(feature):
