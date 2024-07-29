@@ -13,6 +13,6 @@ class Context():
     def strategy(self, strategy: Affinity_strategy) -> None:
         self.affinity_strategy = strategy
 
-    def use_affinity_algorithm(self, data: List):
-        return self.affinity_strategy.compute_affinity(data)
+    def use_affinity_algorithm(self, application_name, data: List):
+        return self.affinity_strategy.compute_affinity(application_name, data)
     

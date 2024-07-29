@@ -15,30 +15,30 @@ def generate_dendogram(preprocessing, embedding, request_content):
         features = preprocess_features(features)
 
     model_file_name = None
-
+    app_name = request_content['app_name']
     if embedding == 'tf-idf-cosine' or embedding == 'all':
         context = Context(Affinity_strategy.TfIdfCosineAffinity())
-        model_file_name = context.use_affinity_algorithm(features)
+        model_file_name = context.use_affinity_algorithm(app_name, features)
 
     if embedding == 'tf-idf-euclidean' or embedding == 'all':
         context = Context(Affinity_strategy.TfIdfEuclideanAffinity())
-        model_file_name = context.use_affinity_algorithm(features)
+        model_file_name = context.use_affinity_algorithm(app_name, features)
 
     if embedding == 'bert-embedding-euclidean' or embedding == 'all':
         context = Context(Affinity_strategy.BERTEuclideanEmbeddingAffinity())
-        model_file_name = context.use_affinity_algorithm(features)
+        model_file_name = context.use_affinity_algorithm(app_name, features)
 
     if embedding == 'bert-embedding-cosine' or embedding == 'all':
         context = Context(Affinity_strategy.BERTCosineEmbeddingAffinity())
-        model_file_name = context.use_affinity_algorithm(features)
+        model_file_name = context.use_affinity_algorithm(app_name, features)
 
     if embedding == 'paraphrase-MiniLM-cosine' or embedding == 'all':
         context = Context(Affinity_strategy.ParaphraseMiniLMCosineEmbeddingAffinity())
-        model_file_name = context.use_affinity_algorithm(features)
+        model_file_name = context.use_affinity_algorithm(app_name, features)
     
     if embedding == 'paraphrase-MiniLM-euclidean' or embedding == 'all':
         context = Context(Affinity_strategy.ParaphraseMiniLMEuclideanEmbeddingAffinity())
-        model_file_name = context.use_affinity_algorithm(features)
+        model_file_name = context.use_affinity_algorithm(app_name, features)
     
     return model_file_name
 
