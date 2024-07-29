@@ -8,11 +8,11 @@ def generate_dendogram():
     preprocessing = request.args.get('preprocessing', 'false')
     affinity = request.args.get('affinity', 'bert-embedding-cosine')
     
-    features = request.get_json()
-    if features is None:
+    request_content = request.get_json()
+    if request_content['features'] is None:
         return make_response("No features", 400)
     
-    dendogram_file = dendogram_service.generate_dendogram(preprocessing, affinity, features)
+    dendogram_file = dendogram_service.generate_dendogram(preprocessing, affinity, request_content)
     return send_file(dendogram_file, as_attachment=True)
     
 
