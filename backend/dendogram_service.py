@@ -9,8 +9,8 @@ from spellchecker import SpellChecker
 from .Context import Context
 from . import Affinity_strategy
 
-def generate_dendogram(preprocessing, embedding, features):
-
+def generate_dendogram(preprocessing, embedding, request_content):
+    features = request_content['features']
     if preprocessing:
         features = preprocess_features(features)
 
@@ -39,6 +39,7 @@ def generate_dendogram(preprocessing, embedding, features):
     if embedding == 'paraphrase-MiniLM-euclidean' or embedding == 'all':
         context = Context(Affinity_strategy.ParaphraseMiniLMEuclideanEmbeddingAffinity())
         model_file_name = context.use_affinity_algorithm(features)
+    
     return model_file_name
 
 
@@ -74,9 +75,10 @@ def preprocess_feature(feature):
     feature = remove_special_characters(feature)
     feature = remove_punctuation(feature)
     feature = standarize_accents(feature)
-    feature = spell_check(feature)
+    # feature = spell_check(feature)
     feature = lemmatize_spacy(feature)
-    # feature = lemmatize_stanza(feature)    
+    # feature = lemmatize_stanza(feature)
+    feature = feature.lower()  
     return feature
 
 
