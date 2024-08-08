@@ -1,5 +1,8 @@
-from flask import Blueprint, request, make_response, send_file
-from . import dendogram_service
+import io
+from flask import Blueprint, request, make_response
+from . import graph_service
+
+
 bp = Blueprint('graph', __name__, url_prefix='/graph')
 
 
@@ -12,7 +15,18 @@ def generate_dendogram():
     if request_content['features'] is None:
         return make_response("No features", 400)
     
-    dendogram_file = dendogram_service.generate_dendogram(preprocessing, affinity, request_content)
-    return send_file(dendogram_file, as_attachment=True)
+    graph_figure = graph_service.generate_graph(preprocessing, affinity, request_content)
+    if graph_figure is None:
+        return make_response("Invalid embedding type", 400)
+    
+    img_stream = io.BytesIO()
+    graph_figure.savefig(img_stream, format='png')
+    img_stream.seek(0)
+    
+    response = make_response(img_stream.read())
+    response.headers.set('Content-Type', 'image/png')
+    response.headers.set('Content-Disposition', 'inline; filename=graph.png')
+    
+    return response
     
 
