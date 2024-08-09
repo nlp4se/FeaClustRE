@@ -138,7 +138,7 @@ def tokenize_sentences(data: List[str], tokenizer) -> Tuple[List[List[int]], int
     tokenized_sentences = [tokenizer.encode(sent, add_special_tokens=True) for sent in data]
     max_len = max(len(sent) for sent in tokenized_sentences)
     padded_sentences = [sent + [tokenizer.pad_token_id] * (max_len - len(sent)) for sent in tokenized_sentences]
-    return padded_sentences, max_len
+    return padded_sentences
 
 def compute_bert_embeddings(padded_sentences: List[List[int]], model) -> torch.Tensor:
     """
@@ -196,16 +196,21 @@ def compute_similarity_matrix(embeddings: torch.Tensor) -> np.ndarray:
 
 def plot_graph(adjacency_matrix: csr_matrix) -> Figure:
     """
-    Plots the graph based on the adjacency matrix (https://www.geeksforgeeks.org/adjacency-matrix-meaning-and-definition-in-dsa/).
+    Plots the graph based on the adjacency matrix 
+    (https://www.geeksforgeeks.org/adjacency-matrix-meaning-and-definition-in-dsa/).
 
     Args:
         adjacency_matrix (csr_matrix): Adjacency matrix representing the graph.
 
     """
-    G = nx.from_scipy_sparse_array(adjacency_matrix)
+    G = nx.from_scipy_sparse_array(adjacency_matrix, create_using=nx.DiGraph)
     fig, ax = plt.subplots()
-    nx.draw(G, with_labels=True, ax=ax)
+
+    pos = nx.kamada_kawai_layout(G)
+    nx.draw(G, pos, with_labels=True, ax=ax, node_size=500, font_size=10, font_color="black")
+
     plt.close(fig)
+
     return fig
 
 
@@ -219,7 +224,7 @@ def compute_bert_affinity(data: List[str]) -> Figure:
     model = BertModel.from_pretrained('bert-base-uncased')
     nlp = spacy.load("en_core_web_sm")
 
-    padded_sentences, _ = tokenize_sentences(data, tokenizer)
+    padded_sentences = tokenize_sentences(data, tokenizer)
     embeddings = compute_bert_embeddings(padded_sentences, model)
     embeddings = adjust_embeddings_with_pos(embeddings, data, nlp)
     similarity_matrix = compute_similarity_matrix(embeddings)
