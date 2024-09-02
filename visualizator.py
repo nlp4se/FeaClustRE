@@ -66,4 +66,6 @@ def show_dendrogram(model_file):
 
 if __name__ == "__main__":
     model_file = 'static/pkls/android.chrome_bert_cosine_complete.pkl'
+    #model_file = 'static/bert_cosine_complete.pkl'
+    #model_file = 'static/paraphrase_minilm_average_cosine.pkl'
     show_dendrogram(model_file)
