@@ -1,0 +1,13 @@
+contractions==0.1.73
+Flask==3.0.3
+joblib==1.4.2
+matplotlib==3.9.2
+numpy==2.1.1
+Requests==2.32.3
+scikit_learn==1.5.1
+scipy==1.14.1
+spacy==3.7.6
+spellchecker==0.4
+stanza==1.8.2
+torch==2.4.1
+transformers==4.44.2
