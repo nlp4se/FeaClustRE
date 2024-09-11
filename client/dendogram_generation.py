@@ -27,7 +27,7 @@ def generate_dendogram(input_file):
 
     # Send the request
     try:
-        response = requests.post(url, headers=headers, json={'app_name': app_name, 'features': data})
+        response = requests.post(url, headers=headers, json={'app_name': app_name, 'features': data['features']})
         logging.info(f"Request sent to {url}")
     except requests.RequestException as e:
         logging.error(f"Error sending request: {e}")

@@ -1,0 +1,11 @@
+{
+    "app_name": "max.demo.voip",
+    "features": [
+        "ReallyPoorPerformance",
+        "NiceSatisfactory",
+        "GoodApp",
+        "BeautifulApp",
+        "GoodFastApp",
+        "ChangeVideoCalls"
+    ]
+}
