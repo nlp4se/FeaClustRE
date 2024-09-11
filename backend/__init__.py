@@ -8,4 +8,8 @@ def create_app():
     from . import dendogram_controller
     app.register_blueprint(dendogram_controller.bp)
 
+    # Graph API
+    from . import graph_controller
+    app.register_blueprint(graph_controller.bp)
+
     return app
