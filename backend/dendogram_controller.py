@@ -10,6 +10,9 @@ def generate_dendogram():
     linkage = request.args.get('linkage', 'average')
     threshold = float(request.args.get('threshold', 0.2))
     
+    # Log the request arguments for debugging
+    print(f"Request arguments: preprocessing={preprocessing}, affinity={affinity}, linkage={linkage}, threshold={threshold}")
+    
     request_content = request.get_json()
     if request_content['features'] is None:
         return make_response("No features", 400)
