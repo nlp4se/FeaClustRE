@@ -10,7 +10,7 @@ import os
 import joblib
 import torch
 
-MODEL_DIRECTORY_PATH = 'static/pkls'
+MODEL_DIRECTORY_PATH = 'static' + os.path.sep + 'pkls'
 
 
 class AffinityStrategy():
