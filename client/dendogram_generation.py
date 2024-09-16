@@ -2,6 +2,7 @@ import json
 import requests
 import argparse
 import logging
+import os
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -21,7 +22,7 @@ def generate_dendogram(input_file):
     # Prepare the request
     url = 'http://127.0.0.1:3008/dendogram/generate?affinity=bert-embedding-cosine'
     headers = {'Content-Type': 'application/json'}
-    app_name = input_file.split('/')[-1].removeprefix('features_').removesuffix('.json')
+    app_name = input_file.split(os.path.sep)[-1].removeprefix('features_').removesuffix('.json')
     
     logging.info(f"Preparing request for app: {app_name}")
 
