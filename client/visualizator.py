@@ -2,6 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from scipy.cluster.hierarchy import dendrogram
 import joblib
+import argparse
 
 
 def add_line_breaks(labels):
@@ -65,7 +66,8 @@ def show_dendrogram(model_file):
 
 
 if __name__ == "__main__":
-    model_file = 'static/pkls/android.chrome_bert_cosine_complete.pkl'
-    #model_file = 'static/bert_cosine_complete.pkl'
-    #model_file = 'static/paraphrase_minilm_average_cosine.pkl'
-    show_dendrogram(model_file)
+    parser = argparse.ArgumentParser(description="Visualize dendrogram from a model file.")
+    parser.add_argument("model_file", help="Path to the model file")
+    args = parser.parse_args()
+
+    show_dendrogram(args.model_file)
