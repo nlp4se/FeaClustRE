@@ -8,4 +8,4 @@ Example for calling dendogram_generation.py client
 
 Example for calling visualizator.py client
 
-```python client/dendogram_generation.py ./data/COMMUNICATION/all/features_com.discord.json average 0.2```
+```python client/dendogram_generation.py ./data/COMMUNICATION/all/features_com.discord.json cosine average 0.2```
