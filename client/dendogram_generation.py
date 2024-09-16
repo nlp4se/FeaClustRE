@@ -7,7 +7,7 @@ import os
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def generate_dendogram(input_file):
+def generate_dendogram(input_file, linkage, threshold):
     logging.info(f"Starting dendogram generation for file: {input_file}")
 
     # Read the JSON file
@@ -20,7 +20,7 @@ def generate_dendogram(input_file):
         return
 
     # Prepare the request
-    url = 'http://127.0.0.1:3008/dendogram/generate?affinity=bert-embedding-cosine'
+    url = f'http://127.0.0.1:3008/dendogram/generate?affinity=bert-embedding-cosine&linkage={args.linkage}&threshold={args.threshold}'
     headers = {'Content-Type': 'application/json'}
     app_name = input_file.split(os.path.sep)[-1].removeprefix('features_').removesuffix('.json')
     
@@ -45,8 +45,10 @@ def generate_dendogram(input_file):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate a dendogram from a JSON file.")
     parser.add_argument("input_file", help="Path to the input JSON file")
+    parser.add_argument("linkage", help="Linkage for agglomerative algorithm: ward, complete, average, single")
+    parser.add_argument("threshold", help="Distance threshold for clustering")
     args = parser.parse_args()
 
     logging.info("Starting script execution")
-    generate_dendogram(args.input_file)
+    generate_dendogram(args.input_file, args.linkage, args.threshold)
     logging.info("Script execution completed")
