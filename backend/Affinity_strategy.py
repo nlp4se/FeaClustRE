@@ -30,7 +30,8 @@ class TfIdfCosineAffinity(AffinityStrategy):
         model = AgglomerativeClustering(n_clusters=None,
                                         linkage=linkage,
                                         distance_threshold=distance_threshold,
-                                        metric="cosine")
+                                        metric="cosine",
+                                        compute_full_tree=True)
         model.fit(dense_data_array)
         model_info = {
             'affinity': 'TF-IDF Cosine Complete',
@@ -50,7 +51,8 @@ class TfIdfEuclideanAffinity(AffinityStrategy):
         model = AgglomerativeClustering(n_clusters=None,
                                         linkage=linkage,
                                         distance_threshold=distance_threshold,
-                                        metric="euclidean")
+                                        metric="euclidean",
+                                        compute_full_tree=True)
         model.fit(dense_data_array)
         model_info = {
             'affinity': 'TF-IDF Euclidean Average',
@@ -148,7 +150,8 @@ class BERTEuclideanEmbeddingAffinity(AffinityStrategy):
         model = AgglomerativeClustering(n_clusters=None,
                                         linkage=linkage,
                                         distance_threshold=distance_threshold,
-                                        metric="euclidean")
+                                        metric="euclidean",
+                                        compute_full_tree=True)
         model.fit(dense_data_array)
         model_info = {
             'affinity': 'BERT Euclidean Average',
@@ -199,7 +202,8 @@ class ParaphraseMiniLMEuclideanEmbeddingAffinity(AffinityStrategy):
         model = AgglomerativeClustering(n_clusters=None,
                                         linkage=linkage,
                                         distance_threshold=distance_threshold,
-                                        metric="euclidean")
+                                        metric="euclidean",
+                                        compute_full_tree=True)
         model.fit(dense_data_array)
         model_info = {
             'affinity': 'Paraphrase MiniLM Euclidean Average',
@@ -250,7 +254,8 @@ class ParaphraseMiniLMCosineEmbeddingAffinity(AffinityStrategy):
         model = AgglomerativeClustering(n_clusters=None,
                                         linkage=linkage,
                                         distance_threshold=distance_threshold,
-                                        metric="cosine")
+                                        metric="cosine",
+                                        compute_full_tree=True)
         model.fit(dense_data_array)
         model_info = {
             'affinity': 'Paraphrase MiniLM Cosine Average',
