@@ -25,11 +25,11 @@ class LevenshteinAffinity(AffinityStrategy):
 
 
 class TfIdfCosineAffinity(AffinityStrategy):
-    def compute_affinity(self, application_name, data: List):
+    def compute_affinity(self, application_name, data: List, linkage, distance_threshold):
         dense_data_array = get_dense_data_array(data=data)
         model = AgglomerativeClustering(n_clusters=None,
-                                        linkage='complete',
-                                        distance_threshold=0,
+                                        linkage=linkage,
+                                        distance_threshold=distance_threshold,
                                         metric="cosine")
         model.fit(dense_data_array)
         model_info = {
@@ -38,18 +38,18 @@ class TfIdfCosineAffinity(AffinityStrategy):
             'labels': data
         }
 
-        file_name = application_name +'_tf_idf_cosine_complete.pkl'
+        file_name = application_name +'_tf_idf_cosine_' + linkage + '_' + str(distance_threshold) + '.pkl'
         file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
         joblib.dump(model_info, file_path)
         return file_path
 
 
 class TfIdfEuclideanAffinity(AffinityStrategy):
-    def compute_affinity(self, application_name, data: List):
+    def compute_affinity(self, application_name, data: List, linkage, distance_threshold):
         dense_data_array = get_dense_data_array(data)
         model = AgglomerativeClustering(n_clusters=None,
-                                        linkage='average',
-                                        distance_threshold=0,
+                                        linkage=linkage,
+                                        distance_threshold=distance_threshold,
                                         metric="euclidean")
         model.fit(dense_data_array)
         model_info = {
@@ -58,14 +58,14 @@ class TfIdfEuclideanAffinity(AffinityStrategy):
             'labels': data
         }
 
-        file_name = application_name +'_tf_idf_euclidean_average.pkl'
+        file_name = application_name +'_tf_idf_euclidean_' + linkage + '_' + str(distance_threshold) + '.pkl'
         file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
         joblib.dump(model_info, file_path)
         return file_path
 
 
 class BERTCosineEmbeddingAffinity(AffinityStrategy):
-    def compute_affinity(self, application_name, data: List):
+    def compute_affinity(self, application_name, data: List, linkage, distance_threshold):
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
         model = BertModel.from_pretrained('bert-base-uncased')
         nlp = spacy.load("en_core_web_sm")
@@ -96,9 +96,10 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
         dense_data_array = sparse_matrix.toarray()
 
         model = AgglomerativeClustering(n_clusters=None,
-                                        linkage='complete',
-                                        distance_threshold=0,
-                                        metric="cosine")
+                                        linkage=linkage,
+                                        distance_threshold=distance_threshold,
+                                        metric="cosine",
+                                        compute_full_tree=True)
         model.fit(dense_data_array)
         model_info = {
             'affinity': 'BERT Cosine Complete',
@@ -108,14 +109,14 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
             'object_weight': obj_weight
         }
 
-        file_name = application_name +'_bert_cosine_complete.pkl'
+        file_name = application_name +'_bert_cosine_' + linkage + '_' + str(distance_threshold) + '.pkl'
         file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
         joblib.dump(model_info, file_path)
         return file_path
 
 
 class BERTEuclideanEmbeddingAffinity(AffinityStrategy):
-    def compute_affinity(self, application_name, data: List):
+    def compute_affinity(self, application_name, data: List, linkage, distance_threshold):
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
         model = BertModel.from_pretrained('bert-base-uncased')
         nlp = spacy.load("en_core_web_sm")
@@ -145,8 +146,8 @@ class BERTEuclideanEmbeddingAffinity(AffinityStrategy):
         dense_data_array = sparse_matrix.toarray()
 
         model = AgglomerativeClustering(n_clusters=None,
-                                        linkage='average',
-                                        distance_threshold=0,
+                                        linkage=linkage,
+                                        distance_threshold=distance_threshold,
                                         metric="euclidean")
         model.fit(dense_data_array)
         model_info = {
@@ -157,7 +158,7 @@ class BERTEuclideanEmbeddingAffinity(AffinityStrategy):
             'object_weight': obj_weight
         }
 
-        file_name = application_name +'_bert_euclidean_average.pkl'
+        file_name = application_name +'_bert_euclidean_' + linkage + '_' + str(distance_threshold) + '.pkl'
         file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
         joblib.dump(model_info, file_path)
         return file_path
@@ -165,7 +166,7 @@ class BERTEuclideanEmbeddingAffinity(AffinityStrategy):
 
 
 class ParaphraseMiniLMEuclideanEmbeddingAffinity(AffinityStrategy):
-    def compute_affinity(self, application_name, data: List):
+    def compute_affinity(self, application_name, data: List, linkage, distance_threshold):
         tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/paraphrase-MiniLM-L6-v2')
         nlp = spacy.load("en_core_web_sm")
 
@@ -196,8 +197,8 @@ class ParaphraseMiniLMEuclideanEmbeddingAffinity(AffinityStrategy):
         dense_data_array = sparse_matrix.toarray()
 
         model = AgglomerativeClustering(n_clusters=None,
-                                        linkage='average',
-                                        distance_threshold=0,
+                                        linkage=linkage,
+                                        distance_threshold=distance_threshold,
                                         metric="euclidean")
         model.fit(dense_data_array)
         model_info = {
@@ -208,7 +209,7 @@ class ParaphraseMiniLMEuclideanEmbeddingAffinity(AffinityStrategy):
             'object_weight': obj_weight
         }
 
-        file_name = application_name +'_paraphrase_minilm_average_euclidean.pkl'
+        file_name = application_name +'_paraphrase_minilm_euclidean_' + linkage + '_' + str(distance_threshold) + '.pkl'
         file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
         joblib.dump(model_info, file_path)
         return file_path
@@ -216,7 +217,7 @@ class ParaphraseMiniLMEuclideanEmbeddingAffinity(AffinityStrategy):
 
 
 class ParaphraseMiniLMCosineEmbeddingAffinity(AffinityStrategy):
-    def compute_affinity(self, application_name, data: List):
+    def compute_affinity(self, application_name, data: List, linkage, distance_threshold):
         tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/paraphrase-MiniLM-L6-v2')
         nlp = spacy.load("en_core_web_sm")
 
@@ -247,8 +248,8 @@ class ParaphraseMiniLMCosineEmbeddingAffinity(AffinityStrategy):
         dense_data_array = sparse_matrix.toarray()
 
         model = AgglomerativeClustering(n_clusters=None,
-                                        linkage='average',
-                                        distance_threshold=0,
+                                        linkage=linkage,
+                                        distance_threshold=distance_threshold,
                                         metric="cosine")
         model.fit(dense_data_array)
         model_info = {
@@ -259,7 +260,7 @@ class ParaphraseMiniLMCosineEmbeddingAffinity(AffinityStrategy):
             'object_weight': obj_weight
         }
 
-        file_name = application_name +'_paraphrase_minilm_average_cosine.pkl'
+        file_name = application_name +'_paraphrase_minilm_cosine_' + linkage + '_' + str(distance_threshold) + '.pkl'
         file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
         joblib.dump(model_info, file_path)
         return file_path
