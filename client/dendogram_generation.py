@@ -7,6 +7,7 @@ import os
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+
 def generate_dendogram(input_file):
     logging.info(f"Starting dendogram generation for file: {input_file}")
 
@@ -20,10 +21,11 @@ def generate_dendogram(input_file):
         return
 
     # Prepare the request
-    url = f'http://127.0.0.1:3008/dendogram/generate?affinity={args.affinity}&linkage={args.linkage}&threshold={args.threshold}'
+    url = (f'http://127.0.0.1:3008/dendogram/generate?affinity='
+           f'{args.affinity}&linkage={args.linkage}&threshold={args.threshold}')
     headers = {'Content-Type': 'application/json'}
     app_name = input_file.split(os.path.sep)[-1].removeprefix('features_').removesuffix('.json')
-    
+
     logging.info(f"Preparing request for app: {app_name}")
 
     # Send the request
@@ -41,6 +43,7 @@ def generate_dendogram(input_file):
     else:
         logging.error(f"Error generating dendogram. Status code: {response.status_code}")
         logging.error(f"Response: {response.text}")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate a dendogram from a JSON file.")

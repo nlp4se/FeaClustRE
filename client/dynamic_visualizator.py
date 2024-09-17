@@ -40,8 +40,9 @@ def load_dendrograms(folder_path):
     dendrograms = []
     logger.info(f"Loading dendrograms from {folder_path}")
     for filename in os.listdir(folder_path):
-        if filename.endswith('.pkl') and len(filename) == 14:  # 'YYYY-MM-DD.pkl'
-            date = datetime.strptime(filename[:10], '%Y-%m-%d')
+        if filename.endswith('.pkl') and len(filename) == 20:  # 'YYYY-MM-DD_HH-MM.pkl'
+            date_str = filename[:16]  # Extract 'YYYY-MM-DD_HH-MM'
+            date = datetime.strptime(date_str, '%Y-%m-%d_%H-%M')
             file_path = os.path.join(folder_path, filename)
             logger.debug(f"Loading file: {file_path}")
             file = joblib.load(file_path)
