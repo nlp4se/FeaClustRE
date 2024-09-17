@@ -106,9 +106,9 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
             'verb_weight': verb_weight,
             'object_weight': object_weigth
         }
-        current_date = datetime.now().strftime('%Y-%m-%d')
+        current_datetime = datetime.now().strftime('%Y-%m-%d_%H-%M')
 
-        file_name = current_date + '.pkl'
+        file_name = current_datetime + '.pkl'
         file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
         joblib.dump(model_info, file_path)
         return file_path
