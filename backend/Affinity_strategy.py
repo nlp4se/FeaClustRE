@@ -67,7 +67,11 @@ class TfIdfEuclideanAffinity(AffinityStrategy):
 
 
 class BERTCosineEmbeddingAffinity(AffinityStrategy):
-    def compute_affinity(self, application_name, data: List, linkage, distance_threshold):
+    def compute_affinity(self,
+                         application_name,
+                         data: List,
+                         linkage,
+                         distance_threshold):
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
         model = BertModel.from_pretrained('bert-base-uncased')
         nlp = spacy.load("en_core_web_sm")
