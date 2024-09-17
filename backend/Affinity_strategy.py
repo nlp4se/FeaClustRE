@@ -103,6 +103,7 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
             'affinity': 'BERT Cosine Complete',
             'model': model,
             'labels': data,
+            'application_name': application_name,
             'distance_threshold': distance_threshold,
             'verb_weight': verb_weight,
             'object_weight': object_weigth

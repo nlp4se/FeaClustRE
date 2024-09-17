@@ -44,6 +44,10 @@ def show_dendrogram(model_file):
     affinity = file['affinity']
     labels = file['labels']
     try:
+        application_name = file['application_name']
+    except KeyError:
+        application_name = 'N/A'
+    try:
         verb_weight = file['verb_weight']
     except KeyError:
         verb_weight = 'N/A'
@@ -59,6 +63,7 @@ def show_dendrogram(model_file):
         plt.figure(figsize=(15, 8))
         plot_dendrogram(model, labels=labels)
         plt.title(affinity
+                  + ' | Application Name: ' + str(application_name)
                   + ' | Distance Threshold: ' + str(distance_threshold)
                   + ' | Verb Weight: ' + str(verb_weight)
                   + ' | Object weight: ' + str(object_weight))
