@@ -51,11 +51,17 @@ def show_dendrogram(model_file):
         object_weight = file['object_weight']
     except KeyError:
         object_weight = 'N/A'
-
+    try:
+        distance_threshold = file['distance_threshold']
+    except KeyError:
+        distance_threshold = 'N/A'
     if hasattr(model, 'children_'):
         plt.figure(figsize=(15, 8))
         plot_dendrogram(model, labels=labels)
-        plt.title(affinity + ' | Verb Weight: ' + str(verb_weight) + ' | Object weight: ' + str(object_weight))
+        plt.title(affinity
+                  + ' | Distance Threshold: ' + str(distance_threshold)
+                  + ' | Verb Weight: ' + str(verb_weight)
+                  + ' | Object weight: ' + str(object_weight))
         plt.xlabel('Features', fontsize=12)
         plt.ylabel('Distance', fontsize=12)
         plt.xticks(rotation=90, fontsize=8)
