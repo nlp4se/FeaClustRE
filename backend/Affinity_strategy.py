@@ -17,13 +17,6 @@ class AffinityStrategy():
     @abstractmethod
     def compute_affinity(self, data: List):
         pass
-
-
-class LevenshteinAffinity(AffinityStrategy):
-    def compute_affinity(self, data: List):
-        return None
-
-
 class TfIdfCosineAffinity(AffinityStrategy):
     def compute_affinity(self, application_name, data: List, linkage, distance_threshold):
         dense_data_array = get_dense_data_array(data=data)
@@ -43,7 +36,6 @@ class TfIdfCosineAffinity(AffinityStrategy):
         file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
         joblib.dump(model_info, file_path)
         return file_path
-
 
 class TfIdfEuclideanAffinity(AffinityStrategy):
     def compute_affinity(self, application_name, data: List, linkage, distance_threshold):
@@ -65,12 +57,13 @@ class TfIdfEuclideanAffinity(AffinityStrategy):
         joblib.dump(model_info, file_path)
         return file_path
 
-
 class BERTCosineEmbeddingAffinity(AffinityStrategy):
     def compute_affinity(self,
                          application_name,
                          data: List,
                          linkage,
+                         object_weigth,
+                         verb_weight,
                          distance_threshold):
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
         model = BertModel.from_pretrained('bert-base-uncased')
@@ -87,15 +80,13 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
 
         embeddings = outputs.last_hidden_state[:, 0, :]
         tagged_data = [nlp(sent) for sent in data]
-        verb_weight = 0.5
-        obj_weight = 1.5
-        
+
         for i, doc in enumerate(tagged_data):
             for token in doc:
                 if token.pos_ == 'VERB':
                     embeddings[i] += verb_weight * embeddings[i]
                 elif token.pos_ == 'NOUN':
-                    embeddings[i] += obj_weight * embeddings[i]
+                    embeddings[i] += object_weigth * embeddings[i]
 
         sparse_matrix = csr_matrix(embeddings.numpy())
 
@@ -112,7 +103,7 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
             'model': model,
             'labels': data,
             'verb_weight': verb_weight,
-            'object_weight': obj_weight
+            'object_weight': object_weigth
         }
 
         file_name = application_name +'_bert_cosine_' + linkage + '_' + str(distance_threshold) + '.pkl'
@@ -170,8 +161,6 @@ class BERTEuclideanEmbeddingAffinity(AffinityStrategy):
         joblib.dump(model_info, file_path)
         return file_path
 
-
-
 class ParaphraseMiniLMEuclideanEmbeddingAffinity(AffinityStrategy):
     def compute_affinity(self, application_name, data: List, linkage, distance_threshold):
         tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/paraphrase-MiniLM-L6-v2')
@@ -221,8 +210,6 @@ class ParaphraseMiniLMEuclideanEmbeddingAffinity(AffinityStrategy):
         file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
         joblib.dump(model_info, file_path)
         return file_path
-
-
 
 class ParaphraseMiniLMCosineEmbeddingAffinity(AffinityStrategy):
     def compute_affinity(self, application_name, data: List, linkage, distance_threshold):
