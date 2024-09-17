@@ -13,6 +13,17 @@ class Context():
     def strategy(self, strategy: Affinity_strategy) -> None:
         self.affinity_strategy = strategy
 
-    def use_affinity_algorithm(self, application_name, data: List, linkage, distance_threshold):
-        return self.affinity_strategy.compute_affinity(application_name, data, linkage, distance_threshold)
+    def use_affinity_algorithm(self,
+                               application_name,
+                               data: List,
+                               linkage,
+                               object_weight,
+                               verb_weight,
+                               distance_threshold):
+        return self.affinity_strategy.compute_affinity(application_name,
+                                                       data,
+                                                       linkage,
+                                                       object_weight,
+                                                       verb_weight,
+                                                       distance_threshold)
     
