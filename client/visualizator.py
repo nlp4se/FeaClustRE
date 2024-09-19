@@ -2,6 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from scipy.cluster.hierarchy import dendrogram
 import joblib
+import argparse
 
 
 def add_line_breaks(labels):
@@ -43,6 +44,10 @@ def show_dendrogram(model_file):
     affinity = file['affinity']
     labels = file['labels']
     try:
+        application_name = file['application_name']
+    except KeyError:
+        application_name = 'N/A'
+    try:
         verb_weight = file['verb_weight']
     except KeyError:
         verb_weight = 'N/A'
@@ -50,11 +55,18 @@ def show_dendrogram(model_file):
         object_weight = file['object_weight']
     except KeyError:
         object_weight = 'N/A'
-
+    try:
+        distance_threshold = file['distance_threshold']
+    except KeyError:
+        distance_threshold = 'N/A'
     if hasattr(model, 'children_'):
         plt.figure(figsize=(15, 8))
         plot_dendrogram(model, labels=labels)
-        plt.title(affinity + ' | Verb Weight: ' + str(verb_weight) + ' | Object weight: ' + str(object_weight))
+        plt.title(affinity
+                  + ' | Application Name: ' + str(application_name)
+                  + ' | Distance Threshold: ' + str(distance_threshold)
+                  + ' | Verb Weight: ' + str(verb_weight)
+                  + ' | Object weight: ' + str(object_weight))
         plt.xlabel('Features', fontsize=12)
         plt.ylabel('Distance', fontsize=12)
         plt.xticks(rotation=90, fontsize=8)
@@ -65,7 +77,8 @@ def show_dendrogram(model_file):
 
 
 if __name__ == "__main__":
-    model_file = 'static/pkls/viber.voip_bert_cosine_complete.pkl'
-    #model_file = 'static/bert_cosine_complete.pkl'
-    #model_file = 'static/paraphrase_minilm_average_cosine.pkl'
-    show_dendrogram(model_file)
+    parser = argparse.ArgumentParser(description="Visualize dendrogram from a model file.")
+    parser.add_argument("model_file", help="Path to the model file")
+    args = parser.parse_args()
+
+    show_dendrogram(args.model_file)
