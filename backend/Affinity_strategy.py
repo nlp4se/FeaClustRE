@@ -100,7 +100,7 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
                                         compute_full_tree=True)
         model.fit(dense_data_array)
         model_info = {
-            'affinity': 'BERT Cosine Complete',
+            'affinity': f'BERT Cosine {linkage}',
             'model': model,
             'labels': data,
             'application_name': application_name,
