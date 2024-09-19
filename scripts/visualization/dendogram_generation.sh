@@ -2202,7 +2202,7 @@ curl --location 'http://127.0.0.1:3008//dendogram/generate?affinity=bert-embeddi
     "good contact",
     "good dark mode",
     "good e",
-    "good email client",
+    "good email scripts",
     "good evening",
     "good experiance",
     "good faster",
