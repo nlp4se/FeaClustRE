@@ -9,7 +9,7 @@ from spellchecker import SpellChecker
 from .Context import Context
 from . import Affinity_strategy
 
-def generate_dendogram(preprocessing, embedding, linkage, distance_threshold, request_content):
+def generate_dendogram(preprocessing, embedding, linkage, distance_threshold, verb_weight, object_weight, request_content):
     features = request_content['features']
     if preprocessing:
         features = preprocess_features(features)
@@ -19,27 +19,27 @@ def generate_dendogram(preprocessing, embedding, linkage, distance_threshold, re
     
     if embedding == 'tf-idf-cosine' or embedding == 'all':
         context = Context(Affinity_strategy.TfIdfCosineAffinity())
-        model_file_name = context.use_affinity_algorithm(app_name, features, linkage, distance_threshold)
+        model_file_name = context.use_affinity_algorithm(app_name, features, linkage, distance_threshold, verb_weight, object_weight)
 
     if embedding == 'tf-idf-euclidean' or embedding == 'all':
         context = Context(Affinity_strategy.TfIdfEuclideanAffinity())
-        model_file_name = context.use_affinity_algorithm(app_name, features, linkage, distance_threshold)
+        model_file_name = context.use_affinity_algorithm(app_name, features, linkage, distance_threshold, verb_weight, object_weight)
 
     if embedding == 'bert-embedding-euclidean' or embedding == 'all':
         context = Context(Affinity_strategy.BERTEuclideanEmbeddingAffinity())
-        model_file_name = context.use_affinity_algorithm(app_name, features, linkage, distance_threshold)
+        model_file_name = context.use_affinity_algorithm(app_name, features, linkage, distance_threshold, verb_weight, object_weight)
 
     if embedding == 'bert-embedding-cosine' or embedding == 'all':
         context = Context(Affinity_strategy.BERTCosineEmbeddingAffinity())
-        model_file_name = context.use_affinity_algorithm(app_name, features, linkage, distance_threshold)
+        model_file_name = context.use_affinity_algorithm(app_name, features, linkage, distance_threshold, verb_weight, object_weight)
 
     if embedding == 'paraphrase-MiniLM-cosine' or embedding == 'all':
         context = Context(Affinity_strategy.ParaphraseMiniLMCosineEmbeddingAffinity())
-        model_file_name = context.use_affinity_algorithm(app_name, features, linkage, distance_threshold)
+        model_file_name = context.use_affinity_algorithm(app_name, features, linkage, distance_threshold, verb_weight, object_weight)
     
     if embedding == 'paraphrase-MiniLM-euclidean' or embedding == 'all':
         context = Context(Affinity_strategy.ParaphraseMiniLMEuclideanEmbeddingAffinity())
-        model_file_name = context.use_affinity_algorithm(app_name, features, linkage, distance_threshold)
+        model_file_name = context.use_affinity_algorithm(app_name, features, linkage, distance_threshold, verb_weight, object_weight)
     
     return model_file_name
 
