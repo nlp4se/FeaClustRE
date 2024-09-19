@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-folder_path = r'C:\Users\Max\NLP4RE\Dendogram-Generator\static\pkls'
+folder_path = r'/static/pkls'
 
 # Define the path to the visualizator.py script
 visualizator_script = r'visualizator.py'
