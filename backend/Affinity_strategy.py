@@ -25,8 +25,9 @@ class LevenshteinAffinity(AffinityStrategy):
 
 
 class TfIdfCosineAffinity(AffinityStrategy):
-    def compute_affinity(self, application_name, data: List, linkage, distance_threshold):
+    def compute_affinity(self, application_name, data: List, linkage, distance_threshold, verb_weight, object_weight):
         dense_data_array = get_dense_data_array(data=data)
+        # TODO add verb and object weight
         model = AgglomerativeClustering(n_clusters=None,
                                         linkage=linkage,
                                         distance_threshold=distance_threshold,
@@ -46,8 +47,9 @@ class TfIdfCosineAffinity(AffinityStrategy):
 
 
 class TfIdfEuclideanAffinity(AffinityStrategy):
-    def compute_affinity(self, application_name, data: List, linkage, distance_threshold):
+    def compute_affinity(self, application_name, data: List, linkage, distance_threshold, verb_weight, object_weight):
         dense_data_array = get_dense_data_array(data)
+        #TODO add verb and object weight
         model = AgglomerativeClustering(n_clusters=None,
                                         linkage=linkage,
                                         distance_threshold=distance_threshold,
@@ -67,7 +69,7 @@ class TfIdfEuclideanAffinity(AffinityStrategy):
 
 
 class BERTCosineEmbeddingAffinity(AffinityStrategy):
-    def compute_affinity(self, application_name, data: List, linkage, distance_threshold):
+    def compute_affinity(self, application_name, data: List, linkage, distance_threshold, verb_weight, object_weight):
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
         model = BertModel.from_pretrained('bert-base-uncased')
         nlp = spacy.load("en_core_web_sm")
@@ -83,15 +85,13 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
 
         embeddings = outputs.last_hidden_state[:, 0, :]
         tagged_data = [nlp(sent) for sent in data]
-        verb_weight = 0.5
-        obj_weight = 1.5
         
         for i, doc in enumerate(tagged_data):
             for token in doc:
                 if token.pos_ == 'VERB':
                     embeddings[i] += verb_weight * embeddings[i]
                 elif token.pos_ == 'NOUN':
-                    embeddings[i] += obj_weight * embeddings[i]
+                    embeddings[i] += object_weight * embeddings[i]
 
         sparse_matrix = csr_matrix(embeddings.numpy())
 
@@ -108,17 +108,17 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
             'model': model,
             'labels': data,
             'verb_weight': verb_weight,
-            'object_weight': obj_weight
+            'object_weight': object_weight
         }
 
-        file_name = application_name +'_bert_cosine_' + linkage + '_' + str(distance_threshold) + '.pkl'
+        file_name = application_name +'_bert_cosine_' + linkage + '_thr-' + str(distance_threshold) + '_vw-' + str(verb_weight) + '_ow-' + str(object_weight) + '.pkl'
         file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
         joblib.dump(model_info, file_path)
         return file_path
 
 
 class BERTEuclideanEmbeddingAffinity(AffinityStrategy):
-    def compute_affinity(self, application_name, data: List, linkage, distance_threshold):
+    def compute_affinity(self, application_name, data: List, linkage, distance_threshold, verb_weight, object_weight):
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
         model = BertModel.from_pretrained('bert-base-uncased')
         nlp = spacy.load("en_core_web_sm")
@@ -134,15 +134,13 @@ class BERTEuclideanEmbeddingAffinity(AffinityStrategy):
 
         embeddings = outputs.last_hidden_state[:, 0, :]
         tagged_data = [nlp(sent) for sent in data]
-        verb_weight = 0.5
-        obj_weight = 1.5
         
         for i, doc in enumerate(tagged_data):
             for token in doc:
                 if token.pos_ == 'VERB':
                     embeddings[i] += verb_weight * embeddings[i]
                 elif token.pos_ == 'NOUN':
-                    embeddings[i] += obj_weight * embeddings[i]
+                    embeddings[i] += object_weight * embeddings[i]
         sparse_matrix = csr_matrix(embeddings.numpy())
 
         dense_data_array = sparse_matrix.toarray()
@@ -158,10 +156,10 @@ class BERTEuclideanEmbeddingAffinity(AffinityStrategy):
             'model': model,
             'labels': data,
             'verb_weight': verb_weight,
-            'object_weight': obj_weight
+            'object_weight': object_weight
         }
 
-        file_name = application_name +'_bert_euclidean_' + linkage + '_' + str(distance_threshold) + '.pkl'
+        file_name = application_name +'_bert_euclidean_' + linkage  + '_thr-' + str(distance_threshold) + '_vw-' + str(verb_weight) + '_ow-' + str(object_weight) + '.pkl'
         file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
         joblib.dump(model_info, file_path)
         return file_path
@@ -169,7 +167,7 @@ class BERTEuclideanEmbeddingAffinity(AffinityStrategy):
 
 
 class ParaphraseMiniLMEuclideanEmbeddingAffinity(AffinityStrategy):
-    def compute_affinity(self, application_name, data: List, linkage, distance_threshold):
+    def compute_affinity(self, application_name, data: List, linkage, distance_threshold, verb_weight, object_weight):
         tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/paraphrase-MiniLM-L6-v2')
         nlp = spacy.load("en_core_web_sm")
 
@@ -186,15 +184,13 @@ class ParaphraseMiniLMEuclideanEmbeddingAffinity(AffinityStrategy):
 
         embeddings = outputs.last_hidden_state[:, 0, :]
         tagged_data = [nlp(sent) for sent in data]
-        verb_weight = 0.5
-        obj_weight = 1.5
         
         for i, doc in enumerate(tagged_data):
             for token in doc:
                 if token.pos_ == 'VERB':
                     embeddings[i] += verb_weight * embeddings[i]
                 elif token.pos_ == 'NOUN':
-                    embeddings[i] += obj_weight * embeddings[i]
+                    embeddings[i] += object_weight * embeddings[i]
         sparse_matrix = csr_matrix(embeddings.numpy())
 
         dense_data_array = sparse_matrix.toarray()
@@ -210,10 +206,10 @@ class ParaphraseMiniLMEuclideanEmbeddingAffinity(AffinityStrategy):
             'model': model,
             'labels': data,
             'verb_weight': verb_weight,
-            'object_weight': obj_weight
+            'object_weight': object_weight
         }
 
-        file_name = application_name +'_paraphrase_minilm_euclidean_' + linkage + '_' + str(distance_threshold) + '.pkl'
+        file_name = application_name +'_paraphrase_minilm_euclidean_' + linkage + '_thr-' + str(distance_threshold) + '_vw-' + str(verb_weight) + '_ow-' + str(object_weight) + '.pkl'
         file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
         joblib.dump(model_info, file_path)
         return file_path
@@ -221,7 +217,7 @@ class ParaphraseMiniLMEuclideanEmbeddingAffinity(AffinityStrategy):
 
 
 class ParaphraseMiniLMCosineEmbeddingAffinity(AffinityStrategy):
-    def compute_affinity(self, application_name, data: List, linkage, distance_threshold):
+    def compute_affinity(self, application_name, data: List, linkage, distance_threshold, verb_weight, object_weight):
         tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/paraphrase-MiniLM-L6-v2')
         nlp = spacy.load("en_core_web_sm")
 
@@ -238,15 +234,13 @@ class ParaphraseMiniLMCosineEmbeddingAffinity(AffinityStrategy):
 
         embeddings = outputs.last_hidden_state[:, 0, :]
         tagged_data = [nlp(sent) for sent in data]
-        verb_weight = 0.5
-        obj_weight = 1.5
         
         for i, doc in enumerate(tagged_data):
             for token in doc:
                 if token.pos_ == 'VERB':
                     embeddings[i] += verb_weight * embeddings[i]
                 elif token.pos_ == 'NOUN':
-                    embeddings[i] += obj_weight * embeddings[i]
+                    embeddings[i] += object_weight * embeddings[i]
         sparse_matrix = csr_matrix(embeddings.numpy())
 
         dense_data_array = sparse_matrix.toarray()
@@ -262,10 +256,10 @@ class ParaphraseMiniLMCosineEmbeddingAffinity(AffinityStrategy):
             'model': model,
             'labels': data,
             'verb_weight': verb_weight,
-            'object_weight': obj_weight
+            'object_weight': object_weight
         }
 
-        file_name = application_name +'_paraphrase_minilm_cosine_' + linkage + '_' + str(distance_threshold) + '.pkl'
+        file_name = application_name +'_paraphrase_minilm_cosine_' + linkage + '_thr-' + str(distance_threshold) + '_vw-' + str(verb_weight) + '_ow-' + str(object_weight) + '.pkl'
         file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
         joblib.dump(model_info, file_path)
         return file_path
