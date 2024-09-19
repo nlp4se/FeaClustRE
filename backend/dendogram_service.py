@@ -9,6 +9,15 @@ from spellchecker import SpellChecker
 from .Context import Context
 from . import Affinity_strategy
 
+
+def preprocessed_app(app_name):
+    return None
+
+def save_preprocessed_features(features):
+    return None
+
+def load_saved_preprocessed_features(appName):
+    return None
 def generate_dendogram(preprocessing,
                        embedding,
                        linkage,
@@ -16,13 +25,17 @@ def generate_dendogram(preprocessing,
                        object_weight,
                        verb_weight,
                        request_content):
+    app_name = request_content['app_name']
     features = request_content['features']
-    if preprocessing:
+
+    if preprocessing and not preprocessed_app(app_name):
         features = preprocess_features(features)
+        save_preprocessed_features(features)
+    elif preprocessing and preprocessed_app(app_name):
+        features = load_saved_preprocessed_features(app_name)
 
     model_file_name = None
-    app_name = request_content['app_name']
-    
+
     # if embedding == 'tf-idf-cosine' or embedding == 'all':
         # context = Context(Affinity_strategy.TfIdfCosineAffinity())
         # model_file_name = context.use_affinity_algorithm(app_name, features, linkage, distance_threshold)
