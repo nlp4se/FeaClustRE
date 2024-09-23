@@ -9,10 +9,9 @@ def generate_dendogram():
     affinity = request.args.get('affinity', 'bert-embedding-cosine')
     linkage = request.args.get('linkage', 'average')
     threshold = float(request.args.get('threshold', 0.2))
-    object_weight = float(request.args.get('object-weight', 0.5))
-    verb_weight = float(request.args.get('verb-weight', 1.5))
+    object_weight = float(request.args.get('obj-weight', 0))
+    verb_weight = float(request.args.get('verb-weight', 0))
 
-    # Log the request arguments for debugging
     print(f"Request arguments: preprocessing={preprocessing}, "
           f"affinity={affinity}, "
           f"linkage={linkage}, "
