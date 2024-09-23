@@ -1,8 +1,7 @@
 from __future__ import annotations
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from datetime import datetime
 from typing import List
-from .tf_idf_utils import get_dense_data_array
 from sklearn.cluster import AgglomerativeClustering
 from transformers import BertTokenizer, BertModel, AutoTokenizer, AutoModel
 from scipy.sparse import csr_matrix
@@ -111,6 +110,7 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
         current_datetime = datetime.now().strftime('%Y-%m-%d_%H-%M')
 
         file_name = current_datetime + '.pkl'
+        file_name = application_name +'_bert_cosine_' + linkage + '_thr-' + str(distance_threshold) + '_vw-' + str(verb_weight) + '_ow-' + str(object_weight) + '.pkl'
         file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
         joblib.dump(model_info, file_path)
         return file_path

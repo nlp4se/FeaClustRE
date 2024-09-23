@@ -20,7 +20,7 @@ def generate_dendogram(input_file):
         return
 
     # Prepare the request
-    url = f'http://127.0.0.1:3008/dendogram/generate?affinity={args.affinity}&linkage={args.linkage}&threshold={args.threshold}'
+    url = f'http://127.0.0.1:3008/dendogram/generate?affinity={args.affinity}&linkage={args.linkage}&threshold={args.threshold}&verb_weight={args.verb_weight}&object_weight={args.object_weight}'
     headers = {'Content-Type': 'application/json'}
     app_name = input_file.split(os.path.sep)[-1].removeprefix('features_').removesuffix('.json')
     
@@ -48,6 +48,8 @@ if __name__ == "__main__":
     parser.add_argument("affinity", help="Affinity (e.g.; bert-embedding-cosine)")
     parser.add_argument("linkage", help="Linkage for agglomerative algorithm: ward, complete, average, single")
     parser.add_argument("threshold", help="Distance threshold for clustering")
+    parser.add_argument("verb_weight", help="Weight for verb features")
+    parser.add_argument("object_weight", help="Weight for object features")
     args = parser.parse_args()
 
     logging.info("Starting script execution")
