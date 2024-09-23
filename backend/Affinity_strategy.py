@@ -81,13 +81,13 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
 
         embeddings = outputs.last_hidden_state[:, 0, :]
         tagged_data = [nlp(sent) for sent in data]
-
-        for i, doc in enumerate(tagged_data):
-            for token in doc:
-                if token.pos_ == 'VERB':
-                    embeddings[i] += verb_weight * embeddings[i]
-                elif token.pos_ == 'NOUN':
-                    embeddings[i] += object_weigth * embeddings[i]
+        if verb_weight != 0 and object_weigth != 0:
+            for i, doc in enumerate(tagged_data):
+                for token in doc:
+                    if token.pos_ == 'VERB':
+                        embeddings[i] += verb_weight * embeddings[i]
+                    elif token.pos_ == 'NOUN':
+                        embeddings[i] += object_weigth * embeddings[i]
 
         sparse_matrix = csr_matrix(embeddings.numpy())
 
