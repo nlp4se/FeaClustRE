@@ -107,10 +107,8 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
             'verb_weight': verb_weight,
             'object_weight': object_weigth
         }
-        current_datetime = datetime.now().strftime('%Y-%m-%d_%H-%M')
 
-        file_name = current_datetime + '.pkl'
-        file_name = application_name +'_bert_cosine_' + linkage + '_thr-' + str(distance_threshold) + '_vw-' + str(verb_weight) + '_ow-' + str(object_weight) + '.pkl'
+        file_name = application_name +'_bert_cosine_' + linkage + '_thr-' + str(distance_threshold) + '_vw-' + str(verb_weight) + '_ow-' + str(object_weigth) + '.pkl'
         file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
         joblib.dump(model_info, file_path)
         return file_path

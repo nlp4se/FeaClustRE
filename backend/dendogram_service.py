@@ -66,12 +66,12 @@ def generate_dendogram(preprocessing,
 
     if embedding == 'bert-embedding-cosine' or embedding == 'all':
         context = Context(Affinity_strategy.BERTCosineEmbeddingAffinity())
-        model_file_name = context.use_affinity_algorithm(app_name,
-                                                         features,
-                                                         linkage,
-                                                         object_weight,
-                                                         verb_weight,
-                                                         distance_threshold)
+        model_file_name = context.use_affinity_algorithm(application_name=app_name,
+                                                         data=features,
+                                                         linkage=linkage,
+                                                         object_weight=object_weight,
+                                                         verb_weight=verb_weight,
+                                                         distance_threshold=distance_threshold)
 
     # if embedding == 'paraphrase-MiniLM-cosine' or embedding == 'all':
     # context = Context(Affinity_strategy.ParaphraseMiniLMCosineEmbeddingAffinity())
