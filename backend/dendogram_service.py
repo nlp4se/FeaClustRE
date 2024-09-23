@@ -56,7 +56,7 @@ def generate_dendogram(preprocessing,
     # context = Context(Affinity_strategy.TfIdfCosineAffinity())
     # model_file_name = context.use_affinity_algorithm(app_name, features, linkage, distance_threshold)
 
-    #if embedding == 'tf-idf-euclidean' or embedding == 'all':
+    # if embedding == 'tf-idf-euclidean' or embedding == 'all':
     # context = Context(Affinity_strategy.TfIdfEuclideanAffinity())
     # model_file_name = context.use_affinity_algorithm(app_name, features, linkage, distance_threshold)
 
@@ -83,6 +83,7 @@ def generate_dendogram(preprocessing,
 
     return model_file_name
 
+
 # TODO preprocess service
 def is_english(text):
     pattern = re.compile(r'^[a-zA-Z0-9\s.,?!\'"-]+$')
@@ -100,7 +101,6 @@ def is_emoji_only(text):
 def contains_weird_characters(text):
     weird_characters_pattern = re.compile(r'[^a-zA-Z0-9\s.,?!\'"_-]')
     return bool(weird_characters_pattern.search(text))
-
 
 
 def preprocess_features(features):

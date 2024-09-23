@@ -23,23 +23,29 @@ def read_csv(file_path):
         sys.exit(1)
 
 def parse_date(date_string):
-    return datetime.strptime(date_string, '%a %b %d %H:%M:%S %Z %Y')
+    # Remove the timezone part (e.g., 'CET')
+    date_string_without_tz = ' '.join(date_string.split()[:-2]) + ' ' + date_string.split()[-1]
+    return datetime.strptime(date_string_without_tz, '%a %b %d %H:%M:%S %Y')
+
 
 def format_date(date):
     return date.strftime('%Y-%m-%d')
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Read a CSV file")
+    parser = argparse.ArgumentParser(description="Read a CSV file and filter features")
     parser.add_argument("-i", "--input", required=True, help="Path to the input CSV file")
     parser.add_argument("-o", "--output", required=True, help="Path to the output JSON file")
     parser.add_argument("--from", dest="from_date", help="Start date (YYYY-MM-DD)")
     parser.add_argument("--to", dest="to_date", help="End date (YYYY-MM-DD)")
+    parser.add_argument("-n", "--min-occurrences", type=int, default=1, help="Minimum number of occurrences of a feature to be included")
+    
     args = parser.parse_args()
 
     csv_file_path = args.input
     output_file_path = args.output
     from_date = datetime.strptime(args.from_date, '%Y-%m-%d') if args.from_date else None
     to_date = datetime.strptime(args.to_date, '%Y-%m-%d') if args.to_date else None
+    min_occurrences = args.min_occurrences
 
     csv_data = read_csv(csv_file_path)
     
@@ -73,14 +79,14 @@ if __name__ == "__main__":
     # Remove empty features
     features = [feature for feature in features if feature.strip()]
 
-    # Sort features by frequency and limit to those with more than 1 mention
+    # Sort features by frequency and limit to those with at least min_occurrences
     feature_counts = Counter(features)
     sorted_features = sorted(feature_counts.items(), key=lambda x: x[1], reverse=True)
-    frequent_features = [feature for feature, count in sorted_features if count > 1]
+    frequent_features = [feature for feature, count in sorted_features if count >= min_occurrences]
 
-    print(f"\nNumber of features with more than 1 mention: {len(frequent_features)}")
+    print(f"\nNumber of features with at least {min_occurrences} mentions: {len(frequent_features)}")
     print("Sample of frequent features:")
-    for feature in frequent_features[:20]:  # Print first 5 frequent features as a sample
+    for feature in frequent_features[:20]:  # Print first 20 frequent features as a sample
         print(f"{feature}: {feature_counts[feature]} mentions")
    
     # Save frequent features as JSON array
@@ -110,7 +116,7 @@ if __name__ == "__main__":
         # Count and sort features
         feature_counts = Counter(processed_features)
         sorted_features = sorted(feature_counts.items(), key=lambda x: x[1], reverse=True)
-        frequent_features = [feature for feature, count in sorted_features if count > 1]
+        frequent_features = [feature for feature, count in sorted_features if count >= min_occurrences]
 
         # Create output file name
         app_output_file = os.path.join(output_folder, f"{os.path.splitext(os.path.basename(output_file_path))[0]}_{app_id}.json")
@@ -122,4 +128,3 @@ if __name__ == "__main__":
             print(f"\nSuccessfully saved {len(frequent_features)} features for {app_id} to {app_output_file}")
         except IOError as e:
             print(f"Error writing to JSON file for {app_id}: {e}")
-
