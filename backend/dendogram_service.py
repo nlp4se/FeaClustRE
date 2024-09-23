@@ -83,38 +83,41 @@ def generate_dendogram(preprocessing,
 
     return model_file_name
 
-
+# TODO preprocess service
 def is_english(text):
-    pattern = re.compile(r'^[a-zA-Z\s.,?!\'"-]+$')
+    pattern = re.compile(r'^[a-zA-Z0-9\s.,?!\'"-]+$')
     return bool(pattern.match(text))
 
 
 def is_emoji_only(text):
     emoji_pattern = re.compile(
-        "[\U00010000-\U0010FFFF]",
+        "[\U00010000-\U0010FFFF]+",
         flags=re.UNICODE
     )
     return bool(emoji_pattern.fullmatch(text))
 
 
 def contains_weird_characters(text):
-    weird_characters_pattern = re.compile(r'[^a-zA-Z0-9\s.,?!\'"-]')
+    weird_characters_pattern = re.compile(r'[^a-zA-Z0-9\s.,?!\'"_-]')
     return bool(weird_characters_pattern.search(text))
+
 
 
 def preprocess_features(features):
     preprocessed_features = []
     for feature in features:
-        if (is_english(feature) and
-                not is_emoji_only(feature) and
-                not contains_weird_characters(feature)):
-            preprocessed_features.append(preprocess_feature(feature))
+        if not is_emoji_only(feature) and not contains_weird_characters(feature):
+            preprocessed_feature = preprocess_feature(feature)
+            if is_english(preprocessed_feature):
+                preprocessed_features.append(preprocessed_feature)
+
     return preprocessed_features
 
 
 def preprocess_feature(feature):
+    feature = feature.replace('_', ' ')
     feature = remove_mentions_and_tags(feature)
-    feature = remove_numbers(feature)
+    # feature = remove_numbers(feature) TODO Check with Quim
     feature = camel_case_to_words(feature)
     feature = expand_contractions(feature)
     feature = remove_special_characters(feature)
