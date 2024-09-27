@@ -4,7 +4,7 @@ from scipy.cluster.hierarchy import dendrogram
 import joblib
 import argparse
 
-
+CLUSTER_COLOR_THRESHOLD = 0.08
 def add_line_breaks(labels):
     return [label.replace(' ', '\n') for label in labels]
 
@@ -27,6 +27,7 @@ def plot_dendrogram(model, labels, **kwargs):
     labels = add_line_breaks(labels=labels)
     dendrogram(linkage_matrix,
                labels=labels,
+               color_threshold=CLUSTER_COLOR_THRESHOLD,
                       ** kwargs)
     '''
     for i, d, c in zip(linkage_matrix[:, 0], linkage_matrix[:, 1], linkage_matrix[:, 2]):
