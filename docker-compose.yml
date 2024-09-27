@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  flask_app:
+    build: .
+    container_name: dendogram_graph_generator
+    ports:
+      - "3008:3008"
+    volumes:
+      - .:/wsgi
+    environment:
+      - FLASK_ENV=development
+    command: pipenv run flask run --host=0.0.0.0 --port=3008

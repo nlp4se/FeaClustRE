@@ -7,7 +7,7 @@ bp = Blueprint('graph', __name__, url_prefix='/graph')
 
 
 @bp.route('/generate', methods=['POST'])
-def generate_dendogram():
+def generate_graph():
     preprocessing = request.args.get('preprocessing', 'false')
     affinity = request.args.get('affinity', 'bert-embedding-cosine')
     
