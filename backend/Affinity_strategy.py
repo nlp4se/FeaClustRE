@@ -58,63 +58,97 @@ class AffinityStrategy():
 #         return file_path
 
 class BERTCosineEmbeddingAffinity(AffinityStrategy):
+
     def compute_affinity(self,
                          application_name,
                          data: List,
                          linkage,
-                         object_weigth,
+                         object_weight,
                          verb_weight,
                          distance_threshold):
+
+        # Initialize tokenizer, BERT model, and SpaCy model
+        print("Initializing models...")
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
         model = BertModel.from_pretrained('bert-base-uncased')
         nlp = spacy.load("en_core_web_sm")
 
-        tokenized_sentences = [tokenizer.encode(sent, add_special_tokens=True) for sent in data]
-        max_len = max(len(sent) for sent in tokenized_sentences)
-        padded_sentences = [sent + [tokenizer.pad_token_id] * (max_len - len(sent)) for sent in tokenized_sentences]
+        def process_batch(batch_data, batch_index):
+            print(f"Processing batch {batch_index + 1}/{(len(data) + batch_size - 1) // batch_size}...")
 
-        input_ids = torch.tensor(padded_sentences)
+            # Tokenize and pad sentences in the batch
+            tokenized_sentences = [tokenizer.encode(sent, add_special_tokens=True) for sent in batch_data]
+            max_len = max(len(sent) for sent in tokenized_sentences)
+            padded_sentences = [sent + [tokenizer.pad_token_id] * (max_len - len(sent)) for sent in tokenized_sentences]
+            input_ids = torch.tensor(padded_sentences)
 
-        with torch.no_grad():
-            outputs = model(input_ids)
+            # Get BERT embeddings
+            print(f"Getting BERT embeddings for batch {batch_index + 1}...")
+            with torch.no_grad():
+                outputs = model(input_ids)
+            embeddings = outputs.last_hidden_state[:, 0, :]  # CLS token embeddings
 
-        embeddings = outputs.last_hidden_state[:, 0, :]
-        tagged_data = [nlp(sent) for sent in data]
-        if verb_weight != 0 and object_weigth != 0:
+            # Apply verb and object weights
+            print(f"Applying verb and object weights for batch {batch_index + 1}...")
+            tagged_data = [nlp(sent) for sent in batch_data]
             for i, doc in enumerate(tagged_data):
                 for token in doc:
-                    if token.pos_ == 'VERB':
+                    if token.pos_ == 'VERB' and verb_weight != 0:
                         embeddings[i] += verb_weight * embeddings[i]
-                    elif token.pos_ == 'NOUN':
-                        embeddings[i] += object_weigth * embeddings[i]
+                    elif token.pos_ == 'NOUN' and object_weight != 0:
+                        embeddings[i] += object_weight * embeddings[i]
 
-        sparse_matrix = csr_matrix(embeddings.numpy())
+            return embeddings
 
+        all_embeddings = []  # To store all batches of embeddings
+        batch_size = 32
+
+        print(f"Processing data in batches of size {batch_size}...")
+        for i in range(0, len(data), batch_size):
+            batch_data = data[i:i + batch_size]
+            batch_index = i // batch_size
+            batch_embeddings = process_batch(batch_data, batch_index)
+            all_embeddings.append(batch_embeddings)
+
+        # Concatenate all embeddings from batches
+        print("Concatenating all batch embeddings...")
+        all_embeddings = torch.cat(all_embeddings, dim=0)
+
+        # Convert to sparse matrix and then to dense format for clustering
+        print("Converting embeddings to dense format...")
+        sparse_matrix = csr_matrix(all_embeddings.numpy())
         dense_data_array = sparse_matrix.toarray()
 
-        model = AgglomerativeClustering(n_clusters=None,
-                                        linkage=linkage,
-                                        distance_threshold=distance_threshold,
-                                        metric="cosine",
-                                        compute_full_tree=True)
-        model.fit(dense_data_array)
+        # Perform clustering
+        print("Performing Agglomerative Clustering...")
+        clustering_model = AgglomerativeClustering(n_clusters=None,
+                                                   linkage=linkage,
+                                                   distance_threshold=distance_threshold,
+                                                   metric='cosine',
+                                                   compute_full_tree=True)
+
+        clustering_model.fit(dense_data_array)
+
+        # Save the clustering model and other information
+        print("Saving the clustering model and metadata...")
         model_info = {
             'affinity': f'BERT Cosine {linkage}',
-            'model': model,
+            'model': clustering_model,
             'labels': data,
             'application_name': application_name,
             'distance_threshold': distance_threshold,
             'verb_weight': verb_weight,
-            'object_weight': object_weigth
+            'object_weight': object_weight
         }
-        current_datetime = datetime.now().strftime('%Y-%m-%d_%H-%M')
 
-        file_name = current_datetime + '.pkl'
-        file_name = application_name +'_bert_cosine_' + linkage + '_thr-' + str(distance_threshold) + '_vw-' + str(verb_weight) + '_ow-' + str(object_weight) + '.pkl'
+        file_name = f"{application_name}_bert_cosine_{linkage}_thr-{distance_threshold}_vw-{verb_weight}_ow-{object_weight}.pkl"
         file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
-        joblib.dump(model_info, file_path)
-        return file_path
 
+        print(f"Saving model to {file_path}...")
+        joblib.dump(model_info, file_path)
+
+        print("Process completed.")
+        return file_path
 
 # class BERTEuclideanEmbeddingAffinity(AffinityStrategy):
 #     def compute_affinity(self, application_name, data: List, linkage, distance_threshold):

@@ -8,6 +8,8 @@ RUN pip install pipenv
 
 RUN pipenv install --deploy --ignore-pipfile
 
+RUN pipenv run python -m spacy download en_core_web_sm
+
 COPY . /wsgi
 
 EXPOSE 3008
