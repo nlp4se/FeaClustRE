@@ -4,7 +4,7 @@ from scipy.cluster.hierarchy import dendrogram
 import joblib
 import argparse
 
-
+CLUSTER_COLOR_THRESHOLD = 0.08
 def add_line_breaks(labels):
     return [label.replace(' ', '\n') for label in labels]
 
@@ -27,6 +27,7 @@ def plot_dendrogram(model, labels, **kwargs):
     labels = add_line_breaks(labels=labels)
     dendrogram(linkage_matrix,
                labels=labels,
+               color_threshold=CLUSTER_COLOR_THRESHOLD,
                       ** kwargs)
     '''
     for i, d, c in zip(linkage_matrix[:, 0], linkage_matrix[:, 1], linkage_matrix[:, 2]):
@@ -40,6 +41,8 @@ def plot_dendrogram(model, labels, **kwargs):
 
 def show_dendrogram(model_file):
     file = joblib.load(model_file)
+    application_name = file['application_name']
+    distance_threshold = file['distance_threshold']
     model = file['model']
     affinity = file['affinity']
     labels = file['labels']
@@ -55,7 +58,11 @@ def show_dendrogram(model_file):
     if hasattr(model, 'children_'):
         plt.figure(figsize=(15, 8))
         plot_dendrogram(model, labels=labels)
-        plt.title(affinity + ' | Verb Weight: ' + str(verb_weight) + ' | Object weight: ' + str(object_weight))
+        plt.title(application_name
+                  + ' | ' + affinity
+                  + ' | Distance Threshold: ' + str(distance_threshold)
+                  + ' | Verb Weight: ' + str(verb_weight)
+                  + ' | Object weight: ' + str(object_weight))
         plt.xlabel('Features', fontsize=12)
         plt.ylabel('Distance', fontsize=12)
         plt.xticks(rotation=90, fontsize=8)
