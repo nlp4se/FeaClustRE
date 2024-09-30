@@ -49,17 +49,26 @@ def generate_dendogram(preprocessing,
                                               verb_weight=verb_weight,
                                               distance_threshold=distance_threshold)
 
+
 def call_preprocessing_service(features):
-    url = "http://localhost:3008/preprocess"
+    url = os.getenv("DG_SERVICE_URL")
+    port = os.getenv("DG_SERVICE_PORT")
+
+    if not url or not port:
+        raise Exception("Preprocessing service URL or port not found in environment variables.")
+
+    full_url = f"{url}:{port}/preprocess"
+
     data = {
         "features": features
     }
 
     try:
-        response = requests.post(url, json=data)
+        response = requests.post(full_url, json=data)
         if response.status_code == 200:
             return response.json()['preprocessed_features']
         else:
-            raise Exception(f"Failed to preprocess features. Status code: {response.status_code}, Response: {response.text}")
+            raise Exception(
+                f"Failed to preprocess features. Status code: {response.status_code}, Response: {response.text}")
     except Exception as e:
         raise Exception(f"Error occurred while calling preprocessing service: {str(e)}")

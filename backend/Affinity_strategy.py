@@ -76,31 +76,30 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
         def process_batch(batch_data, batch_index):
             print(f"Processing batch {batch_index + 1}/{(len(data) + batch_size - 1) // batch_size}...")
 
-            # Tokenize and pad sentences in the batch
             tokenized_sentences = [tokenizer.encode(sent, add_special_tokens=True) for sent in batch_data]
             max_len = max(len(sent) for sent in tokenized_sentences)
             padded_sentences = [sent + [tokenizer.pad_token_id] * (max_len - len(sent)) for sent in tokenized_sentences]
             input_ids = torch.tensor(padded_sentences)
 
-            # Get BERT embeddings
             print(f"Getting BERT embeddings for batch {batch_index + 1}...")
             with torch.no_grad():
                 outputs = model(input_ids)
             embeddings = outputs.last_hidden_state[:, 0, :]  # CLS token embeddings
 
-            # Apply verb and object weights
             print(f"Applying verb and object weights for batch {batch_index + 1}...")
             tagged_data = [nlp(sent) for sent in batch_data]
+
             for i, doc in enumerate(tagged_data):
                 for token in doc:
-                    if token.pos_ == 'VERB' and verb_weight != 0:
-                        embeddings[i] += verb_weight * embeddings[i]
-                    elif token.pos_ == 'NOUN' and object_weight != 0:
-                        embeddings[i] += object_weight * embeddings[i]
+                    token_position = token.pos_
+                    if token_position == 'VERB' and verb_weight != 0:
+                        embeddings[i] *= (1 + verb_weight)
+                    elif token_position == 'NOUN' and object_weight != 0:
+                        embeddings[i] *= (1 + object_weight)
 
             return embeddings
 
-        all_embeddings = []  # To store all batches of embeddings
+        all_embeddings = []
         batch_size = 32
 
         print(f"Processing data in batches of size {batch_size}...")
