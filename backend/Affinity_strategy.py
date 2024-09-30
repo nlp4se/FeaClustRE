@@ -93,9 +93,9 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
                 for token in doc:
                     token_position = token.pos_
                     if token_position == 'VERB' and verb_weight != 0:
-                        embeddings[i] *= (1 + verb_weight)
+                        embeddings[i] += verb_weight * embeddings[i]
                     elif token_position == 'NOUN' and object_weight != 0:
-                        embeddings[i] *= (1 + object_weight)
+                        embeddings[i] += object_weight * embeddings[i]
 
             return embeddings
 
