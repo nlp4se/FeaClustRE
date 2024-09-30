@@ -9,9 +9,10 @@ import spacy
 import os
 import joblib
 import torch
+import pandas as pd
 
 MODEL_DIRECTORY_PATH = 'static' + os.path.sep + 'pkls'
-
+MODEL_DIRECTORY_CSV_PATH = 'static' + os.path.sep + 'csv'
 
 class AffinityStrategy():
     @abstractmethod
@@ -56,7 +57,6 @@ class AffinityStrategy():
 #         file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
 #         joblib.dump(model_info, file_path)
 #         return file_path
-
 class BERTCosineEmbeddingAffinity(AffinityStrategy):
 
     def compute_affinity(self,
@@ -76,31 +76,30 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
         def process_batch(batch_data, batch_index):
             print(f"Processing batch {batch_index + 1}/{(len(data) + batch_size - 1) // batch_size}...")
 
-            # Tokenize and pad sentences in the batch
             tokenized_sentences = [tokenizer.encode(sent, add_special_tokens=True) for sent in batch_data]
             max_len = max(len(sent) for sent in tokenized_sentences)
             padded_sentences = [sent + [tokenizer.pad_token_id] * (max_len - len(sent)) for sent in tokenized_sentences]
             input_ids = torch.tensor(padded_sentences)
 
-            # Get BERT embeddings
             print(f"Getting BERT embeddings for batch {batch_index + 1}...")
             with torch.no_grad():
                 outputs = model(input_ids)
             embeddings = outputs.last_hidden_state[:, 0, :]  # CLS token embeddings
 
-            # Apply verb and object weights
             print(f"Applying verb and object weights for batch {batch_index + 1}...")
             tagged_data = [nlp(sent) for sent in batch_data]
+
             for i, doc in enumerate(tagged_data):
                 for token in doc:
-                    if token.pos_ == 'VERB' and verb_weight != 0:
+                    token_position = token.pos_
+                    if token_position == 'VERB' and verb_weight != 0:
                         embeddings[i] += verb_weight * embeddings[i]
-                    elif token.pos_ == 'NOUN' and object_weight != 0:
+                    elif token_position == 'NOUN' and object_weight != 0:
                         embeddings[i] += object_weight * embeddings[i]
 
             return embeddings
 
-        all_embeddings = []  # To store all batches of embeddings
+        all_embeddings = []
         batch_size = 32
 
         print(f"Processing data in batches of size {batch_size}...")
@@ -129,6 +128,19 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
 
         clustering_model.fit(dense_data_array)
 
+        # Get labels from clustering results
+        labels = clustering_model.labels_
+
+        # Create a DataFrame to save the clustering results
+        df_results = pd.DataFrame({'Sentence': data, 'Cluster': labels})
+
+        # Save the DataFrame to a CSV file
+        csv_file_name = f"{application_name}_bert_cosine_{linkage}_results.csv"
+        csv_file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_CSV_PATH, csv_file_name)
+
+        print(f"Saving clustering results to {csv_file_path}...")
+        df_results.to_csv(csv_file_path, index=False)
+
         # Save the clustering model and other information
         print("Saving the clustering model and metadata...")
         model_info = {
@@ -148,7 +160,7 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
         joblib.dump(model_info, file_path)
 
         print("Process completed.")
-        return file_path
+        return csv_file_path, file_path
 
 # class BERTEuclideanEmbeddingAffinity(AffinityStrategy):
 #     def compute_affinity(self, application_name, data: List, linkage, distance_threshold):
