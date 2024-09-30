@@ -3,8 +3,11 @@ from matplotlib import pyplot as plt
 from scipy.cluster.hierarchy import dendrogram
 import joblib
 import argparse
+import os
 
 CLUSTER_COLOR_THRESHOLD = 0.08
+
+
 def add_line_breaks(labels):
     return [label.replace(' ', '\n') for label in labels]
 
@@ -25,18 +28,14 @@ def plot_dendrogram(model, labels, **kwargs):
         [model.children_, model.distances_, counts]
     ).astype(float)
     labels = add_line_breaks(labels=labels)
+
     dendrogram(linkage_matrix,
                labels=labels,
                color_threshold=CLUSTER_COLOR_THRESHOLD,
-                      ** kwargs)
-    '''
-    for i, d, c in zip(linkage_matrix[:, 0], linkage_matrix[:, 1], linkage_matrix[:, 2]):
-        x = 0
-        y = c
-        plt.annotate('%.2f' % c, (x, y), xytext=(550, 0),
-                     textcoords='offset points', va='top', ha='center')
-    '''
-    plt.xticks(rotation=90, fontsize=10)
+               leaf_font_size=10,
+               **kwargs)
+
+    plt.xticks(rotation=90, fontsize=10, ha='right')
 
 
 def show_dendrogram(model_file):
@@ -46,35 +45,51 @@ def show_dendrogram(model_file):
     model = file['model']
     affinity = file['affinity']
     labels = file['labels']
+
     try:
         verb_weight = file['verb_weight']
     except KeyError:
         verb_weight = 'N/A'
-    try: 
+
+    try:
         object_weight = file['object_weight']
     except KeyError:
         object_weight = 'N/A'
 
     if hasattr(model, 'children_'):
-        plt.figure(figsize=(15, 8))
+        n_leaves = len(labels)
+        figsize_width = max(100, n_leaves * 0.75)
+        plt.figure(figsize=(figsize_width, 12))
         plot_dendrogram(model, labels=labels)
+
         plt.title(application_name
                   + ' | ' + affinity
                   + ' | Distance Threshold: ' + str(distance_threshold)
                   + ' | Verb Weight: ' + str(verb_weight)
-                  + ' | Object weight: ' + str(object_weight))
-        plt.xlabel('Features', fontsize=12)
-        plt.ylabel('Distance', fontsize=12)
-        plt.xticks(rotation=90, fontsize=8)
+                  + ' | Object weight: ' + str(object_weight),
+                  fontsize=14)
+        plt.xlabel('Features', fontsize=14)
+        plt.ylabel('Distance', fontsize=14)
+        plt.subplots_adjust(bottom=0.2)
         plt.tight_layout()
-        plt.show()
+
+        save_directory = r"C:\Users\Max\NLP4RE\Dendogram-Generator\static\png"
+        base_name = os.path.splitext(os.path.basename(model_file))[0]
+        save_path = os.path.join(save_directory, f"{base_name}.png")
+        plt.savefig(save_path)
+        plt.close()
+        print(f"Dendrogram saved at: {save_path}")
     else:
         raise ValueError("The provided model is not AgglomerativeClustering.")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Visualize dendrogram from a model file.")
-    parser.add_argument("model_file", help="Path to the model file")
-    args = parser.parse_args()
+    # Path to the directory containing .pkl files
+    pkls_directory = r"C:\Users\Max\NLP4RE\Dendogram-Generator\static\pkls"
 
-    show_dendrogram(args.model_file)
+    # Iterate over each .pkl file in the directory
+    for filename in os.listdir(pkls_directory):
+        if filename.endswith('.pkl'):
+            model_file = os.path.join(pkls_directory, filename)
+            print(f"Processing: {model_file}")
+            show_dendrogram(model_file)
