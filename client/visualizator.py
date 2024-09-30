@@ -58,8 +58,14 @@ def show_dendrogram(model_file):
 
     if hasattr(model, 'children_'):
         n_leaves = len(labels)
-        figsize_width = max(100, n_leaves * 0.75)
-        plt.figure(figsize=(figsize_width, 12))
+
+        max_figsize_width = 30
+        max_figsize_height = 15
+        figsize_width = min(max_figsize_width, n_leaves * 0.5)
+        figsize_height = max(12, min(max_figsize_height, n_leaves * 0.25))
+
+        plt.figure(figsize=(figsize_width, figsize_height))
+
         plot_dendrogram(model, labels=labels)
 
         plt.title(application_name
@@ -82,12 +88,9 @@ def show_dendrogram(model_file):
     else:
         raise ValueError("The provided model is not AgglomerativeClustering.")
 
-
 if __name__ == "__main__":
-    # Path to the directory containing .pkl files
     pkls_directory = r"C:\Users\Max\NLP4RE\Dendogram-Generator\static\pkls"
 
-    # Iterate over each .pkl file in the directory
     for filename in os.listdir(pkls_directory):
         if filename.endswith('.pkl'):
             model_file = os.path.join(pkls_directory, filename)

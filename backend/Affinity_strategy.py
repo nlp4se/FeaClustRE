@@ -9,9 +9,10 @@ import spacy
 import os
 import joblib
 import torch
+import pandas as pd
 
 MODEL_DIRECTORY_PATH = 'static' + os.path.sep + 'pkls'
-
+MODEL_DIRECTORY_CSV_PATH = 'static' + os.path.sep + 'csv'
 
 class AffinityStrategy():
     @abstractmethod
@@ -56,7 +57,6 @@ class AffinityStrategy():
 #         file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
 #         joblib.dump(model_info, file_path)
 #         return file_path
-
 class BERTCosineEmbeddingAffinity(AffinityStrategy):
 
     def compute_affinity(self,
@@ -128,6 +128,19 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
 
         clustering_model.fit(dense_data_array)
 
+        # Get labels from clustering results
+        labels = clustering_model.labels_
+
+        # Create a DataFrame to save the clustering results
+        df_results = pd.DataFrame({'Sentence': data, 'Cluster': labels})
+
+        # Save the DataFrame to a CSV file
+        csv_file_name = f"{application_name}_bert_cosine_{linkage}_results.csv"
+        csv_file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_CSV_PATH, csv_file_name)
+
+        print(f"Saving clustering results to {csv_file_path}...")
+        df_results.to_csv(csv_file_path, index=False)
+
         # Save the clustering model and other information
         print("Saving the clustering model and metadata...")
         model_info = {
@@ -147,7 +160,7 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
         joblib.dump(model_info, file_path)
 
         print("Process completed.")
-        return file_path
+        return csv_file_path, file_path
 
 # class BERTEuclideanEmbeddingAffinity(AffinityStrategy):
 #     def compute_affinity(self, application_name, data: List, linkage, distance_threshold):
