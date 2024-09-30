@@ -23,7 +23,6 @@ def generate_dendogram():
     if request_content['features'] is None:
         return make_response("No features", 400)
 
-    # TODO we should add the params in the request body, too many
     dendogram_file = dendogram_service.generate_dendogram(preprocessing,
                                                           affinity,
                                                           linkage,

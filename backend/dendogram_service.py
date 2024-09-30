@@ -1,7 +1,11 @@
 import requests
 import json
 import os
+from .Context import Context
+from . import Affinity_strategy
+from dotenv import load_dotenv
 
+load_dotenv()
 def preprocessed_app(app_name):
     file_path = f"static/preprocessed_jsons/{app_name}Features.json"
     return os.path.exists(file_path) and os.path.getsize(file_path) > 0
@@ -31,13 +35,12 @@ def generate_dendogram(preprocessing,
     features = request_content['features']
 
     if preprocessing and not preprocessed_app(app_name):
-        # Call the external preprocessing service
         features = call_preprocessing_service(features)
         save_preprocessed_features(features, app_name)
     elif preprocessing and preprocessed_app(app_name):
         features = load_saved_preprocessed_features(app_name)
 
-    if embedding == 'bert-embedding-cosine' or embedding == 'all':
+    if embedding == 'bert-embedding-cosine':
         context = Context(Affinity_strategy.BERTCosineEmbeddingAffinity())
         return context.use_affinity_algorithm(application_name=app_name,
                                               data=features,
