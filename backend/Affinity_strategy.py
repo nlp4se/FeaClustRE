@@ -65,7 +65,8 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
                          linkage,
                          object_weight,
                          verb_weight,
-                         distance_threshold):
+                         distance_threshold,
+                         metric):
 
         # Initialize tokenizer, BERT model, and SpaCy model
         print("Initializing models...")
@@ -120,10 +121,11 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
 
         # Perform clustering
         print("Performing Agglomerative Clustering...")
+
         clustering_model = AgglomerativeClustering(n_clusters=None,
                                                    linkage=linkage,
                                                    distance_threshold=distance_threshold,
-                                                   metric='cosine',
+                                                   metric=metric,
                                                    compute_full_tree=True)
 
         clustering_model.fit(dense_data_array)
@@ -135,7 +137,7 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
         df_results = pd.DataFrame({'Sentence': data, 'Cluster': labels})
 
         # Save the DataFrame to a CSV file
-        csv_file_name = f"{application_name}_bert_cosine_{linkage}_results.csv"
+        csv_file_name = f"{application_name}_bert_{metric}_{linkage}_results.csv"
         csv_file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_CSV_PATH, csv_file_name)
 
         print(f"Saving clustering results to {csv_file_path}...")
@@ -144,7 +146,7 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
         # Save the clustering model and other information
         print("Saving the clustering model and metadata...")
         model_info = {
-            'affinity': f'BERT Cosine {linkage}',
+            'affinity': f'BERT {metric} {linkage}',
             'model': clustering_model,
             'labels': data,
             'application_name': application_name,
@@ -153,7 +155,7 @@ class BERTCosineEmbeddingAffinity(AffinityStrategy):
             'object_weight': object_weight
         }
 
-        file_name = f"{application_name}_bert_cosine_{linkage}_thr-{distance_threshold}_vw-{verb_weight}_ow-{object_weight}.pkl"
+        file_name = f"{application_name}_bert_{metric}_{linkage}_thr-{distance_threshold}_vw-{verb_weight}_ow-{object_weight}.pkl"
         file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, file_name)
 
         print(f"Saving model to {file_path}...")
