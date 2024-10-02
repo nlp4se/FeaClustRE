@@ -3,6 +3,8 @@ from . import dendogram_service
 bp = Blueprint('dendogram', __name__, url_prefix='/dendogram')
 
 
+from flask import jsonify
+
 @bp.route('/generate', methods=['POST'])
 def generate_dendogram():
     preprocessing = request.args.get('preprocessing', 'false')
@@ -17,14 +19,15 @@ def generate_dendogram():
           f"affinity={affinity}, "
           f"metric={metric}, "
           f"linkage={linkage}, "
-          f"threshold={threshold}",
-          f"object_weight={object_weight}",
+          f"threshold={threshold} ",
+          f"object_weight={object_weight} ",
           f"verb_weight={verb_weight}")
 
     request_content = request.get_json()
     if request_content['features'] is None:
         return make_response("No features", 400)
 
+    # Generate the dendrogram file
     dendogram_file = dendogram_service.generate_dendogram(preprocessing,
                                                           affinity,
                                                           metric,
@@ -33,6 +36,8 @@ def generate_dendogram():
                                                           object_weight,
                                                           verb_weight,
                                                           request_content)
-    return None
-    
+
+    # Return an OK response with the file path
+    return jsonify({"message": "Dendrogram generated successfully", "dendrogram_path": dendogram_file}), 200
+
 
