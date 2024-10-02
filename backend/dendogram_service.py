@@ -26,6 +26,7 @@ def load_saved_preprocessed_features(app_name):
 
 def generate_dendogram(preprocessing,
                        embedding,
+                       metric,
                        linkage,
                        distance_threshold,
                        object_weight,
@@ -40,14 +41,15 @@ def generate_dendogram(preprocessing,
     elif preprocessing and preprocessed_app(app_name):
         features = load_saved_preprocessed_features(app_name)
 
-    if embedding == 'bert-embedding-cosine':
-        context = Context(Affinity_strategy.BERTCosineEmbeddingAffinity())
+    if embedding == 'bert-embedding':
+        context = Context(Affinity_strategy.BertEmbeddingAffinity())
         return context.use_affinity_algorithm(application_name=app_name,
                                               data=features,
                                               linkage=linkage,
                                               object_weight=object_weight,
                                               verb_weight=verb_weight,
-                                              distance_threshold=distance_threshold)
+                                              distance_threshold=distance_threshold,
+                                              metric=metric)
 
 
 def call_preprocessing_service(features):
