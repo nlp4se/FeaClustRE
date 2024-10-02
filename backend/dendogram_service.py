@@ -42,7 +42,7 @@ def generate_dendogram(preprocessing,
         features = load_saved_preprocessed_features(app_name)
 
     if embedding == 'bert-embedding':
-        context = Context(Affinity_strategy.BERTCosineEmbeddingAffinity())
+        context = Context(Affinity_strategy.BertEmbeddingAffinity())
         return context.use_affinity_algorithm(application_name=app_name,
                                               data=features,
                                               linkage=linkage,
