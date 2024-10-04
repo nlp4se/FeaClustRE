@@ -1,11 +1,13 @@
 import numpy as np
-from matplotlib import pyplot as plt
+import matplotlib.pyplot as plt
+import seaborn as sns
 from scipy.cluster.hierarchy import dendrogram
+from sklearn.cluster import AgglomerativeClustering
+from sklearn.preprocessing import LabelEncoder
 import joblib
-import argparse
 import os
 
-CLUSTER_COLOR_THRESHOLD = 0.08
+CLUSTER_COLOR_THRESHOLD = 0.85
 
 
 def add_line_breaks(labels):
@@ -15,78 +17,154 @@ def add_line_breaks(labels):
 def plot_dendrogram(model, labels, **kwargs):
     counts = np.zeros(model.children_.shape[0])
     n_samples = len(model.labels_)
+    cluster_colors = {}
+
+    def get_random_color():
+        return np.random.rand(3)
+
     for i, merge in enumerate(model.children_):
         current_count = 0
         for child_idx in merge:
             if child_idx < n_samples:
                 current_count += 1
+                if child_idx not in cluster_colors:
+                    cluster_colors[child_idx] = get_random_color()
             else:
                 current_count += counts[child_idx - n_samples]
+
         counts[i] = current_count
+
+        new_cluster_idx = n_samples + i
+        cluster_colors[new_cluster_idx] = get_random_color()
 
     linkage_matrix = np.column_stack(
         [model.children_, model.distances_, counts]
     ).astype(float)
+
     labels = add_line_breaks(labels=labels)
+
+    def link_color_func(i):
+        return f'#{int(cluster_colors[i][0] * 255):02x}{int(cluster_colors[i][1] * 255):02x}{int(cluster_colors[i][2] * 255):02x}'
 
     dendrogram(linkage_matrix,
                labels=labels,
-               color_threshold=CLUSTER_COLOR_THRESHOLD,
+               color_threshold=0,
                leaf_font_size=10,
+               link_color_func=link_color_func,
                **kwargs)
 
     plt.xticks(rotation=90, fontsize=10, ha='right')
 
+def plot_scatter(data, labels):
+    plt.figure(figsize=(10, 6))
+    label_encoder = LabelEncoder()
+    numeric_labels = label_encoder.fit_transform(labels)
+
+    # Check if data is 1D or 2D
+    if data.ndim == 1:
+        plt.scatter(np.arange(len(data)), data, c=numeric_labels, cmap='viridis', marker='o', edgecolor='k')
+        plt.xlabel('Sample Index', fontsize=12)
+        plt.ylabel('Value', fontsize=12)
+    elif data.ndim == 2 and data.shape[1] >= 2:
+        scatter = plt.scatter(data[:, 0], data[:, 1], c=numeric_labels, cmap='viridis', marker='o', edgecolor='k')
+        for cluster in np.unique(numeric_labels):
+            indices = np.where(numeric_labels == cluster)[0]
+            if len(indices) > 1:
+                for i in range(len(indices)):
+                    for j in range(i + 1, len(indices)):
+                        plt.plot(
+                            [data[indices[i], 0], data[indices[j], 0]],
+                            [data[indices[i], 1], data[indices[j], 1]],
+                            color='gray', alpha=0.5, linewidth=0.5
+                        )
+
+        plt.xlabel('Feature 1', fontsize=12)
+        plt.ylabel('Feature 2', fontsize=12)
+
+        for i, label in enumerate(labels):
+            plt.text(data[i, 0], data[i, 1] - 0.02, label, fontsize=8, ha='center')
+
+    else:
+        raise ValueError("Input data must be either 1D or at least 2D with two or more features.")
+
+    plt.title('Scatter Plot of Clusters', fontsize=14)
+    plt.grid(alpha=0.75)
+    plt.colorbar(scatter, label='Cluster Labels')
+    plt.tight_layout()
+
+def plot_heatmap(data):
+    """Plot heatmap of the distances between clusters."""
+    distance_matrix = np.linalg.norm(data[:, np.newaxis] - data, axis=2)
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(distance_matrix, cmap='viridis', cbar=True)
+    plt.title('Heatmap of Distances Between Points', fontsize=14)
+    plt.xlabel('Samples', fontsize=12)
+    plt.ylabel('Samples', fontsize=12)
+    plt.tight_layout()
+
+
 
 def show_dendrogram(model_file):
-    file = joblib.load(model_file)
-    application_name = file['application_name']
-    distance_threshold = file['distance_threshold']
-    model = file['model']
-    affinity = file['affinity']
-    labels = file['labels']
+    model_info = joblib.load(model_file)
+
+    application_name = model_info['application_name']
+    distance_threshold = model_info['distance_threshold']
+    clustering_model = model_info['model']
+    affinity = model_info['affinity']
+    data = model_info['data_points']
+    labels = model_info['labels']
 
     try:
-        verb_weight = file['verb_weight']
-    except KeyError:
-        verb_weight = 'N/A'
+        verb_weight = model_info.get('verb_weight', 'N/A')
+        object_weight = model_info.get('object_weight', 'N/A')
+    except KeyError as e:
+        print(f"Missing key: {e}")
 
-    try:
-        object_weight = file['object_weight']
-    except KeyError:
-        object_weight = 'N/A'
-
-    if hasattr(model, 'children_'):
-        n_leaves = len(labels)
-
-        max_figsize_width = 30
+    if hasattr(clustering_model, 'children_'):
+        n_leaves = len(data)
+        max_figsize_width = 40
         max_figsize_height = 15
-        figsize_width = min(max_figsize_width, n_leaves * 0.5)
+        figsize_width = min(max_figsize_width, n_leaves * 0.75)
         figsize_height = max(12, min(max_figsize_height, n_leaves * 0.25))
 
+        save_directory = os.path.join(r"C:\Users\Max\NLP4RE\Dendogram-Generator\static\png", application_name)
+        os.makedirs(save_directory, exist_ok=True)
+
+        # Dendrogram Plot
         plt.figure(figsize=(figsize_width, figsize_height))
+        plot_dendrogram(clustering_model, labels)
 
-        plot_dendrogram(model, labels=labels)
-
-        plt.title(application_name
-                  + ' | ' + affinity
-                  + ' | Distance Threshold: ' + str(distance_threshold)
-                  + ' | Verb Weight: ' + str(verb_weight)
-                  + ' | Object weight: ' + str(object_weight),
-                  fontsize=14)
+        plt.title(
+            f"{application_name} | {affinity} | Distance Threshold: {distance_threshold} | Verb Weight: {verb_weight} | Object Weight: {object_weight}",
+            fontsize=14)
         plt.xlabel('Features', fontsize=14)
         plt.ylabel('Distance', fontsize=14)
         plt.subplots_adjust(bottom=0.2)
         plt.tight_layout()
 
-        save_directory = r"C:\Users\Max\NLP4RE\Dendogram-Generator\static\png"
-        base_name = os.path.splitext(os.path.basename(model_file))[0]
-        save_path = os.path.join(save_directory, f"{base_name}.png")
-        plt.savefig(save_path)
+        dendrogram_save_path = os.path.join(save_directory, f"{application_name}_dendrogram.png")
+        plt.savefig(dendrogram_save_path)
         plt.close()
-        print(f"Dendrogram saved at: {save_path}")
+        print(f"Dendrogram saved at: {dendrogram_save_path}")
+
+
+        data = np.array(data)
+        plot_scatter(data, labels)
+        scatter_save_path = os.path.join(save_directory, f"{application_name}_scatter.png")
+        plt.savefig(scatter_save_path)
+        plt.close()
+        print(f"Scatter plot saved at: {scatter_save_path}")
+
+
+        plot_heatmap(data)
+        heatmap_save_path = os.path.join(save_directory, f"{application_name}_heatmap.png")
+        plt.savefig(heatmap_save_path)
+        plt.close()
+        print(f"Heatmap saved at: {heatmap_save_path}")
+
     else:
         raise ValueError("The provided model is not AgglomerativeClustering.")
+
 
 if __name__ == "__main__":
     pkls_directory = r"C:\Users\Max\NLP4RE\Dendogram-Generator\static\pkls"
