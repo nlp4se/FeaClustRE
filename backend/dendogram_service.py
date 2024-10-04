@@ -4,6 +4,7 @@ import os
 from .Context import Context
 from . import Affinity_strategy
 from dotenv import load_dotenv
+from .preprocessing_service import preprocess_features
 
 load_dotenv()
 def preprocessed_app(app_name):
@@ -36,7 +37,7 @@ def generate_dendogram(preprocessing,
     features = request_content['features']
 
     if preprocessing and not preprocessed_app(app_name):
-        features = call_preprocessing_service(features)
+        features = preprocess_features(features)
         save_preprocessed_features(features, app_name)
     elif preprocessing and preprocessed_app(app_name):
         features = load_saved_preprocessed_features(app_name)
