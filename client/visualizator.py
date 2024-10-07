@@ -1,19 +1,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
 from scipy.cluster.hierarchy import dendrogram
 from sklearn.preprocessing import LabelEncoder
 import joblib
 import os
-
-CLUSTER_COLOR_THRESHOLD = 0.85
-
+import seaborn as sns
 
 def add_line_breaks(labels):
     return [label.replace(' ', '\n') for label in labels]
 
-
-def plot_dendrogram(model, labels, **kwargs):
+def plot_dendrogram(model, labels, color_threshold):
     counts = np.zeros(model.children_.shape[0])
     n_samples = len(model.labels_)
     cluster_colors = {}
@@ -42,15 +38,10 @@ def plot_dendrogram(model, labels, **kwargs):
 
     labels = add_line_breaks(labels=labels)
 
-    def link_color_func(i):
-        return f'#{int(cluster_colors[i][0] * 255):02x}{int(cluster_colors[i][1] * 255):02x}{int(cluster_colors[i][2] * 255):02x}'
-
     dendrogram(linkage_matrix,
                labels=labels,
-               color_threshold=0,
-               leaf_font_size=10,
-               link_color_func=link_color_func,
-               **kwargs)
+               color_threshold=color_threshold,
+               leaf_font_size=10)
 
     plt.xticks(rotation=90, fontsize=10, ha='right')
 
@@ -101,8 +92,6 @@ def plot_heatmap(data):
     plt.ylabel('Samples', fontsize=12)
     plt.tight_layout()
 
-
-
 def show_dendrogram(model_file):
     model_info = joblib.load(model_file)
 
@@ -119,6 +108,17 @@ def show_dendrogram(model_file):
     except KeyError as e:
         print(f"Missing key: {e}")
 
+    # Dynamically determine n_clusters if available, otherwise use len of leaves
+    if hasattr(clustering_model, 'n_clusters_'):
+        n_clusters = clustering_model.n_clusters_
+    else:
+        n_clusters = len(set(clustering_model.labels_))  # Fallback if n_clusters is not available
+
+    # Dynamically calculate CLUSTER_COLOR_THRESHOLD based on the number of clusters
+    CLUSTER_COLOR_THRESHOLD = max(0.1, min(1.0, 0.85 - 0.01 * (n_clusters - 1)))  # Adjust this formula as needed
+
+    print(f"Computed CLUSTER_COLOR_THRESHOLD: {CLUSTER_COLOR_THRESHOLD}")
+
     if hasattr(clustering_model, 'children_'):
         n_leaves = len(data)
         max_figsize_width = 40
@@ -133,7 +133,7 @@ def show_dendrogram(model_file):
 
         # Dendrogram Plot
         plt.figure(figsize=(figsize_width, figsize_height))
-        plot_dendrogram(clustering_model, labels)
+        plot_dendrogram(clustering_model, labels, color_threshold=CLUSTER_COLOR_THRESHOLD)
 
         plt.title(
             f"{application_name} | {affinity} | Distance Threshold: {distance_threshold} | Verb Weight: {verb_weight} | Object Weight: {object_weight}",
@@ -163,6 +163,7 @@ def show_dendrogram(model_file):
 
     else:
         raise ValueError("The provided model is not AgglomerativeClustering.")
+
 if __name__ == "__main__":
     pkls_directory = r"C:\Users\Max\NLP4RE\Dendogram-Generator\static\pkls"
 
