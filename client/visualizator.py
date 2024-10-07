@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy.cluster.hierarchy import dendrogram
-from sklearn.cluster import AgglomerativeClustering
 from sklearn.preprocessing import LabelEncoder
 import joblib
 import os
@@ -127,7 +126,9 @@ def show_dendrogram(model_file):
         figsize_width = min(max_figsize_width, n_leaves * 0.75)
         figsize_height = max(12, min(max_figsize_height, n_leaves * 0.25))
 
-        save_directory = os.path.join(r"C:\Users\Max\NLP4RE\Dendogram-Generator\static\png", application_name)
+        # Construct the folder name with attributes
+        folder_name = f"{application_name}_dt-{distance_threshold}_vw-{verb_weight}_ow-{object_weight}".replace(" ", "_")
+        save_directory = os.path.join(r"C:\Users\Max\NLP4RE\Dendogram-Generator\static\png", folder_name)
         os.makedirs(save_directory, exist_ok=True)
 
         # Dendrogram Plot
@@ -147,14 +148,12 @@ def show_dendrogram(model_file):
         plt.close()
         print(f"Dendrogram saved at: {dendrogram_save_path}")
 
-
         data = np.array(data)
         plot_scatter(data, labels)
         scatter_save_path = os.path.join(save_directory, f"{application_name}_scatter.png")
         plt.savefig(scatter_save_path)
         plt.close()
         print(f"Scatter plot saved at: {scatter_save_path}")
-
 
         plot_heatmap(data)
         heatmap_save_path = os.path.join(save_directory, f"{application_name}_heatmap.png")
@@ -164,8 +163,6 @@ def show_dendrogram(model_file):
 
     else:
         raise ValueError("The provided model is not AgglomerativeClustering.")
-
-
 if __name__ == "__main__":
     pkls_directory = r"C:\Users\Max\NLP4RE\Dendogram-Generator\static\pkls"
 
