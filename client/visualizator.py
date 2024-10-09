@@ -114,20 +114,20 @@ def show_dendrogram(model_file):
     else:
         n_clusters = len(set(clustering_model.labels_))  # Fallback if n_clusters is not available
 
-    # Dynamically calculate CLUSTER_COLOR_THRESHOLD based on the number of clusters
-    CLUSTER_COLOR_THRESHOLD = max(0.1, min(1.0, 0.85 - 0.01 * (n_clusters - 1)))  # Adjust this formula as needed
+    CLUSTER_COLOR_THRESHOLD = max(0.1, min(1.0, 0.85 - 0.01 * (n_clusters - 1)))
 
     print(f"Computed CLUSTER_COLOR_THRESHOLD: {CLUSTER_COLOR_THRESHOLD}")
 
     if hasattr(clustering_model, 'children_'):
         n_leaves = len(data)
-        max_figsize_width = 40
+        max_figsize_width = 120
         max_figsize_height = 15
-        figsize_width = min(max_figsize_width, n_leaves * 0.75)
-        figsize_height = max(12, min(max_figsize_height, n_leaves * 0.25))
+        figsize_width = min(max_figsize_width, n_leaves * 0.85)
+        figsize_height = max(12, min(max_figsize_height, n_leaves * 0.85))
 
         # Construct the folder name with attributes
-        folder_name = f"{application_name}_dt-{distance_threshold}_vw-{verb_weight}_ow-{object_weight}".replace(" ", "_")
+        folder_name = (f"{application_name}_dt-{distance_threshold}_vw-{verb_weight}_ow-{object_weight}"
+                       .replace(" ", "_"))
         save_directory = os.path.join(r"C:\Users\Max\NLP4RE\Dendogram-Generator\static\png", folder_name)
         os.makedirs(save_directory, exist_ok=True)
 
@@ -136,7 +136,8 @@ def show_dendrogram(model_file):
         plot_dendrogram(clustering_model, labels, color_threshold=CLUSTER_COLOR_THRESHOLD)
 
         plt.title(
-            f"{application_name} | {affinity} | Distance Threshold: {distance_threshold} | Verb Weight: {verb_weight} | Object Weight: {object_weight}",
+            f"{application_name} | {affinity} | Distance Threshold: {distance_threshold} "
+            f"| Verb Weight: {verb_weight} | Object Weight: {object_weight}",
             fontsize=14)
         plt.xlabel('Features', fontsize=14)
         plt.ylabel('Distance', fontsize=14)
