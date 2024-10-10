@@ -89,7 +89,16 @@ class Utils:
         return pkl_file_path
 
     @staticmethod
-    def generate_pkl(application_name, clustering_model, model_name, dense_data_array, labels, distance_threshold, linkage, metric, verb_weight, object_weight):
+    def generate_pkl(application_name,
+                     clustering_model,
+                     model_name,
+                     dense_data_array,
+                     labels,
+                     distance_threshold,
+                     linkage,
+                     metric,
+                     verb_weight,
+                     object_weight):
         print("Saving clustering metadata for plotting...")
         model_info = {
             'affinity': f'{model_name} {metric} {linkage}',
