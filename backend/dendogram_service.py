@@ -52,7 +52,6 @@ def generate_dendogram(preprocessing,
     else:
         raise ValueError(f"Unsupported embedding method: {embedding}")
 
-    # Use the selected embedding strategy to generate the dendogram
     return context.use_affinity_algorithm(application_name=app_name,
                                           data=features,
                                           linkage=linkage,
