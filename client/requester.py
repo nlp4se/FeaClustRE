@@ -1,5 +1,6 @@
 import requests
 import json
+import subprocess
 
 base_url = "http://127.0.0.1"
 port = "3008"
@@ -23,6 +24,7 @@ def construct_url(base_url, port, endpoint, params):
             f"&linkage=average&verb-weight={params['verb_weight']}&obj-weight={params['obj_weight']}")
 
 def main():
+    # Send requests for all combinations of affinity models, thresholds, and verb/obj weights
     for affinity_model in affinity_models:
         for threshold in thresholds:
             for verb_weight, obj_weight in zip(verb_weights, obj_weights):
@@ -43,6 +45,15 @@ def main():
                         print(f"Error: {response.status_code} - {url}")
                 except requests.exceptions.RequestException as e:
                     print(f"Request failed: {e}")
+
+    # Execute visualizator.py script after all requests are done
+    try:
+        subprocess.run(['python', 'visualizator.py'], check=True)
+        print("Visualizator script executed successfully.")
+    except subprocess.CalledProcessError as e:
+        print(f"Error executing visualizator.py: {e}")
+    except FileNotFoundError:
+        print("visualizator.py not found. Make sure it's in the same directory as this script.")
 
 if __name__ == "__main__":
     main()
