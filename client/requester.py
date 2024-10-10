@@ -9,7 +9,7 @@ endpoint = "dendogram/generate"
 thresholds = [0.1, 0.2, 0.3, 0.4, 0.5]
 verb_weights = [0.1, 0.25, 0.5, 0.75, 0.9]
 obj_weights = [0.9, 0.75, 0.5, 0.25, 0.1]
-affinity_models = ['bert-embedding', 'tf-idf', 'paraphrase']
+affinity_models = ['bert', 'tf-idf', 'paraphrase']
 
 json_file_path = "body.json"
 with open(json_file_path, 'r') as json_file:
