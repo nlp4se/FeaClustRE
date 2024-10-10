@@ -11,30 +11,13 @@ import numpy as np
 import pandas as pd
 from scipy.sparse import csr_matrix
 
-MODEL_DIRECTORY_PATH = 'static' + os.path.sep + 'pkls'
-MODEL_DIRECTORY_CSV_PATH = 'static' + os.path.sep + 'csv'
-MODEL_DIRECTORY_CSV_EMBEDDIGNS_PATH = 'static' + os.path.sep + 'csv' + os.path.sep + 'embeddings'
+from backend.utils import Utils
+
 
 class AffinityStrategy():
     @abstractmethod
     def compute_affinity(self, data: List):
         pass
-
-def save_to_csv(dataframe: pd.DataFrame, csv_filename: str):
-    if not os.path.exists(MODEL_DIRECTORY_CSV_PATH):
-        os.makedirs(MODEL_DIRECTORY_CSV_PATH)
-    csv_file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_CSV_PATH, csv_filename)
-    print(f"Saving CSV to {csv_file_path}...")
-    dataframe.to_csv(csv_file_path, index=False)
-    return csv_file_path
-
-def save_to_pkl(model_info: dict, pkl_filename: str):
-    if not os.path.exists(MODEL_DIRECTORY_PATH):
-        os.makedirs(MODEL_DIRECTORY_PATH)
-    pkl_file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, pkl_filename)
-    print(f"Saving model to {pkl_file_path}...")
-    joblib.dump(model_info, pkl_file_path)
-    return pkl_file_path
 
 class BertEmbeddingAffinity(AffinityStrategy):
     def __init__(self, verb_weight=1.0, object_weight=1.0):
@@ -128,34 +111,34 @@ class BertEmbeddingAffinity(AffinityStrategy):
         sparse_matrix = csr_matrix(all_embeddings.numpy())
         dense_data_array = sparse_matrix.toarray()
 
+        print("Concatenating all batch embeddings...")
+        all_embeddings = torch.cat(all_embeddings, dim=0)
+        dense_data_array = all_embeddings.numpy()
+
         print("Saving embeddings to CSV...")
         embedding_df = pd.DataFrame(dense_data_array)
         embedding_df['Sentence'] = labels
         csv_filename = f"{application_name}_bert_{metric}_{linkage}_embeddings.csv"
-        if not os.path.exists(MODEL_DIRECTORY_CSV_PATH):
-            os.makedirs(MODEL_DIRECTORY_CSV_PATH)
-        csv_file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_CSV_EMBEDDIGNS_PATH, csv_filename)
-        embedding_df.to_csv(csv_file_path, index=False)
+        Utils.save_to_csv(embedding_df, csv_filename)
 
         print("Performing Agglomerative Clustering...")
-        clustering_model = AgglomerativeClustering(
-            n_clusters=None,
-            linkage=linkage,
-            distance_threshold=distance_threshold,
-            metric=metric,
-            compute_full_tree=True
-        )
-
+        clustering_model = AgglomerativeClustering(n_clusters=None,
+                                                   linkage=linkage,
+                                                   distance_threshold=distance_threshold,
+                                                   metric=metric)
         clustering_model.fit(dense_data_array)
 
-        pkl_file_path = self.generate_pkl(application_name,
-                                          clustering_model,
-                                          'BertEmbedding',
-                                          dense_data_array,
-                                          labels,
-                                          distance_threshold,
-                                          linkage,
-                                          metric)
+        # TODO: create container class to reduce arguments
+        return Utils.generate_pkl(application_name,
+                                  clustering_model,
+                                  'BertEmbedding',
+                                  dense_data_array,
+                                  labels,
+                                  distance_threshold,
+                                  linkage,
+                                  metric,
+                                  verb_weight,
+                                  object_weight)
         print("Process completed.")
         return pkl_file_path
 
