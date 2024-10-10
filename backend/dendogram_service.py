@@ -43,7 +43,7 @@ def generate_dendogram(preprocessing,
     elif preprocessing and preprocessed_app(app_name):
         features = load_saved_preprocessed_features(app_name)
 
-    if embedding == 'bert-embedding':
+    if embedding == 'bert':
         context = Context(Affinity_strategy.BertEmbeddingAffinity())
     elif embedding == 'paraphrase':
         context = Context(Affinity_strategy.ParaphraseEmbeddingAffinity())
