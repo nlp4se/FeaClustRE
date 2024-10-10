@@ -46,9 +46,9 @@ def generate_dendogram(preprocessing,
     if embedding == 'bert':
         context = Context(Affinity_strategy.BertEmbeddingAffinity())
     elif embedding == 'paraphrase':
-        context = Context(Affinity_strategy.ParaphraseEmbeddingAffinity())
+        context = Context(Affinity_strategy.MiniLMEmbeddingService())
     elif embedding == 'tf-idf':
-        context = Context(Affinity_strategy.TfidfEmbeddingAffinity())
+        context = Context(Affinity_strategy.TfidfEmbeddingService())
     else:
         raise ValueError(f"Unsupported embedding method: {embedding}")
 

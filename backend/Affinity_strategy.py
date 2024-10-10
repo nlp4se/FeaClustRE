@@ -73,7 +73,7 @@ class BertEmbeddingAffinity(AffinityStrategy):
 
         with torch.no_grad():
             outputs = self.model(**inputs)
-            embeddings = outputs.last_hidden_state.mean(dim=1)  # Average pooling
+            embeddings = outputs.last_hidden_state.mean(dim=1)
 
         self.ponderate_embeddings(batch_index, batch_data, embeddings)
         return embeddings
@@ -143,18 +143,14 @@ class TfidfEmbeddingService(AffinityStrategy):
     def ponderate_embeddings(self, batch_data, embeddings):
         print("Applying verb and object weights...")
 
-        # Perform POS tagging using spaCy
         tagged_data = [self.nlp(sent) for sent in batch_data]
 
-        # Iterate over the sentences
         for i, doc in enumerate(tagged_data):
             verb_weights = []
             obj_weights = []
             for token in doc:
-                # Check for verbs
                 if token.pos_ == 'VERB' and self.verb_weight != 0:
                     verb_weights.append(self.verb_weight)
-                # Check for object-related dependencies
                 elif token.dep_ in ('dobj', 'nsubj', 'attr', 'prep', 'pobj') and self.object_weight != 0:
                     obj_weights.append(self.object_weight)
 
@@ -162,7 +158,6 @@ class TfidfEmbeddingService(AffinityStrategy):
             if total_weight == 0:
                 continue
 
-            # Apply the weights to the embeddings for the current sentence
             for token in doc:
                 token_weight = 0
                 if token.pos_ == 'VERB':
