@@ -17,10 +17,6 @@ from backend.utils import Utils
 BATCH_SIZE = 32
 
 
-MODEL_DIRECTORY_PATH = 'static' + os.path.sep + 'pkls'
-MODEL_DIRECTORY_CSV_PATH = 'static' + os.path.sep + 'csv'
-MODEL_DIRECTORY_CSV_EMBEDDIGNS_PATH = 'static' + os.path.sep + 'csv' + os.path.sep + 'embeddings'
-
 class AffinityStrategy():
     @abstractmethod
     def compute_affinity(self, data: List):
@@ -111,14 +107,6 @@ class BertEmbeddingAffinity(AffinityStrategy):
         sparse_matrix = csr_matrix(all_embeddings.numpy())
         dense_data_array = sparse_matrix.toarray()
 
-        print("Saving embeddings to CSV...")
-        embedding_df = pd.DataFrame(dense_data_array)
-        embedding_df['Sentence'] = labels
-        csv_filename = f"{application_name}_bert_{metric}_{linkage}_embeddings.csv"
-        if not os.path.exists(MODEL_DIRECTORY_CSV_PATH):
-            os.makedirs(MODEL_DIRECTORY_CSV_PATH)
-        csv_file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_CSV_EMBEDDIGNS_PATH, csv_filename)
-        embedding_df.to_csv(csv_file_path, index=False)
 
         print("Performing Agglomerative Clustering...")
         clustering_model = AgglomerativeClustering(
@@ -131,39 +119,18 @@ class BertEmbeddingAffinity(AffinityStrategy):
 
         clustering_model.fit(dense_data_array)
 
-        pkl_file_path = self.generate_pkl(application_name,
-                                          clustering_model,
-                                          'Bert',
-                                          dense_data_array,
-                                          labels,
-                                          distance_threshold,
-                                          linkage,
-                                          metric)
-        print("Process completed.")
-        return pkl_file_path
+        return Utils.generate_pkl(application_name,
+                                  clustering_model,
+                                  'Bert',
+                                  dense_data_array,
+                                  labels,
+                                  distance_threshold,
+                                  linkage,
+                                  metric,
+                                  verb_weight,
+                                  object_weight)
 
-    def generate_pkl(self, application_name, clustering_model, model_name, dense_data_array, labels, distance_threshold, linkage,
-                     metric):
-        print("Saving clustering metadata for plotting...")
 
-        model_info = {
-            'affinity': f'BERT {metric} {linkage}',
-            'labels': labels,
-            'model_name': model_name,
-            'model': clustering_model,
-            'data_points': dense_data_array,
-            'application_name': application_name,
-            'distance_threshold': distance_threshold,
-            'verb_weight': self.verb_weight,
-            'object_weight': self.object_weight
-        }
-
-        if hasattr(clustering_model, 'cluster_centers_'):
-            model_info['cluster_centers'] = clustering_model.cluster_centers_
-
-        pkl_file_name = f"{application_name}_bert_{metric}_{linkage}_thr-{distance_threshold}_vw-{self.verb_weight}_ow-{self.object_weight}.pkl"
-        pkl_file_path = Utils.save_to_pkl(model_info, pkl_file_name)
-        return pkl_file_path
 
 
 class TfidfEmbeddingService(AffinityStrategy):
@@ -171,15 +138,45 @@ class TfidfEmbeddingService(AffinityStrategy):
         self.vectorizer = TfidfVectorizer()
         self.verb_weight = verb_weight
         self.object_weight = object_weight
+        self.nlp = spacy.load("en_core_web_sm")
 
-    def compute_affinity(self,
-                         application_name,
-                         labels,
-                         linkage,
-                         object_weight,
-                         verb_weight,
-                         distance_threshold,
-                         metric):
+    def ponderate_embeddings(self, batch_data, embeddings):
+        print("Applying verb and object weights...")
+
+        # Perform POS tagging using spaCy
+        tagged_data = [self.nlp(sent) for sent in batch_data]
+
+        # Iterate over the sentences
+        for i, doc in enumerate(tagged_data):
+            verb_weights = []
+            obj_weights = []
+            for token in doc:
+                # Check for verbs
+                if token.pos_ == 'VERB' and self.verb_weight != 0:
+                    verb_weights.append(self.verb_weight)
+                # Check for object-related dependencies
+                elif token.dep_ in ('dobj', 'nsubj', 'attr', 'prep', 'pobj') and self.object_weight != 0:
+                    obj_weights.append(self.object_weight)
+
+            total_weight = np.sum(verb_weights) + np.sum(obj_weights)
+            if total_weight == 0:
+                continue
+
+            # Apply the weights to the embeddings for the current sentence
+            for token in doc:
+                token_weight = 0
+                if token.pos_ == 'VERB':
+                    token_weight = self.verb_weight
+                elif token.dep_ in ('dobj', 'nsubj', 'attr', 'prep', 'pobj'):
+                    token_weight = self.object_weight
+
+                if token_weight > 0:
+                    # Find the index in the embeddings and modify the weight accordingly
+                    token_idx = self.vectorizer.vocabulary_.get(token.text.lower())
+                    if token_idx is not None:
+                        embeddings[i, token_idx] *= token_weight  # Modify TF-IDF feature by weight
+
+    def compute_affinity(self, application_name, labels, linkage, object_weight, verb_weight, distance_threshold, metric):
         self.verb_weight = verb_weight
         self.object_weight = object_weight
 
@@ -187,12 +184,16 @@ class TfidfEmbeddingService(AffinityStrategy):
         all_embeddings = self.vectorizer.fit_transform(labels)
         dense_data_array = all_embeddings.toarray()
 
+        # Apply ponderation based on POS tagging
+        self.ponderate_embeddings(labels, dense_data_array)
 
         print("Performing Agglomerative Clustering...")
-        clustering_model = AgglomerativeClustering(n_clusters=None,
-                                                   linkage=linkage,
-                                                   distance_threshold=distance_threshold,
-                                                   metric=metric)
+        clustering_model = AgglomerativeClustering(
+            n_clusters=None,
+            linkage=linkage,
+            distance_threshold=distance_threshold,
+            metric=metric
+        )
         clustering_model.fit(dense_data_array)
 
         return Utils.generate_pkl(application_name,
@@ -212,16 +213,47 @@ class MiniLMEmbeddingService(AffinityStrategy):
         self.model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
         self.verb_weight = verb_weight
         self.object_weight = object_weight
+        self.nlp = spacy.load("en_core_web_sm")
 
-    def compute_affinity(self,
-                         application_name,
-                         labels,
-                         linkage,
-                         object_weight,
-                         verb_weight,
-                         distance_threshold,
-                         metric):
+    def ponderate_embeddings(self, batch_data, embeddings):
+        print("Applying verb and object weights...")
 
+        # Perform POS tagging using spaCy
+        tagged_data = [self.nlp(sent) for sent in batch_data]
+
+        for i, doc in enumerate(tagged_data):
+            verb_weights = []
+            obj_weights = []
+            token_embeddings = []
+            tokens = []
+
+            for token in doc:
+                # Identify verbs and objects
+                if token.pos_ == 'VERB' and self.verb_weight != 0:
+                    verb_weights.append(self.verb_weight)
+                    tokens.append(token.text)
+                elif token.dep_ in ('dobj', 'nsubj', 'attr', 'prep', 'pobj') and self.object_weight != 0:
+                    obj_weights.append(self.object_weight)
+                    tokens.append(token.text)
+
+            if not tokens:
+                continue
+
+            # Retrieve embeddings for tokens
+            for token in tokens:
+                token_embedding = self.model.encode([token], convert_to_tensor=True).cpu().numpy()
+                token_embeddings.append(token_embedding[0])
+
+            # Apply ponderation to the token embeddings
+            weights = np.array(verb_weights + obj_weights)
+            token_embeddings = np.array(token_embeddings)
+            weighted_embeddings = token_embeddings * weights[:, np.newaxis]
+            sentence_embedding = np.mean(weighted_embeddings, axis=0)
+
+            # Apply the pondered sentence embedding to the embeddings array
+            embeddings[i] = torch.tensor(sentence_embedding)
+
+    def compute_affinity(self, application_name, labels, linkage, object_weight, verb_weight, distance_threshold, metric):
         self.verb_weight = verb_weight
         self.object_weight = object_weight
 
@@ -233,6 +265,9 @@ class MiniLMEmbeddingService(AffinityStrategy):
             batch_index = i // BATCH_SIZE
             print(f"Processing batch {batch_index}...")
             batch_embeddings = self.model.encode(batch_data, convert_to_tensor=True)
+
+            self.ponderate_embeddings(batch_data, batch_embeddings)
+
             all_embeddings.append(batch_embeddings)
 
         print("Concatenating all batch embeddings...")
@@ -240,10 +275,12 @@ class MiniLMEmbeddingService(AffinityStrategy):
         dense_data_array = all_embeddings.cpu().numpy()
 
         print("Performing Agglomerative Clustering...")
-        clustering_model = AgglomerativeClustering(n_clusters=None,
-                                                   linkage=linkage,
-                                                   distance_threshold=distance_threshold,
-                                                   metric=metric)
+        clustering_model = AgglomerativeClustering(
+            n_clusters=None,
+            linkage=linkage,
+            distance_threshold=distance_threshold,
+            metric=metric
+        )
         clustering_model.fit(dense_data_array)
 
         return Utils.generate_pkl(application_name,
@@ -256,3 +293,4 @@ class MiniLMEmbeddingService(AffinityStrategy):
                                   metric,
                                   verb_weight,
                                   object_weight)
+
