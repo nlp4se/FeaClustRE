@@ -43,7 +43,7 @@ def generate_dendogram(preprocessing,
     elif preprocessing and preprocessed_app(app_name):
         features = load_saved_preprocessed_features(app_name)
 
-    if embedding == 'bert-embedding':
+    if embedding == 'bert':
         context = Context(Affinity_strategy.BertEmbeddingAffinity())
     elif embedding == 'paraphrase':
         context = Context(Affinity_strategy.ParaphraseEmbeddingAffinity())
@@ -52,7 +52,6 @@ def generate_dendogram(preprocessing,
     else:
         raise ValueError(f"Unsupported embedding method: {embedding}")
 
-    # Use the selected embedding strategy to generate the dendogram
     return context.use_affinity_algorithm(application_name=app_name,
                                           data=features,
                                           linkage=linkage,
