@@ -136,15 +136,18 @@ class BertEmbeddingAffinity(AffinityStrategy):
 class TfidfEmbeddingService(AffinityStrategy):
     def __init__(self, verb_weight=1.0, object_weight=1.0):
         self.vectorizer = TfidfVectorizer()
+        self.nlp = spacy.load("en_core_web_sm")
         self.verb_weight = verb_weight
         self.object_weight = object_weight
-        self.nlp = spacy.load("en_core_web_sm")
+
+    def get_dense_data_array(self, data: List) -> np.ndarray:
+        tfidf_vectorizer = TfidfVectorizer()
+        tf_idf_data_vector = tfidf_vectorizer.fit_transform(data)
+        return tf_idf_data_vector.toarray()
 
     def ponderate_embeddings(self, batch_data, embeddings):
         print("Applying verb and object weights...")
-
         tagged_data = [self.nlp(sent) for sent in batch_data]
-
         for i, doc in enumerate(tagged_data):
             verb_weights = []
             obj_weights = []
@@ -166,29 +169,41 @@ class TfidfEmbeddingService(AffinityStrategy):
                     token_weight = self.object_weight
 
                 if token_weight > 0:
-                    # Find the index in the embeddings and modify the weight accordingly
                     token_idx = self.vectorizer.vocabulary_.get(token.text.lower())
                     if token_idx is not None:
-                        embeddings[i, token_idx] *= token_weight  # Modify TF-IDF feature by weight
+                        embeddings[i, token_idx] *= token_weight
 
-    def compute_affinity(self, application_name, labels, linkage, object_weight, verb_weight, distance_threshold, metric):
+    def compute_affinity(self,
+                         application_name,
+                         labels,
+                         linkage,
+                         object_weight,
+                         verb_weight,
+                         distance_threshold,
+                         metric):
+
         self.verb_weight = verb_weight
         self.object_weight = object_weight
 
-        print("Fitting TF-IDF vectorizer...")
-        all_embeddings = self.vectorizer.fit_transform(labels)
-        dense_data_array = all_embeddings.toarray()
+        print("Converting data to dense TF-IDF vectors...")
+        dense_data_array = self.get_dense_data_array(labels)
 
-        # Apply ponderation based on POS tagging
-        self.ponderate_embeddings(labels, dense_data_array)
+        zero_vectors = np.all(dense_data_array == 0, axis=1)
+        print(f"Number of zero vectors: {np.sum(zero_vectors)}")
+
+        if np.sum(zero_vectors) > 0:
+            dense_data_array = dense_data_array[~zero_vectors]
+            labels = [label for i, label in enumerate(labels) if not zero_vectors[i]]
+
+        if len(dense_data_array) == 0:
+            print("All vectors are zero vectors, aborting clustering.")
+            return None
 
         print("Performing Agglomerative Clustering...")
-        clustering_model = AgglomerativeClustering(
-            n_clusters=None,
-            linkage=linkage,
-            distance_threshold=distance_threshold,
-            metric=metric
-        )
+        clustering_model = AgglomerativeClustering(n_clusters=None,
+                                                   linkage=linkage,
+                                                   distance_threshold=distance_threshold,
+                                                   metric=metric)
         clustering_model.fit(dense_data_array)
 
         return Utils.generate_pkl(application_name,
@@ -202,7 +217,6 @@ class TfidfEmbeddingService(AffinityStrategy):
                                   verb_weight,
                                   object_weight)
 
-
 class MiniLMEmbeddingService(AffinityStrategy):
     def __init__(self, verb_weight=1.0, object_weight=1.0):
         self.model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
@@ -210,7 +224,9 @@ class MiniLMEmbeddingService(AffinityStrategy):
         self.object_weight = object_weight
         self.nlp = spacy.load("en_core_web_sm")
 
-    def ponderate_embeddings(self, batch_data, embeddings):
+    def ponderate_embeddings(self,
+                             batch_data,
+                             embeddings):
         print("Applying verb and object weights...")
 
         # Perform POS tagging using spaCy
@@ -248,7 +264,14 @@ class MiniLMEmbeddingService(AffinityStrategy):
             # Apply the pondered sentence embedding to the embeddings array
             embeddings[i] = torch.tensor(sentence_embedding)
 
-    def compute_affinity(self, application_name, labels, linkage, object_weight, verb_weight, distance_threshold, metric):
+    def compute_affinity(self,
+                         application_name,
+                         labels,
+                         linkage,
+                         object_weight,
+                         verb_weight,
+                         distance_threshold,
+                         metric):
         self.verb_weight = verb_weight
         self.object_weight = object_weight
 
