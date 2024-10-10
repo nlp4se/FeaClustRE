@@ -86,8 +86,7 @@ def show_dendrogram(model_file):
         figsize_width = min(max_figsize_width, n_leaves * 0.85)
         figsize_height = max(12, min(max_figsize_height, n_leaves * 0.85))
 
-        # Construct the folder name with attributes
-        folder_name = (f"{application_name}_dt-{distance_threshold}_vw-{verb_weight}_ow-{object_weight}"
+        folder_name = (f"{affinity}_{application_name}_dt-{distance_threshold}_vw-{verb_weight}_ow-{object_weight}"
                        .replace(" ", "_"))
         save_directory = os.path.join(r"C:\Users\Max\NLP4RE\Dendogram-Generator\static\png", folder_name)
         os.makedirs(save_directory, exist_ok=True)
