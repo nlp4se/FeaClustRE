@@ -72,7 +72,8 @@ def show_dendrogram(model_file):
     else:
         n_clusters = len(set(clustering_model.labels_))
 
-    CLUSTER_COLOR_THRESHOLD = max(0.1, min(1.0, distance_threshold - 0.01 * (n_clusters - 1)))
+    # CLUSTER_COLOR_THRESHOLD = max(0.1, min(1.0, distance_threshold - 0.01 * (n_clusters - 1)))
+    CLUSTER_COLOR_THRESHOLD = distance_threshold
     print("------------")
     print(f"Threshold: {distance_threshold}")
     print(f"Detected {n_clusters} clusters")
