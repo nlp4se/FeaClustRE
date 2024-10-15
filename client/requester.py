@@ -7,8 +7,8 @@ port = "3008"
 endpoint = "dendogram/generate"
 
 thresholds = [0.1, 0.2, 0.3, 0.4, 0.5]
-verb_weights = [0.1, 0.25, 0.5, 0.75, 0.9]
-obj_weights = [0.9, 0.75, 0.5, 0.25, 0.1]
+verb_weights = [0.1, 0.25, 0.331, 0.5, 0.75, 0.9]
+obj_weights = [0.9, 0.75, 0.669, 0.5, 0.25, 0.1]
 affinity_models = ['bert', 'tf-idf', 'paraphrase']
 
 json_file_path = "body.json"
@@ -24,7 +24,6 @@ def construct_url(base_url, port, endpoint, params):
             f"&linkage=average&verb-weight={params['verb_weight']}&obj-weight={params['obj_weight']}")
 
 def main():
-    # Send requests for all combinations of affinity models, thresholds, and verb/obj weights
     for affinity_model in affinity_models:
         for threshold in thresholds:
             for verb_weight, obj_weight in zip(verb_weights, obj_weights):
@@ -46,7 +45,6 @@ def main():
                 except requests.exceptions.RequestException as e:
                     print(f"Request failed: {e}")
 
-    # Execute visualizator.py script after all requests are done
     try:
         subprocess.run(['python', 'visualizator.py'], check=True)
         print("Visualizator script executed successfully.")
