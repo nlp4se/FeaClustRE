@@ -6,10 +6,8 @@ from transformers import BertTokenizer, BertModel
 from sentence_transformers import SentenceTransformer
 import torch
 import spacy
-import os
 
 import numpy as np
-import pandas as pd
 from scipy.sparse import csr_matrix
 from sklearn.feature_extraction.text import TfidfVectorizer
 from backend.utils import Utils
@@ -30,52 +28,13 @@ class BertEmbeddingAffinity(AffinityStrategy):
         self.verb_weight = verb_weight
         self.object_weight = object_weight
 
-    def ponderate_embeddings(self, batch_index, batch_data, embeddings):
-        print(f"Applying verb and object weights for batch {batch_index + 1}...")
-
-        tagged_data = [self.nlp(sent) for sent in batch_data]
-
-        for i, doc in enumerate(tagged_data):
-            verb_weights = []
-            obj_weights = []
-            token_embeddings = []
-            tokens = []
-
-            for token in doc:
-                if token.pos_ == 'VERB' and self.verb_weight != 0:
-                    verb_weights.append(self.verb_weight)
-                    tokens.append(token.text)
-                elif token.dep_ in ('dobj', 'nsubj', 'attr', 'prep', 'pobj') and self.object_weight != 0:
-                    obj_weights.append(self.object_weight)
-                    tokens.append(token.text)
-
-            if not tokens:
-                continue
-
-            for token in tokens:
-                inputs = self.tokenizer(token, return_tensors='pt')
-                with torch.no_grad():
-                    outputs = self.model(**inputs)
-                    token_embedding = outputs.last_hidden_state.mean(dim=1).numpy()
-                    token_embeddings.append(token_embedding[0])
-
-            weights = np.array(verb_weights + obj_weights)
-            token_embeddings = np.array(token_embeddings)
-            weighted_embeddings = token_embeddings * weights[:, np.newaxis]
-            sentence_embedding = np.mean(weighted_embeddings, axis=0)
-            embeddings[i] = torch.tensor(sentence_embedding)
-
     def process_batch(self, batch_data, batch_index, data_size):
-        print(f"Processing batch {batch_index + 1}/{(data_size + len(batch_data) - 1) // len(batch_data)}...")
-
         inputs = self.tokenizer(batch_data, return_tensors='pt', padding=True, truncation=True)
-        print(f"Getting BERT embeddings for batch {batch_index + 1}...")
-
         with torch.no_grad():
             outputs = self.model(**inputs)
             embeddings = outputs.last_hidden_state.mean(dim=1)
 
-        self.ponderate_embeddings(batch_index, batch_data, embeddings)
+        Utils.ponderate_embeddings_with_weights(batch_index, batch_data, embeddings, self.verb_weight, self.object_weight)
         return embeddings
 
     def compute_affinity(self,
@@ -131,8 +90,6 @@ class BertEmbeddingAffinity(AffinityStrategy):
                                   object_weight)
 
 
-
-
 class TfidfEmbeddingService(AffinityStrategy):
     def __init__(self, verb_weight=1.0, object_weight=1.0):
         self.vectorizer = TfidfVectorizer()
@@ -144,34 +101,6 @@ class TfidfEmbeddingService(AffinityStrategy):
         tfidf_vectorizer = TfidfVectorizer()
         tf_idf_data_vector = tfidf_vectorizer.fit_transform(data)
         return tf_idf_data_vector.toarray()
-
-    def ponderate_embeddings(self, batch_data, embeddings):
-        print("Applying verb and object weights...")
-        tagged_data = [self.nlp(sent) for sent in batch_data]
-        for i, doc in enumerate(tagged_data):
-            verb_weights = []
-            obj_weights = []
-            for token in doc:
-                if token.pos_ == 'VERB' and self.verb_weight != 0:
-                    verb_weights.append(self.verb_weight)
-                elif token.dep_ in ('dobj', 'nsubj', 'attr', 'prep', 'pobj') and self.object_weight != 0:
-                    obj_weights.append(self.object_weight)
-
-            total_weight = np.sum(verb_weights) + np.sum(obj_weights)
-            if total_weight == 0:
-                continue
-
-            for token in doc:
-                token_weight = 0
-                if token.pos_ == 'VERB':
-                    token_weight = self.verb_weight
-                elif token.dep_ in ('dobj', 'nsubj', 'attr', 'prep', 'pobj'):
-                    token_weight = self.object_weight
-
-                if token_weight > 0:
-                    token_idx = self.vectorizer.vocabulary_.get(token.text.lower())
-                    if token_idx is not None:
-                        embeddings[i, token_idx] *= token_weight
 
     def compute_affinity(self,
                          application_name,
@@ -199,6 +128,7 @@ class TfidfEmbeddingService(AffinityStrategy):
             print("All vectors are zero vectors, aborting clustering.")
             return None
 
+        Utils.ponderate_embeddings_with_weights(None, labels, dense_data_array, self.verb_weight, self.object_weight)
         print("Performing Agglomerative Clustering...")
         clustering_model = AgglomerativeClustering(n_clusters=None,
                                                    linkage=linkage,
@@ -224,46 +154,6 @@ class MiniLMEmbeddingService(AffinityStrategy):
         self.object_weight = object_weight
         self.nlp = spacy.load("en_core_web_sm")
 
-    def ponderate_embeddings(self,
-                             batch_data,
-                             embeddings):
-        print("Applying verb and object weights...")
-
-        # Perform POS tagging using spaCy
-        tagged_data = [self.nlp(sent) for sent in batch_data]
-
-        for i, doc in enumerate(tagged_data):
-            verb_weights = []
-            obj_weights = []
-            token_embeddings = []
-            tokens = []
-
-            for token in doc:
-                # Identify verbs and objects
-                if token.pos_ == 'VERB' and self.verb_weight != 0:
-                    verb_weights.append(self.verb_weight)
-                    tokens.append(token.text)
-                elif token.dep_ in ('dobj', 'nsubj', 'attr', 'prep', 'pobj') and self.object_weight != 0:
-                    obj_weights.append(self.object_weight)
-                    tokens.append(token.text)
-
-            if not tokens:
-                continue
-
-            # Retrieve embeddings for tokens
-            for token in tokens:
-                token_embedding = self.model.encode([token], convert_to_tensor=True).cpu().numpy()
-                token_embeddings.append(token_embedding[0])
-
-            # Apply ponderation to the token embeddings
-            weights = np.array(verb_weights + obj_weights)
-            token_embeddings = np.array(token_embeddings)
-            weighted_embeddings = token_embeddings * weights[:, np.newaxis]
-            sentence_embedding = np.mean(weighted_embeddings, axis=0)
-
-            # Apply the pondered sentence embedding to the embeddings array
-            embeddings[i] = torch.tensor(sentence_embedding)
-
     def compute_affinity(self,
                          application_name,
                          labels,
@@ -284,7 +174,7 @@ class MiniLMEmbeddingService(AffinityStrategy):
             print(f"Processing batch {batch_index}...")
             batch_embeddings = self.model.encode(batch_data, convert_to_tensor=True)
 
-            self.ponderate_embeddings(batch_data, batch_embeddings)
+            Utils.ponderate_embeddings_with_weights(batch_index, batch_data, batch_embeddings, self.verb_weight, self.object_weight)
 
             all_embeddings.append(batch_embeddings)
 
@@ -311,4 +201,3 @@ class MiniLMEmbeddingService(AffinityStrategy):
                                   metric,
                                   verb_weight,
                                   object_weight)
-
