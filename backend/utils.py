@@ -1,9 +1,9 @@
 import os
-
 import joblib
 import pandas as pd
 import torch
 import numpy as np
+import spacy
 
 MODEL_DIRECTORY_PATH = 'static' + os.path.sep + 'pkls'
 MODEL_DIRECTORY_CSV_PATH = 'static' + os.path.sep + 'csv'
@@ -115,5 +115,56 @@ class Utils:
         if hasattr(clustering_model, 'cluster_centers_'):
             model_info['cluster_centers'] = clustering_model.cluster_centers_
 
-        pkl_file_name = f"{application_name}_{model_name.lower()}_{metric}_{linkage}_thr-{distance_threshold}_vw-{verb_weight}_ow-{object_weight}.pkl"
+        pkl_file_name = (f"{application_name}_"
+                         f"{model_name.lower()}_"
+                         f"{metric}_"
+                         f"{linkage}_"
+                         f"thr-{distance_threshold}_"
+                         f"vw-{verb_weight}_"
+                         f"ow-{object_weight}.pkl")
         return Utils.save_to_pkl(model_info, pkl_file_name)
+    @staticmethod
+    def ponderate_embeddings_with_weights(batch_data,
+                                          embeddings,
+                                          verb_weight,
+                                          object_weight,
+                                          tokenizer=None,
+                                          model=None):
+        nlp = spacy.load("en_core_web_sm")
+
+        tagged_data = [nlp(sent) for sent in batch_data]
+
+        for i, doc in enumerate(tagged_data):
+            verb_weights = []
+            obj_weights = []
+            token_embeddings = []
+            tokens = []
+
+            for token in doc:
+                if token.pos_ == 'VERB' and verb_weight != 0:
+                    verb_weights.append(verb_weight)
+                    tokens.append(token.text)
+                elif token.dep_ in ('dobj', 'nsubj', 'attr', 'prep', 'pobj') and object_weight != 0:
+                    obj_weights.append(object_weight)
+                    tokens.append(token.text)
+
+            if not tokens:
+                continue
+
+            if tokenizer is not None and model is not None:
+                for token in tokens:
+                    inputs = tokenizer(token, return_tensors='pt')
+                    with torch.no_grad():
+                        outputs = model(**inputs)
+                        token_embedding = outputs.last_hidden_state.mean(dim=1).numpy()
+                        token_embeddings.append(token_embedding[0])
+            else:
+                # For TF-IDF embeddings, we modify them directly
+                token_embeddings = embeddings[i]
+
+            weights = np.array(verb_weights + obj_weights)
+            token_embeddings = np.array(token_embeddings)
+            weighted_embeddings = token_embeddings * weights[:, np.newaxis]
+            sentence_embedding = np.mean(weighted_embeddings, axis=0)
+
+            embeddings[i] = torch.tensor(sentence_embedding)
