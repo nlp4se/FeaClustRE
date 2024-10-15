@@ -128,12 +128,16 @@ class TfidfEmbeddingService(AffinityStrategy):
             print("All vectors are zero vectors, aborting clustering.")
             return None
 
-        Utils.ponderate_embeddings_with_weights(None,
-                                                labels,
-                                                dense_data_array,
+        ''' Utils.ponderate_embeddings_with_weights(labels,  # batch_data
+                                                dense_data_array,  # embeddings
                                                 self.verb_weight,
-                                                self.object_weight)
+                                                self.object_weight,
+                                                tokenizer=None,  # Not needed for TF-IDF
+                                                model=None)  # Not needed for TF-IDF
+                                                  '''
         print("Performing Agglomerative Clustering...")
+
+
         clustering_model = AgglomerativeClustering(n_clusters=None,
                                                    linkage=linkage,
                                                    distance_threshold=distance_threshold,
@@ -148,8 +152,9 @@ class TfidfEmbeddingService(AffinityStrategy):
                                   distance_threshold,
                                   linkage,
                                   metric,
-                                  verb_weight,
-                                  object_weight)
+                                  'N/A',
+                                  'N/A')
+
 
 class MiniLMEmbeddingService(AffinityStrategy):
     def __init__(self, verb_weight=1.0, object_weight=1.0):
