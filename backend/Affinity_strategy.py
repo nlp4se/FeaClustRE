@@ -152,8 +152,8 @@ class TfidfEmbeddingService(AffinityStrategy):
                                   distance_threshold,
                                   linkage,
                                   metric,
-                                  'N/A',
-                                  'N/A')
+                                  1,
+                                  1)
 
 
 class MiniLMEmbeddingService(AffinityStrategy):
