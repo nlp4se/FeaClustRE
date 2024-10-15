@@ -128,7 +128,11 @@ class TfidfEmbeddingService(AffinityStrategy):
             print("All vectors are zero vectors, aborting clustering.")
             return None
 
-        Utils.ponderate_embeddings_with_weights(None, labels, dense_data_array, self.verb_weight, self.object_weight)
+        Utils.ponderate_embeddings_with_weights(None,
+                                                labels,
+                                                dense_data_array,
+                                                self.verb_weight,
+                                                self.object_weight)
         print("Performing Agglomerative Clustering...")
         clustering_model = AgglomerativeClustering(n_clusters=None,
                                                    linkage=linkage,
@@ -174,7 +178,13 @@ class MiniLMEmbeddingService(AffinityStrategy):
             print(f"Processing batch {batch_index}...")
             batch_embeddings = self.model.encode(batch_data, convert_to_tensor=True)
 
-            Utils.ponderate_embeddings_with_weights(batch_index, batch_data, batch_embeddings, self.verb_weight, self.object_weight)
+            # Call Utils.ponderate_embeddings_with_weights with None for tokenizer and model
+            Utils.ponderate_embeddings_with_weights(batch_data,
+                                                    batch_embeddings,
+                                                    self.verb_weight,
+                                                    self.object_weight,
+                                                    tokenizer=None,
+                                                    model=None)
 
             all_embeddings.append(batch_embeddings)
 
