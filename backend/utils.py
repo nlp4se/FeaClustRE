@@ -34,43 +34,6 @@ class Utils:
         return embeddings
 
     @staticmethod
-    def ponderate_embeddings(batch_index, batch_data, embeddings, tokenizer, model, nlp, verb_weight, object_weight):
-        print(f"Applying verb and object weights for batch {batch_index + 1}...")
-
-        tagged_data = [nlp(sent) for sent in batch_data]
-
-        for i, doc in enumerate(tagged_data):
-            verb_weights = []
-            obj_weights = []
-            token_embeddings = []
-            tokens = []
-
-            for token in doc:
-                if token.pos_ == 'VERB' and verb_weight != 0:
-                    verb_weights.append(verb_weight)
-                    tokens.append(token.text)
-                elif token.dep_ in ('dobj', 'nsubj', 'attr', 'prep', 'pobj') and object_weight != 0:
-                    obj_weights.append(object_weight)
-                    tokens.append(token.text)
-
-            if not tokens:
-                continue
-
-            for token in tokens:
-                inputs = tokenizer(token, return_tensors='pt')
-                with torch.no_grad():
-                    outputs = model(**inputs)
-                    token_embedding = outputs.last_hidden_state.mean(dim=1).numpy()
-                    token_embeddings.append(token_embedding[0])
-
-            weights = np.array(verb_weights + obj_weights)
-
-            token_embeddings = np.array(token_embeddings)
-            weighted_embeddings = token_embeddings * weights[:, np.newaxis]
-
-            sentence_embedding = np.mean(weighted_embeddings, axis=0)
-            embeddings[i] = torch.tensor(sentence_embedding)
-    @staticmethod
     def save_to_csv(dataframe: pd.DataFrame, csv_filename: str):
         if not os.path.exists(MODEL_DIRECTORY_CSV_PATH):
             os.makedirs(MODEL_DIRECTORY_CSV_PATH)
@@ -123,6 +86,44 @@ class Utils:
                          f"vw-{verb_weight}_"
                          f"ow-{object_weight}.pkl")
         return Utils.save_to_pkl(model_info, pkl_file_name)
+
+    @staticmethod
+    def ponderate_tfidf_with_weights(batch_data,
+                                     tfidf_matrix,
+                                     tfidf_vectorizer,
+                                     verb_weight,
+                                     object_weight):
+        nlp = spacy.load("en_core_web_sm")
+
+        feature_names = np.array(tfidf_vectorizer.get_feature_names_out())
+
+        tagged_data = [nlp(sent) for sent in batch_data]
+
+        for i, doc in enumerate(tagged_data):
+            tfidf_vector = tfidf_matrix[i]
+
+            # Create a copy of the TF-IDF vector to modify
+            weighted_tfidf_vector = tfidf_vector.copy()
+
+            # Apply weights to verbs and objects in the document
+            for token in doc:
+                # Find the index of the token in the TF-IDF vector
+                if token.text in feature_names:
+                    token_index = np.where(feature_names == token.text)[0][0]
+
+                    # Apply verb weight
+                    if token.pos_ == 'VERB' and verb_weight != 0:
+                        weighted_tfidf_vector[token_index] *= verb_weight
+
+                    # Apply object weight (e.g., for direct objects, subjects, etc.)
+                    elif token.dep_ in ('dobj', 'nsubj', 'attr', 'prep', 'pobj') and object_weight != 0:
+                        weighted_tfidf_vector[token_index] *= object_weight
+
+            # Replace the original TF-IDF vector with the weighted version
+            tfidf_matrix[i] = weighted_tfidf_vector
+
+        return tfidf_matrix
+
     @staticmethod
     def ponderate_embeddings_with_weights(batch_data,
                                           embeddings,
