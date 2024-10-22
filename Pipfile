@@ -16,6 +16,7 @@ pyspellchecker = "*"
 python-dotenv = "*"
 pandas = "*"
 requests = "*"
+bertopic = "*"
 
 [requires]
 python_version = "3.9"
