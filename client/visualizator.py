@@ -57,10 +57,11 @@ def plot_dendrogram(model, labels, color_threshold):
                color_threshold=color_threshold,
                leaf_font_size=10,
                orientation='right',
+               distance_sort='descending',
                above_threshold_color=ABOVE_THRESHOLD_COLOR)
 
-    # Rotate x-axis labels for readability
     plt.xticks(rotation=45, fontsize=10, ha='right')
+    plt.yticks(rotation=45, fontsize=5, ha='right')
 
 # Function to display and save the dendrogram for a given model
 def show_dendrogram(model_file):
@@ -97,8 +98,8 @@ def show_dendrogram(model_file):
     if hasattr(clustering_model, 'children_'):
         # Determine figure size based on number of leaves (data points)
         n_leaves = len(data)
-        max_figsize_width = 120
-        max_figsize_height = 15
+        max_figsize_width = 150
+        max_figsize_height = 50
         figsize_height = min(max_figsize_width, n_leaves * 0.85)
         figsize_width = max(12, min(max_figsize_height, n_leaves * 0.85))
 
@@ -123,7 +124,9 @@ def show_dendrogram(model_file):
         plt.tight_layout()
 
         # Save the dendrogram image
-        dendrogram_save_path = os.path.join(save_directory, f"{application_name}_dendrogram.png")
+        image_name = f"{affinity}_{application_name}_dt-{distance_threshold}_vw-{verb_weight}_ow-{object_weight}_dendogram.png"
+        image_name = image_name.replace(" ", "_")
+        dendrogram_save_path = os.path.join(save_directory, image_name)
         plt.savefig(dendrogram_save_path)
         plt.close()
         print(f"Dendrogram saved at: {dendrogram_save_path}")
