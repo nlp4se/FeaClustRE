@@ -34,7 +34,14 @@ class BertEmbeddingAffinity(AffinityStrategy):
             outputs = self.model(**inputs)
             embeddings = outputs.last_hidden_state.mean(dim=1)
 
-        Utils.ponderate_embeddings_with_weights(batch_index, batch_data, embeddings, self.verb_weight, self.object_weight)
+        Utils.ponderate_embeddings_with_weights(
+            batch_data=batch_data,
+            embeddings=embeddings,
+            verb_weight=self.verb_weight,
+            object_weight=self.object_weight,
+            tokenizer=self.tokenizer,
+            model=self.model
+        )
         return embeddings
 
     def compute_affinity(self,
@@ -89,7 +96,6 @@ class BertEmbeddingAffinity(AffinityStrategy):
                                   verb_weight,
                                   object_weight)
 
-
 class TfidfEmbeddingService(AffinityStrategy):
     def __init__(self, verb_weight=1.0, object_weight=1.0):
         self.vectorizer = TfidfVectorizer()
@@ -100,7 +106,7 @@ class TfidfEmbeddingService(AffinityStrategy):
     def get_dense_data_array(self, data: List) -> np.ndarray:
         tfidf_vectorizer = TfidfVectorizer()
         tf_idf_data_vector = tfidf_vectorizer.fit_transform(data)
-        return tf_idf_data_vector.toarray()
+        return tf_idf_data_vector.toarray(), tfidf_vectorizer
 
     def compute_affinity(self,
                          application_name,
@@ -115,7 +121,7 @@ class TfidfEmbeddingService(AffinityStrategy):
         self.object_weight = object_weight
 
         print("Converting data to dense TF-IDF vectors...")
-        dense_data_array = self.get_dense_data_array(labels)
+        dense_data_array, tfidf_vectorizer = self.get_dense_data_array(labels)
 
         zero_vectors = np.all(dense_data_array == 0, axis=1)
         print(f"Number of zero vectors: {np.sum(zero_vectors)}")
@@ -128,16 +134,17 @@ class TfidfEmbeddingService(AffinityStrategy):
             print("All vectors are zero vectors, aborting clustering.")
             return None
 
-        ''' Utils.ponderate_embeddings_with_weights(labels,  # batch_data
-                                                dense_data_array,  # embeddings
-                                                self.verb_weight,
-                                                self.object_weight,
-                                                tokenizer=None,  # Not needed for TF-IDF
-                                                model=None)  # Not needed for TF-IDF
-                                                  '''
+        print("Ponderating TF-IDF embeddings with verb and object weights...")
+        # Adjust TF-IDF values based on verb and object weights
+        dense_data_array = Utils.ponderate_tfidf_with_weights(
+            labels,  # batch_data
+            dense_data_array,  # tfidf_matrix
+            tfidf_vectorizer,  # vectorizer
+            verb_weight=self.verb_weight,
+            object_weight=self.object_weight
+        )
+
         print("Performing Agglomerative Clustering...")
-
-
         clustering_model = AgglomerativeClustering(n_clusters=None,
                                                    linkage=linkage,
                                                    distance_threshold=distance_threshold,
@@ -152,10 +159,8 @@ class TfidfEmbeddingService(AffinityStrategy):
                                   distance_threshold,
                                   linkage,
                                   metric,
-                                  1,
-                                  1)
-
-
+                                  self.verb_weight,
+                                  self.object_weight)
 class MiniLMEmbeddingService(AffinityStrategy):
     def __init__(self, verb_weight=1.0, object_weight=1.0):
         self.model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
@@ -183,13 +188,12 @@ class MiniLMEmbeddingService(AffinityStrategy):
             print(f"Processing batch {batch_index}...")
             batch_embeddings = self.model.encode(batch_data, convert_to_tensor=True)
 
-            # Call Utils.ponderate_embeddings_with_weights with None for tokenizer and model
             Utils.ponderate_embeddings_with_weights(batch_data,
-                                                    batch_embeddings,
-                                                    self.verb_weight,
-                                                    self.object_weight,
-                                                    tokenizer=None,
-                                                    model=None)
+                                       batch_embeddings,
+                                       self.verb_weight,
+                                       self.object_weight,
+                                       tokenizer=None,
+                                       model=None)
 
             all_embeddings.append(batch_embeddings)
 
