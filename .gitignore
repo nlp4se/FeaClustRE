@@ -17,3 +17,8 @@ build/
 *.png
 *.csv
 *.zip
+
+/.idea
+/.vscode
+.idea/
+.vscode/

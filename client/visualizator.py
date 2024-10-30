@@ -56,10 +56,11 @@ def plot_dendrogram(model, labels, color_threshold):
                labels=labels,
                color_threshold=color_threshold,
                leaf_font_size=10,
+               orientation='right',
                above_threshold_color=ABOVE_THRESHOLD_COLOR)
 
     # Rotate x-axis labels for readability
-    plt.xticks(rotation=90, fontsize=10, ha='right')
+    plt.xticks(rotation=45, fontsize=10, ha='right')
 
 # Function to display and save the dendrogram for a given model
 def show_dendrogram(model_file):
@@ -98,8 +99,8 @@ def show_dendrogram(model_file):
         n_leaves = len(data)
         max_figsize_width = 120
         max_figsize_height = 15
-        figsize_width = min(max_figsize_width, n_leaves * 0.85)
-        figsize_height = max(12, min(max_figsize_height, n_leaves * 0.85))
+        figsize_height = min(max_figsize_width, n_leaves * 0.85)
+        figsize_width = max(12, min(max_figsize_height, n_leaves * 0.85))
 
         # Create a folder for saving the dendrogram image
         folder_name = (f"{affinity}_{application_name}_dt-{distance_threshold}_vw-{verb_weight}_ow-{object_weight}"
