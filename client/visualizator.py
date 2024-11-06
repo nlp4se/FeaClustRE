@@ -48,10 +48,7 @@ def plot_dendrogram(model, labels, color_threshold):
         [model.children_, model.distances_, counts]
     ).astype(float)
 
-    # Update labels to have line breaks
-    labels = add_line_breaks(labels=labels)
-
-    # Plot dendrogram
+    # Plot dendrogram without modifying labels for single line display
     dendrogram(linkage_matrix,
                labels=labels,
                color_threshold=color_threshold,
@@ -60,9 +57,9 @@ def plot_dendrogram(model, labels, color_threshold):
                distance_sort='descending',
                above_threshold_color=ABOVE_THRESHOLD_COLOR)
 
-    plt.xticks(rotation=45, fontsize=10, ha='right')
-    plt.yticks(rotation=45, fontsize=5, ha='right')
-
+    # Adjust font size without rotation for single-line labels
+    plt.xticks(fontsize=10, ha='right')
+    plt.yticks(fontsize=5, ha='right')
 # Function to display and save the dendrogram for a given model
 def show_dendrogram(model_file):
     # Load the model information from the .pkl file
