@@ -62,8 +62,7 @@ class BertEmbeddingAffinity(AffinityStrategy):
         print(f"Processing data in batches of size {batch_size}...")
         for i in range(0, len(labels), batch_size):
             batch_data = labels[i:i + batch_size]
-            batch_index = i // batch_size
-            batch_embeddings = self.process_batch(batch_data, batch_index, len(labels))
+            batch_embeddings = self.process_batch(batch_data)
             all_embeddings.append(batch_embeddings)
 
         print("Concatenating all batch embeddings...")
