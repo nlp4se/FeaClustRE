@@ -76,7 +76,7 @@ def generate_dendogram_from_file():
     for review in data.get("analyzed_reviews", []):
         for sentence in review.get("sentences", []):
             feature = sentence.get("featureData", {}).get("feature", "")
-            if feature:  # Only add non-empty features
+            if feature:
                 features.append(feature)
 
     request_content = {
