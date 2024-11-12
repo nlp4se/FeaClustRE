@@ -28,7 +28,7 @@ class BertEmbeddingAffinity(AffinityStrategy):
         self.verb_weight = verb_weight
         self.object_weight = object_weight
 
-    def process_batch(self, batch_data, batch_index, data_size):
+    def process_batch(self, batch_data):
         inputs = self.tokenizer(batch_data, return_tensors='pt', padding=True, truncation=True)
         with torch.no_grad():
             outputs = self.model(**inputs)
