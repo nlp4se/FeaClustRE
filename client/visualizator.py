@@ -4,34 +4,45 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.cluster.hierarchy import dendrogram
 import seaborn as sns
-from openai import OpenAI
-from dotenv import load_dotenv
+from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
+import torch
 import pandas as pd
-
-load_dotenv()
-api_key = os.getenv("OPENAI_KEY")
-client = OpenAI(api_key=api_key)
 
 ABOVE_THRESHOLD_COLOR = '#D3D3D3'
 N_PALETTE_COLORS = 50
 PALETTE_NAME = 'husl'
 
-def generate_dynamic_label(cluster_labels):
-    input_text = ("In maximum one sentence, provide a unique concise abstract label for these actions "
-                  "(do not repeat in the label the actions): ") + ", ".join(cluster_labels)
+model_name = "meta-llama/Llama-3.2-3B"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.bfloat16).to(
+    'cuda' if torch.cuda.is_available() else 'cpu')
 
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": "You are an assistant that provides concise abstract labels."},
-            {"role": "user", "content": input_text}
-        ],
-        max_tokens=20,
-        temperature=0.5
+pipe = pipeline(
+    "text-generation",
+    model=model,
+    tokenizer=tokenizer,
+    device=0 if torch.cuda.is_available() else -1
+)
+
+
+def generate_dynamic_label(cluster_labels):
+    unique_labels = list(set(cluster_labels))
+
+    input_text = (
+        "Generate a single concise label summarizing the following actions.\n\n"
+        "Examples:\n"
+        "Video meeting, online meeting, team video chat, conference call\n"
+        "Label: Virtual Team Communication\n\n"
+        "Secure chat, encrypted messaging, private message\n"
+        "Label: Private Messaging\n\n"
+        "Video call, group video call, secure video call, video conference\n"
+        "Label: Secure Video Conferencing\n\n"
+        + ", ".join(unique_labels) + "\nLabel:"
     )
 
-    label = response.choices[0].message
-    return label.content
+    response = pipe(input_text, max_new_tokens=10, do_sample=True)
+    label = response[0]['generated_text'].replace(input_text, "").strip()
+    return label.split('\n')[0]
 
 
 def render_dendrogram(model_info, model, labels, color_threshold, distance_threshold):
@@ -45,8 +56,7 @@ def render_dendrogram(model_info, model, labels, color_threshold, distance_thres
     max_figsize_width = 30
     max_figsize_height = min(30, max(10, n_leaves * 0.35))
 
-    fig = plt.figure(figsize=(max_figsize_width, max_figsize_height * 1.5))
-    ax = fig.add_subplot()
+    fig, ax = plt.subplots(figsize=(max_figsize_width, max_figsize_height * 1.5))
     ax.set_title(
         f"{application_name} | {affinity} | Distance Threshold: {distance_threshold} "
         f"| Verb Weight: {verb_weight} | Object Weight: {object_weight}",
@@ -56,7 +66,7 @@ def render_dendrogram(model_info, model, labels, color_threshold, distance_thres
     counts = np.zeros(model.children_.shape[0])
     cluster_contents = {i: [label] for i, label in enumerate(labels)}
     n_samples = len(model.labels_)
-    palette = sns.color_palette("hsv", len(labels))  # Example palette
+    palette = sns.color_palette("hsv", len(labels))
     cluster_colors = {}
 
     def get_color_for_cluster(cluster_idx):
@@ -99,44 +109,33 @@ def render_dendrogram(model_info, model, labels, color_threshold, distance_thres
     clusters_to_save = []
 
     for i, (icoord, dcoord) in enumerate(zip(dendrogram_data['icoord'], dendrogram_data['dcoord'])):
-        # Calculate the midpoint for the x-coordinate and use the correct y-coordinate
-        x = 0.5 * sum(icoord[1:3]) * 0.1  # Test scaling x down by a factor of 10
-        y = dcoord[1] * 0.5
+        x = 0.5 * sum(icoord[1:3])
+        y = dcoord[1]
 
-        # Limit the number of labels to prevent overcrowding
         if label_counter > max_labels:
             break
 
         cluster_idx = n_samples + i
         if cluster_idx in cluster_contents and cluster_idx not in labeled_clusters:
-            # Retrieve cluster labels for current cluster
             cluster_labels = cluster_contents[cluster_idx]
             labeled_clusters.add(cluster_idx)
-            # Generate a dynamic label for the cluster (assuming generate_dynamic_label function exists)
             label = generate_dynamic_label(cluster_labels)
             print(f"Label {label_counter}: '{label}' at (x={x}, y={y})")
-            # Save cluster information to a list for CSV export (if needed)
             clusters_to_save.append({"cluster_name": label, "feature_list": cluster_labels})
 
-            ax.plot(x, y, 'ro', markersize=8)  # Increased marker size for better visibility
+            ax.plot(x, y, 'ro', markersize=8)
             ax.annotate(label, (x, y), xytext=(0, -8),
                         textcoords='offset points',
-                        fontsize=10,  # Larger font size for better visibility
+                        fontsize=10,
                         va='top', ha='center')
             label_counter += 1
 
-    # Save clusters to CSV
     save_clusters_to_csv(clusters_to_save)
     plt.tight_layout()
-    ax.set_xlim(0, 100)  # Adjust the limits to fit within the visible range
-    ax.set_ylim(0, 100)
     plt.show()
 
 
 def save_clusters_to_csv(clusters):
-    """
-    Save cluster names and feature lists to a CSV file.
-    """
     df = pd.DataFrame(clusters)
     df.to_csv("clusters.csv", index=False, sep=',')
     print("Cluster data saved to clusters.csv")
@@ -156,10 +155,10 @@ def generate_dendogram_visualization(model_file):
         os.makedirs(save_directory, exist_ok=True)
 
         render_dendrogram(model_info,
-                      clustering_model,
-                      labels,
-                      color_threshold=distance_threshold,
-                      distance_threshold=distance_threshold)
+                          clustering_model,
+                          labels,
+                          color_threshold=distance_threshold,
+                          distance_threshold=distance_threshold)
 
         image_name = f"{model_info['affinity']}_{model_info['application_name']}_dt-{distance_threshold}_dendrogram.png".replace(" ", "_")
         dendrogram_save_path = os.path.join(save_directory, image_name)
@@ -169,6 +168,7 @@ def generate_dendogram_visualization(model_file):
 
     else:
         raise ValueError("The provided model is not AgglomerativeClustering.")
+
 
 if __name__ == "__main__":
     pkls_directory = r"C:\Users\Max\NLP4RE\Dendogram-Generator\static\pkls"
