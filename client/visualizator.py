@@ -2,7 +2,7 @@ import joblib
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.cluster.hierarchy import dendrogram
+from scipy.cluster.hierarchy import dendrogram, linkage
 import seaborn as sns
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 import torch
@@ -45,6 +45,92 @@ def generate_dynamic_label(cluster_labels):
     return label.split('\n')[0]
 
 
+def log_clusters_at_distance_threshold(linkage_matrix, distance_threshold):
+    from scipy.cluster.hierarchy import fcluster
+    cluster_assignments = fcluster(linkage_matrix, t=distance_threshold, criterion='distance')
+    num_clusters = len(set(cluster_assignments))
+    print(f"Number of clusters at distance threshold {distance_threshold}: {num_clusters}")
+
+
+def process_clusters_and_generate_dendrograms(linkage_matrix, labels, distance_threshold, application_name):
+    """
+    Processes each cluster individually by detecting clusters at the given distance threshold,
+    saves each cluster's labels in a CSV file, and generates individual dendrograms.
+
+    Parameters:
+    - linkage_matrix: The linkage matrix used to construct the dendrogram.
+    - labels: The labels of the leaf nodes.
+    - distance_threshold: The distance threshold to calculate the clusters.
+    - application_name: The name of the application (used for folder naming).
+    """
+    from scipy.cluster.hierarchy import fcluster
+
+    # Generate cluster assignments based on the distance threshold
+    cluster_assignments = fcluster(linkage_matrix, t=distance_threshold, criterion='distance')
+
+    # Map cluster indices to their corresponding labels
+    cluster_dict = {}
+    for idx, cluster_id in enumerate(cluster_assignments):
+        if cluster_id not in cluster_dict:
+            cluster_dict[cluster_id] = []
+        cluster_dict[cluster_id].append(labels[idx])
+
+    # Create folder to save the clusters
+    output_folder = f"{application_name}_clusters"
+    os.makedirs(output_folder, exist_ok=True)
+
+    # Process each cluster individually
+    for cluster_id, cluster_labels in cluster_dict.items():
+        print(f"Cluster {cluster_id} contains labels: {cluster_labels}")
+
+        cluster_label = generate_dynamic_label(cluster_labels)
+        print(f"Generated label for Cluster {cluster_id}: {cluster_label}")
+
+        cluster_data = {"cluster_name": cluster_label, "feature_list": cluster_labels}
+        cluster_df = pd.DataFrame(cluster_data)
+        cluster_file_path = os.path.join(output_folder, f"cluster_{cluster_id}.csv")
+        cluster_df.to_csv(cluster_file_path, index=False, sep=',')
+        print(f"Cluster {cluster_id} saved to {cluster_file_path}")
+
+        generate_individual_dendrogram(cluster_labels, cluster_id, application_name, cluster_label)
+
+
+def generate_individual_dendrogram(cluster_labels, cluster_id, application_name, cluster_label):
+    """
+    Generates and saves a dendrogram for a specific cluster.
+
+    Parameters:
+    - cluster_labels: Labels of the data points in the cluster.
+    - cluster_id: The ID of the cluster.
+    - application_name: The name of the application (used for folder naming).
+    - cluster_label: The label generated for this cluster.
+    """
+    if len(cluster_labels) < 2:
+        print(f"Cluster {cluster_id} has less than 2 labels, skipping dendrogram generation.")
+        return
+
+    # Create dummy numerical data for the linkage function
+    dummy_data = np.random.rand(len(cluster_labels), 2)  # 2D random data for visualization
+    linkage_matrix = linkage(dummy_data, method='ward')
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    dendrogram(
+        linkage_matrix,
+        labels=cluster_labels,
+        leaf_font_size=10,
+        orientation='top',
+        ax=ax
+    )
+    ax.set_title(f"Cluster {cluster_id} - {cluster_label} Dendrogram", fontsize=14)
+    ax.set_xlabel("Data Points")
+    ax.set_ylabel("Distance")
+
+    output_folder = f"{application_name}_individual_dendrograms"
+    os.makedirs(output_folder, exist_ok=True)
+    dendrogram_path = os.path.join(output_folder, f"cluster_{cluster_id}_dendrogram.png")
+    plt.savefig(dendrogram_path)
+    plt.close()
+    print(f"Dendrogram for Cluster {cluster_id} saved at: {dendrogram_path}")
 def render_dendrogram(model_info, model, labels, color_threshold, distance_threshold):
     data = model_info['data_points']
     application_name = model_info['application_name']
@@ -91,7 +177,10 @@ def render_dendrogram(model_info, model, labels, color_threshold, distance_thres
 
     linkage_matrix = np.column_stack([model.children_, model.distances_, counts]).astype(float)
 
-    dendrogram_data = dendrogram(
+    log_clusters_at_distance_threshold(linkage_matrix, distance_threshold)
+    process_clusters_and_generate_dendrograms(linkage_matrix, labels, distance_threshold, application_name)
+
+    dendrogram(
         linkage_matrix,
         labels=labels,
         color_threshold=color_threshold,
@@ -103,47 +192,13 @@ def render_dendrogram(model_info, model, labels, color_threshold, distance_thres
     )
     ax.set_ylabel('Distance', fontsize=14)
 
-    label_counter = 1
-    max_labels = 5
-    labeled_clusters = set()
-    clusters_to_save = []
-
-    for i, (icoord, dcoord) in enumerate(zip(dendrogram_data['icoord'], dendrogram_data['dcoord'])):
-        x = 0.5 * sum(icoord[1:3])
-        y = dcoord[1]
-
-        if label_counter > max_labels:
-            break
-
-        cluster_idx = n_samples + i
-        if cluster_idx in cluster_contents and cluster_idx not in labeled_clusters:
-            cluster_labels = cluster_contents[cluster_idx]
-            labeled_clusters.add(cluster_idx)
-            label = generate_dynamic_label(cluster_labels)
-            print(f"Label {label_counter}: '{label}' at (x={x}, y={y})")
-            clusters_to_save.append({"cluster_name": label, "feature_list": cluster_labels})
-
-            ax.plot(x, y, 'ro', markersize=8)
-            ax.annotate(label, (x, y), xytext=(0, -8),
-                        textcoords='offset points',
-                        fontsize=10,
-                        va='top', ha='center')
-            label_counter += 1
-
-    save_clusters_to_csv(clusters_to_save)
     plt.tight_layout()
     plt.show()
 
 
-def save_clusters_to_csv(clusters):
-    df = pd.DataFrame(clusters)
-    df.to_csv("clusters.csv", index=False, sep=',')
-    print("Cluster data saved to clusters.csv")
-
-
 def generate_dendogram_visualization(model_file):
     model_info = joblib.load(model_file)
-    distance_threshold = model_info['distance_threshold']
+    distance_threshold = 0.5
     clustering_model = model_info['model']
     labels = model_info['labels']
 
