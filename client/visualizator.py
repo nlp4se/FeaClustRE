@@ -49,23 +49,10 @@ def log_clusters_at_distance_threshold(linkage_matrix, distance_threshold):
 
 
 def process_clusters_and_generate_dendrograms(linkage_matrix, labels, distance_threshold, application_name, app_folder):
-    """
-    Processes each cluster individually by detecting clusters at the given distance threshold,
-    saves each cluster's labels in a CSV file, generates individual dendrograms, and creates a final CSV.
-
-    Parameters:
-    - linkage_matrix: The linkage matrix used to construct the dendrogram.
-    - labels: The labels of the leaf nodes.
-    - distance_threshold: The distance threshold to calculate the clusters.
-    - application_name: The name of the application (used for folder naming).
-    - app_folder: Path to the application folder where outputs are saved.
-    """
     from scipy.cluster.hierarchy import fcluster
 
-    # Generate cluster assignments based on the distance threshold
     cluster_assignments = fcluster(linkage_matrix, t=distance_threshold, criterion='distance')
 
-    # Map cluster indices to their corresponding labels
     cluster_dict = {}
     for idx, cluster_id in enumerate(cluster_assignments):
         if cluster_id not in cluster_dict:
@@ -74,15 +61,12 @@ def process_clusters_and_generate_dendrograms(linkage_matrix, labels, distance_t
 
     final_csv_data = []
 
-    # Process each cluster individually
     for cluster_id, cluster_labels in cluster_dict.items():
         print(f"Cluster {cluster_id} contains labels: {cluster_labels}")
 
-        # Generate a cluster label
         cluster_label = generate_dynamic_label(cluster_labels)
         print(f"Generated label for Cluster {cluster_id}: {cluster_label}")
 
-        # Cluster-specific folder with cluster label in name
         sanitized_cluster_label = cluster_label.replace(" ", "_").replace("/", "_")
         cluster_folder = os.path.join(app_folder, f"cluster_{cluster_id}_{sanitized_cluster_label}")
         os.makedirs(cluster_folder, exist_ok=True)
@@ -108,11 +92,11 @@ def process_clusters_and_generate_dendrograms(linkage_matrix, labels, distance_t
 
 
 def generate_individual_dendrogram(cluster_labels, cluster_id, application_name, cluster_label, output_folder):
+
     if len(cluster_labels) < 2:
         print(f"Cluster {cluster_id} has less than 2 labels, skipping dendrogram generation.")
         return
 
-    # Create dummy numerical data for the linkage function
     dummy_data = np.random.rand(len(cluster_labels), 2)
     linkage_matrix = linkage(dummy_data, method='ward')
 
@@ -121,18 +105,20 @@ def generate_individual_dendrogram(cluster_labels, cluster_id, application_name,
         linkage_matrix,
         labels=cluster_labels,
         leaf_font_size=10,
-        orientation='top',
+        orientation='right',
         ax=ax
     )
-    ax.set_title(f"Cluster {cluster_id} - {cluster_label} Dendrogram", fontsize=14)
-    ax.set_xlabel("Data Points")
-    ax.set_ylabel("Distance")
+    ax.set_title(f"{application_name} | Cluster {cluster_id}, Detected Label {cluster_label} ", fontsize=14)
+    ax.set_xlabel("Distance")
+    ax.set_ylabel("Data Points")
+
+    ax.tick_params(axis='y', labelrotation=0)
 
     dendrogram_path = os.path.join(output_folder, f"cluster_{cluster_id}_dendrogram.png")
+    plt.tight_layout()
     plt.savefig(dendrogram_path)
     plt.close()
     print(f"Dendrogram for Cluster {cluster_id} saved at: {dendrogram_path}")
-
 
 def render_dendrogram(model_info, model, labels, color_threshold, distance_threshold):
 
@@ -212,9 +198,6 @@ def render_dendrogram(model_info, model, labels, color_threshold, distance_thres
 
 
 def generate_dendogram_visualization(model_file):
-    """
-    Loads the model and generates dendrogram visualizations.
-    """
     model_info = joblib.load(model_file)
     distance_threshold = 0.5
     clustering_model = model_info['model']
