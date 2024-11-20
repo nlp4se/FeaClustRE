@@ -9,7 +9,7 @@ import torch
 import pandas as pd
 import json
 import shutil
-
+from scipy.cluster.hierarchy import fcluster
 
 model_name = "meta-llama/Llama-3.2-3B"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -49,7 +49,6 @@ def generate_dynamic_label(cluster_labels):
 
 
 def log_clusters_at_distance_threshold(linkage_matrix, distance_threshold):
-    from scipy.cluster.hierarchy import fcluster
     cluster_assignments = fcluster(linkage_matrix, t=distance_threshold, criterion='distance')
     num_clusters = len(set(cluster_assignments))
     print(f"Number of clusters at distance threshold {distance_threshold}: {num_clusters}")
@@ -115,30 +114,58 @@ def generate_individual_dendrogram(cluster_labels, cluster_id, application_name,
 
 
 def create_dendrogram_hierarchy(dendrogram_result, cluster_labels):
-    node_hierarchy = {}
+    # Initialize mappings for leaf nodes
     label_mapping = {i: cluster_labels[i] for i in range(len(cluster_labels))}
-    for idx, d in enumerate(dendrogram_result['dcoord']):
-        left_idx, right_idx = dendrogram_result['icoord'][idx][:2]
-        left_child = label_mapping[int(left_idx)] if int(left_idx) < len(cluster_labels) else f"Node {int(left_idx)}"
-        right_child = label_mapping[int(right_idx)] if int(right_idx) < len(cluster_labels) else f"Node {int(right_idx)}"
-        node_name = f"Node {len(cluster_labels) + idx}"
+    node_hierarchy = {}
+    next_node_index = len(cluster_labels)  # Start node index after all the leaf nodes
+
+    # Iterate over the dendrogram data to build nodes
+    for idx, dcoord in enumerate(dendrogram_result['dcoord']):
+        left_child_index = int(dendrogram_result['icoord'][idx][0] / 10)
+        right_child_index = int(dendrogram_result['icoord'][idx][2] / 10)
+
+        # Determine left and right children, always using Node references
+        if left_child_index < len(cluster_labels):
+            left_child = f"Node {left_child_index}"
+        else:
+            left_child = f"Node {left_child_index}"
+
+        if right_child_index < len(cluster_labels):
+            right_child = f"Node {right_child_index}"
+        else:
+            right_child = f"Node {right_child_index}"
+
+        # Create a new node representing the current merge
+        node_name = f"Node {next_node_index}"
+
+        # Gather labels for the current node by combining children labels
         labels = []
-        if isinstance(left_child, str) and left_child in cluster_labels:
-            labels.append(left_child)
-        elif left_child in node_hierarchy:
+        if left_child_index < len(cluster_labels):
+            labels.append(label_mapping[left_child_index])
+        else:
             labels.extend(node_hierarchy[left_child]["labels"])
-        if isinstance(right_child, str) and right_child in cluster_labels:
-            labels.append(right_child)
-        elif right_child in node_hierarchy:
+
+        if right_child_index < len(cluster_labels):
+            labels.append(label_mapping[right_child_index])
+        else:
             labels.extend(node_hierarchy[right_child]["labels"])
-        children = list(set([left_child, right_child]))
+
+        # Assign children (always as Node references) and labels to the new node
+        children = [left_child, right_child]
+
         node_hierarchy[node_name] = {
             "children": children,
-            "labels": labels
+            "labels": labels,
         }
-    root_node = f"Node {len(cluster_labels) + len(dendrogram_result['dcoord']) - 1}"
-    return {"root": root_node, "nodes": node_hierarchy}
 
+        # Update the node index for next iteration
+        next_node_index += 1
+
+    # The root node will be the last created node
+    root_node = f"Node {next_node_index - 1}"
+
+    # Return the entire hierarchy
+    return {"root": root_node, "nodes": node_hierarchy}
 
 def render_dendrogram(model_info, model, labels, color_threshold, distance_threshold):
     data = model_info['data_points']
@@ -210,7 +237,7 @@ def render_dendrogram(model_info, model, labels, color_threshold, distance_thres
 
 def generate_dendogram_visualization(model_file):
     model_info = joblib.load(model_file)
-    distance_threshold = 0.5
+    distance_threshold = 0.2
     clustering_model = model_info['model']
     labels = model_info['labels']
     if hasattr(clustering_model, 'children_'):
