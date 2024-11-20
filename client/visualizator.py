@@ -8,6 +8,8 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 import torch
 import pandas as pd
 import json
+import shutil
+
 
 model_name = "meta-llama/Llama-3.2-3B"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -20,6 +22,12 @@ pipe = pipeline(
     tokenizer=tokenizer,
     device=0 if torch.cuda.is_available() else -1
 )
+
+
+def reset_folder(folder_path):
+    if os.path.exists(folder_path):
+        shutil.rmtree(folder_path)
+    os.makedirs(folder_path, exist_ok=True)
 
 
 def generate_dynamic_label(cluster_labels):
@@ -90,7 +98,7 @@ def generate_individual_dendrogram(cluster_labels, cluster_id, application_name,
         orientation='right',
         ax=ax
     )
-    ax.set_title(f"Cluster {cluster_id} - {cluster_label} Dendrogram", fontsize=14)
+    ax.set_title(f"{application_name} | Cluster {cluster_id} | {cluster_label} ", fontsize=14)
     ax.set_xlabel("Distance")
     ax.set_ylabel("Data Points")
     ax.tick_params(axis='y', labelrotation=0)
@@ -143,6 +151,7 @@ def render_dendrogram(model_info, model, labels, color_threshold, distance_thres
         static_folder,
         f"{affinity}_{application_name}_dt-{distance_threshold}_vw-{verb_weight}_ow-{object_weight}".replace(" ", "_")
     )
+    reset_folder(app_folder)
     os.makedirs(app_folder, exist_ok=True)
     n_leaves = len(data)
     max_figsize_width = 30
