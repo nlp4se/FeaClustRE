@@ -10,7 +10,6 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 import torch
 
 
-# Load the Llama model and tokenizer
 model_name = "meta-llama/Llama-3.2-3B"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.bfloat16).to(
@@ -32,9 +31,6 @@ def reset_folder(folder_path):
 
 
 def generate_dynamic_label(cluster_labels):
-    """
-    Generates a concise label for a cluster using the Llama model.
-    """
     unique_labels = list(set(cluster_labels))
     input_text = (
         "Generate a single concise label summarizing the following actions:\n\n"
@@ -53,9 +49,6 @@ def generate_dynamic_label(cluster_labels):
 
 
 def render_dendrogram_and_process_clusters(model_info, model, labels, color_threshold, distance_threshold):
-    """
-    Renders the dendrogram, extracts clusters, and generates additional outputs (CSV, JSON, plots).
-    """
     application_name = model_info['application_name']
     affinity = model_info['affinity']
     verb_weight = model_info.get('verb_weight', 'N/A')
@@ -68,10 +61,8 @@ def render_dendrogram_and_process_clusters(model_info, model, labels, color_thre
     reset_folder(app_folder)
     os.makedirs(app_folder, exist_ok=True)
 
-    # Build the linkage matrix from model information
     linkage_matrix = np.column_stack([model.children_, model.distances_, np.zeros(len(model.children_))]).astype(float)
 
-    # Create a dendrogram and extract clustering information
     fig, ax = plt.subplots(figsize=(30, 30))
     dendrogram_result = dendrogram(
         linkage_matrix,
@@ -99,7 +90,6 @@ def render_dendrogram_and_process_clusters(model_info, model, labels, color_thre
     plt.close(fig)
     print(f"Final dendrogram saved at: {final_dendrogram_path}")
 
-    # Process and save clusters
     process_and_save_clusters(cluster_map, application_name, app_folder)
 
     return cluster_map
@@ -107,14 +97,10 @@ def render_dendrogram_and_process_clusters(model_info, model, labels, color_thre
 
 
 def process_and_save_clusters(cluster_map, application_name, app_folder):
-    """
-    Generates CSV and JSON files and plots individual dendrograms for clusters.
-    """
     final_csv_data = []
     for cluster_id, (color, cluster_labels) in enumerate(cluster_map.items(), start=1):
         print(f"Processing Cluster {cluster_id} (Color: {color}): Labels = {cluster_labels}")
 
-        # Generate a dynamic label for the cluster using Llama
         dynamic_label = generate_dynamic_label(cluster_labels)
         print(f"Generated label for Cluster {cluster_id}: {dynamic_label}")
 
@@ -122,7 +108,6 @@ def process_and_save_clusters(cluster_map, application_name, app_folder):
         cluster_folder = os.path.join(app_folder, cluster_label)
         os.makedirs(cluster_folder, exist_ok=True)
 
-        # Save cluster details to a CSV
         cluster_data = {"Cluster Name": [dynamic_label], "Feature List": [cluster_labels]}
         cluster_df = pd.DataFrame(cluster_data)
         cluster_csv_path = os.path.join(cluster_folder, f"{cluster_label}.csv")
@@ -153,9 +138,6 @@ def process_and_save_clusters(cluster_map, application_name, app_folder):
 
 
 def generate_individual_dendrogram(cluster_labels, cluster_id, application_name, cluster_label, output_folder):
-    """
-    Generates an individual dendrogram for a cluster.
-    """
     if len(cluster_labels) < 2:
         print(f"Cluster {cluster_id} has less than 2 labels, skipping dendrogram generation.")
         return
@@ -180,9 +162,6 @@ def generate_individual_dendrogram(cluster_labels, cluster_id, application_name,
 
 
 def generate_dendrogram_visualization(model_file):
-    """
-    Loads a model file and generates the dendrogram visualization with all outputs.
-    """
     model_info = joblib.load(model_file)
     distance_threshold = 0.2
     clustering_model = model_info['model']
