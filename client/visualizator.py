@@ -1,143 +1,190 @@
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.cluster.hierarchy import dendrogram
 import joblib
 import os
-import seaborn as sns
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.cluster.hierarchy import dendrogram, linkage
+import shutil
+import pandas as pd
+import json
+from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
+import torch
 
-# Constants for visualization
-ABOVE_THRESHOLD_COLOR = '#D3D3D3'
-N_PALETTE_COLORS = 50
-PALETTE_NAME = 'husl'
 
-# Helper function to add line breaks to labels
-def add_line_breaks(labels):
-    return [label.replace(' ', '\n') for label in labels]
+model_name = "meta-llama/Llama-3.2-3B"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.bfloat16).to(
+    'cuda' if torch.cuda.is_available() else 'cpu'
+)
 
-# Function to plot the dendrogram
-def plot_dendrogram(model, labels, color_threshold):
-    # Initialize count array
-    counts = np.zeros(model.children_.shape[0])
-    n_samples = len(model.labels_)
+pipe = pipeline(
+    "text-generation",
+    model=model,
+    tokenizer=tokenizer,
+    device=0 if torch.cuda.is_available() else -1
+)
 
-    # Create color palette for clusters
-    palette = sns.color_palette(PALETTE_NAME, N_PALETTE_COLORS)
-    cluster_colors = {}
 
-    def get_color_for_cluster(cluster_idx):
-        return palette[cluster_idx % N_PALETTE_COLORS]
+def reset_folder(folder_path):
+    if os.path.exists(folder_path):
+        shutil.rmtree(folder_path)
+    os.makedirs(folder_path, exist_ok=True)
 
-    # Compute the number of samples in each node (or merged cluster)
-    for i, merge in enumerate(model.children_):
-        current_count = 0
-        for child_idx in merge:
-            if child_idx < n_samples:
-                current_count += 1
-                if child_idx not in cluster_colors:
-                    cluster_colors[child_idx] = get_color_for_cluster(child_idx)
-            else:
-                current_count += counts[child_idx - n_samples]
 
-        counts[i] = current_count
+def generate_dynamic_label(cluster_labels):
+    unique_labels = list(set(cluster_labels))
+    input_text = (
+        "Generate a single concise label summarizing the following actions:\n\n"
+        "Examples:\n"
+        "Video meeting, online meeting, team video chat, conference call\n"
+        "Label: Virtual Team Communication\n\n"
+        "Secure chat, encrypted messaging, private message\n"
+        "Label: Private Messaging\n\n"
+        "Video call, group video call, secure video call, video conference\n"
+        "Label: Secure Video Conferencing\n\n"
+        + ", ".join(unique_labels) + "\nLabel:"
+    )
+    response = pipe(input_text, max_new_tokens=10, do_sample=True)
+    label = response[0]['generated_text'].replace(input_text, "").strip()
+    return label.split('\n')[0]
 
-        new_cluster_idx = n_samples + i
-        cluster_colors[new_cluster_idx] = get_color_for_cluster(new_cluster_idx)
 
-    # Create linkage matrix for dendrogram
-    linkage_matrix = np.column_stack(
-        [model.children_, model.distances_, counts]
-    ).astype(float)
-
-    # Update labels to have line breaks
-    labels = add_line_breaks(labels=labels)
-
-    # Plot dendrogram
-    dendrogram(linkage_matrix,
-               labels=labels,
-               color_threshold=color_threshold,
-               leaf_font_size=10,
-               above_threshold_color=ABOVE_THRESHOLD_COLOR)
-
-    # Rotate x-axis labels for readability
-    plt.xticks(rotation=90, fontsize=10, ha='right')
-
-# Function to display and save the dendrogram for a given model
-def show_dendrogram(model_file):
-    # Load the model information from the .pkl file
-    model_info = joblib.load(model_file)
-
-    # Extract relevant information from the model
+def render_dendrogram_and_process_clusters(model_info, model, labels, color_threshold, distance_threshold):
     application_name = model_info['application_name']
-    distance_threshold = model_info['distance_threshold']
-    clustering_model = model_info['model']
     affinity = model_info['affinity']
-    data = model_info['data_points']
+    verb_weight = model_info.get('verb_weight', 'N/A')
+    object_weight = model_info.get('object_weight', 'N/A')
+    static_folder = r"C:\Users\Max\NLP4RE\Dendogram-Generator\static\png"
+    app_folder = os.path.join(
+        static_folder,
+        f"{affinity}_{application_name}_dt-{distance_threshold}_vw-{verb_weight}_ow-{object_weight}".replace(" ", "_")
+    )
+    reset_folder(app_folder)
+    os.makedirs(app_folder, exist_ok=True)
+
+    linkage_matrix = np.column_stack([model.children_, model.distances_, np.zeros(len(model.children_))]).astype(float)
+
+    fig, ax = plt.subplots(figsize=(30, 30))
+    dendrogram_result = dendrogram(
+        linkage_matrix,
+        labels=labels,
+        color_threshold=color_threshold,
+        leaf_font_size=10,
+        orientation='right',
+        distance_sort='descending',
+        above_threshold_color='grey',  # Specify grey for ignored items
+        ax=ax
+    )
+
+    # Extract clusters based on colored labels, ignoring grey clusters
+    cluster_map = {}
+    for leaf, color in zip(dendrogram_result['leaves'], dendrogram_result['leaves_color_list']):
+        if color == 'grey':
+            continue  # Skip grey clusters
+        if color not in cluster_map:
+            cluster_map[color] = []
+        cluster_map[color].append(labels[leaf])
+
+    plt.tight_layout()
+    final_dendrogram_path = os.path.join(app_folder, f"{application_name}_final_dendrogram.png")
+    plt.savefig(final_dendrogram_path)
+    plt.close(fig)
+    print(f"Final dendrogram saved at: {final_dendrogram_path}")
+
+    process_and_save_clusters(cluster_map, application_name, app_folder)
+
+    return cluster_map
+
+
+
+def process_and_save_clusters(cluster_map, application_name, app_folder):
+    final_csv_data = []
+    for cluster_id, (color, cluster_labels) in enumerate(cluster_map.items(), start=1):
+        print(f"Processing Cluster {cluster_id} (Color: {color}): Labels = {cluster_labels}")
+
+        dynamic_label = generate_dynamic_label(cluster_labels)
+        print(f"Generated label for Cluster {cluster_id}: {dynamic_label}")
+
+        cluster_label = f"Cluster_{cluster_id}_{dynamic_label.replace(' ', '_')}"
+        cluster_folder = os.path.join(app_folder, cluster_label)
+        os.makedirs(cluster_folder, exist_ok=True)
+
+        cluster_data = {"Cluster Name": [dynamic_label], "Feature List": [cluster_labels]}
+        cluster_df = pd.DataFrame(cluster_data)
+        cluster_csv_path = os.path.join(cluster_folder, f"{cluster_label}.csv")
+        cluster_df.to_csv(cluster_csv_path, index=False, sep=',')
+        print(f"Cluster {cluster_id} saved to {cluster_csv_path}")
+
+        # Save cluster details to a JSON
+        cluster_json_path = os.path.join(cluster_folder, f"{cluster_label}.json")
+        with open(cluster_json_path, 'w') as json_file:
+            json.dump({"Cluster Name": dynamic_label, "Feature List": cluster_labels}, json_file, indent=4)
+        print(f"Cluster {cluster_id} JSON saved at {cluster_json_path}")
+
+        # Generate and save an individual dendrogram
+        generate_individual_dendrogram(cluster_labels, cluster_id, application_name, cluster_label, cluster_folder)
+
+        # Append to final CSV summary data
+        final_csv_data.append({
+            "Cluster ID": cluster_id,
+            "Cluster Name": dynamic_label,
+            "Feature List": cluster_labels
+        })
+
+    # Save final summary CSV
+    final_csv_path = os.path.join(app_folder, f"{application_name}_clusters_summary.csv")
+    final_csv_df = pd.DataFrame(final_csv_data)
+    final_csv_df.to_csv(final_csv_path, index=False, sep=',')
+    print(f"Final summary CSV saved at: {final_csv_path}")
+
+
+def generate_individual_dendrogram(cluster_labels, cluster_id, application_name, cluster_label, output_folder):
+    if len(cluster_labels) < 2:
+        print(f"Cluster {cluster_id} has less than 2 labels, skipping dendrogram generation.")
+        return
+    dummy_data = np.random.rand(len(cluster_labels), 2)
+    linkage_matrix = linkage(dummy_data, method='ward')
+    fig, ax = plt.subplots(figsize=(10, 6))
+    dendrogram(
+        linkage_matrix,
+        labels=cluster_labels,
+        leaf_font_size=10,
+        orientation='right',
+        ax=ax
+    )
+    ax.set_title(f"{application_name} | Cluster {cluster_id} | {cluster_label}")
+    ax.set_xlabel("Distance")
+    ax.set_ylabel("Data Points")
+    dendrogram_path = os.path.join(output_folder, f"{cluster_label}_dendrogram.png")
+    plt.tight_layout()
+    plt.savefig(dendrogram_path)
+    plt.close()
+    print(f"Dendrogram for Cluster {cluster_id} saved at: {dendrogram_path}")
+
+
+def generate_dendrogram_visualization(model_file):
+    model_info = joblib.load(model_file)
+    distance_threshold = 0.2
+    clustering_model = model_info['model']
     labels = model_info['labels']
 
-    try:
-        verb_weight = model_info.get('verb_weight', 'N/A')
-        object_weight = model_info.get('object_weight', 'N/A')
-    except KeyError as e:
-        print(f"Missing key: {e}")
-
-    if hasattr(clustering_model, 'n_clusters_'):
-        n_clusters = clustering_model.n_clusters_
-    else:
-        n_clusters = len(set(clustering_model.labels_))
-
-    # Define the threshold for coloring clusters in the dendrogram
-    CLUSTER_COLOR_THRESHOLD = distance_threshold
-    print("------------")
-    print(f"Threshold: {distance_threshold}")
-    print(f"Detected {n_clusters} clusters")
-    print(f"Computed CLUSTER_COLOR_THRESHOLD: {CLUSTER_COLOR_THRESHOLD}")
-    print("------------")
-
     if hasattr(clustering_model, 'children_'):
-        # Determine figure size based on number of leaves (data points)
-        n_leaves = len(data)
-        max_figsize_width = 120
-        max_figsize_height = 15
-        figsize_width = min(max_figsize_width, n_leaves * 0.85)
-        figsize_height = max(12, min(max_figsize_height, n_leaves * 0.85))
-
-        # Create a folder for saving the dendrogram image
-        folder_name = (f"{affinity}_{application_name}_dt-{distance_threshold}_vw-{verb_weight}_ow-{object_weight}"
-                       .replace(" ", "_"))
-        save_directory = os.path.join(r"C:\Users\Max\NLP4RE\Dendogram-Generator\static\png", folder_name)
-        os.makedirs(save_directory, exist_ok=True)
-
-        # Plot the dendrogram
-        plt.figure(figsize=(figsize_width, figsize_height))
-        plot_dendrogram(clustering_model, labels, color_threshold=CLUSTER_COLOR_THRESHOLD)
-
-        # Set plot title and labels
-        plt.title(
-            f"{application_name} | {affinity} | Distance Threshold: {distance_threshold} "
-            f"| Verb Weight: {verb_weight} | Object Weight: {object_weight}",
-            fontsize=14)
-        plt.xlabel('Features', fontsize=14)
-        plt.ylabel('Distance', fontsize=14)
-        plt.subplots_adjust(bottom=0.2)
-        plt.tight_layout()
-
-        # Save the dendrogram image
-        dendrogram_save_path = os.path.join(save_directory, f"{application_name}_dendrogram.png")
-        plt.savefig(dendrogram_save_path)
-        plt.close()
-        print(f"Dendrogram saved at: {dendrogram_save_path}")
-
+        clusters = render_dendrogram_and_process_clusters(
+            model_info,
+            clustering_model,
+            labels,
+            color_threshold=distance_threshold,
+            distance_threshold=distance_threshold
+        )
+        return clusters
     else:
         raise ValueError("The provided model is not AgglomerativeClustering.")
 
-# Main function to process .pkl files in the specified directory
-if __name__ == "__main__":
-    # Directory containing the .pkl files
-    pkls_directory = r"C:\Users\Max\NLP4RE\Dendogram-Generator\static\pkls"
 
-    # Loop through all .pkl files in the directory and generate dendrograms
+if __name__ == "__main__":
+    pkls_directory = r"C:\Users\Max\NLP4RE\Dendogram-Generator\static\pkls"
     for filename in os.listdir(pkls_directory):
         if filename.endswith('.pkl'):
             model_file = os.path.join(pkls_directory, filename)
             print(f"Processing: {model_file}")
-            show_dendrogram(model_file)
+            clusters = generate_dendrogram_visualization(model_file)
+            print(f"Clusters for {filename}: {clusters}")
