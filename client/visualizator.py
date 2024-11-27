@@ -71,10 +71,14 @@ def render_dendrogram_and_process_clusters(model_info, model, labels, color_thre
         leaf_font_size=10,
         orientation='right',
         distance_sort='descending',
-        above_threshold_color='grey',  # Specify grey for ignored items
+        above_threshold_color='grey',
         ax=ax
     )
-
+    ax.set_title(
+        f"{application_name} | {affinity} | Distance Threshold: {distance_threshold} "
+        f"| Verb Weight: {verb_weight} | Object Weight: {object_weight}",
+        fontsize=14
+    )
     # Extract clusters based on colored labels, ignoring grey clusters
     cluster_map = {}
     for leaf, color in zip(dendrogram_result['leaves'], dendrogram_result['leaves_color_list']):
