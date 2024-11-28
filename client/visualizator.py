@@ -166,7 +166,7 @@ def process_and_save_clusters(cluster_map, application_name, app_folder):
         numerical_data = [[item[1]] for item in linkage_data]
         sub_linkage_matrix = linkage(numerical_data, method='ward')
 
-        plt.figure(figsize=(8, 5))
+        plt.figure(figsize=(15, 12))
         dendrogram(
             sub_linkage_matrix,
             labels=[item[0] for item in linkage_data],
