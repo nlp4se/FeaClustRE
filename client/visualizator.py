@@ -52,10 +52,8 @@ def build_hierarchical_json(linkage_matrix, labels):
 
     def traverse_node(node_id):
         if node_id < n_samples:
-            # Leaf node
             return {"id": int(node_id), "label": labels[node_id]}
         else:
-            # Internal node
             left_child = int(linkage_matrix[node_id - n_samples, 0])
             right_child = int(linkage_matrix[node_id - n_samples, 1])
             distance = float(linkage_matrix[node_id - n_samples, 2])
@@ -66,42 +64,7 @@ def build_hierarchical_json(linkage_matrix, labels):
                 "children": [traverse_node(left_child), traverse_node(right_child)],
             }
 
-    # Start from the root node
     return traverse_node(len(linkage_matrix) + n_samples - 1)
-
-
-def build_hierarchical_json_for_subcluster(linkage_matrix, cluster_labels):
-    """
-    Build a hierarchical JSON structure for a sub-cluster.
-
-    Args:
-        linkage_matrix (ndarray): Linkage matrix for the sub-cluster.
-        cluster_labels (list): List of labels for the sub-cluster's leaf nodes.
-
-    Returns:
-        dict: Hierarchical JSON structure.
-    """
-    n_samples = len(cluster_labels)
-
-    def traverse_node(node_id):
-        if node_id < n_samples:
-            # Leaf node
-            return {"id": int(node_id), "label": cluster_labels[node_id]}
-        else:
-            # Internal node
-            left_child = int(linkage_matrix[node_id - n_samples, 0])
-            right_child = int(linkage_matrix[node_id - n_samples, 1])
-            distance = float(linkage_matrix[node_id - n_samples, 2])
-
-            return {
-                "id": int(node_id),
-                "distance": distance,
-                "children": [traverse_node(left_child), traverse_node(right_child)],
-            }
-
-    # Start from the root node
-    return traverse_node(len(linkage_matrix) + n_samples - 1)
-
 
 def save_json(data, file_path):
     with open(file_path, 'w') as json_file:
@@ -150,12 +113,18 @@ def render_dendrogram_and_process_clusters(model_info, model, labels, color_thre
 
     # Extract clusters based on colors
     cluster_map = {}
+    leaf_distances = {i: linkage_matrix[i, 2] for i in range(len(linkage_matrix))}
+
     for leaf, color in zip(dendrogram_result['leaves'], dendrogram_result['leaves_color_list']):
         if color == 'grey':
             continue  # Skip grey clusters
         if color not in cluster_map:
-            cluster_map[color] = []
-        cluster_map[color].append(labels[leaf])
+            cluster_map[color] = {'labels': [], 'distances': [], 'linkage_data': []}
+        label = labels[leaf]
+        distance = leaf_distances.get(leaf, 0)
+        cluster_map[color]['labels'].append(label)
+        cluster_map[color]['distances'].append(distance)
+        cluster_map[color]['linkage_data'].append([label, distance])  # Add linkage_data here
 
     # Save hierarchical JSON for the general dendrogram
     general_json = build_hierarchical_json(linkage_matrix, labels)
@@ -170,7 +139,11 @@ def render_dendrogram_and_process_clusters(model_info, model, labels, color_thre
 
 def process_and_save_clusters(cluster_map, application_name, app_folder):
     final_csv_data = []
-    for cluster_id, (color, cluster_labels) in enumerate(cluster_map.items(), start=1):
+
+    for cluster_id, (color, cluster_data) in enumerate(cluster_map.items(), start=1):
+        cluster_labels = cluster_data['labels']
+        linkage_data = cluster_data['linkage_data']
+
         print(f"Processing Cluster {cluster_id} (Color: {color}): Labels = {cluster_labels}")
 
         dynamic_label = generate_dynamic_label(cluster_labels)
@@ -180,32 +153,51 @@ def process_and_save_clusters(cluster_map, application_name, app_folder):
         cluster_folder = os.path.join(app_folder, cluster_label)
         os.makedirs(cluster_folder, exist_ok=True)
 
-        cluster_data = {"Cluster Name": [dynamic_label], "Feature List": [cluster_labels]}
-        cluster_df = pd.DataFrame(cluster_data)
+        cluster_df = pd.DataFrame({
+            "Label": [item[0] for item in linkage_data],  # Extract labels
+            "Distance": [item[1] for item in linkage_data]  # Extract distances
+        })
         cluster_csv_path = os.path.join(cluster_folder, f"{cluster_label}.csv")
         cluster_df.to_csv(cluster_csv_path, index=False, sep=',')
         print(f"Cluster {cluster_id} saved to {cluster_csv_path}")
 
-        # Generate and save hierarchical JSON for the sub-cluster
-        filtered_data = np.random.rand(len(cluster_labels), 2)  # Generate dummy data for sub-cluster
-        sub_linkage_matrix = linkage(filtered_data, method='ward')
-        sub_json = build_hierarchical_json_for_subcluster(sub_linkage_matrix, cluster_labels)
+        print(f"Generating dendrogram for Cluster {cluster_id}...")
+
+        numerical_data = [[item[1]] for item in linkage_data]
+        sub_linkage_matrix = linkage(numerical_data, method='ward')
+
+        plt.figure(figsize=(8, 5))
+        dendrogram(
+            sub_linkage_matrix,
+            labels=[item[0] for item in linkage_data],
+            leaf_rotation=0,
+            leaf_font_size=10,
+            orientation='right'
+        )
+        plt.title(f"Dendrogram for Cluster {cluster_id} ({color})")
+        plt.xlabel("Cluster Labels")
+        plt.ylabel("Distance")
+        dendrogram_path = os.path.join(cluster_folder, f"{cluster_label}_dendrogram.png")
+        plt.savefig(dendrogram_path)
+        plt.close()
+        print(f"Dendrogram for Cluster {cluster_id} saved at: {dendrogram_path}")
+
+        print(f"Saving hierarchical JSON for Cluster {cluster_id}...")
+        sub_json = build_hierarchical_json(sub_linkage_matrix, [item[0] for item in linkage_data])
         sub_json_path = os.path.join(cluster_folder, f"{cluster_label}_hierarchy.json")
         save_json(sub_json, sub_json_path)
+        print(f"Hierarchical JSON for Cluster {cluster_id} saved at: {sub_json_path}")
 
-        # Append to final CSV summary data
         final_csv_data.append({
             "Cluster ID": cluster_id,
             "Cluster Name": dynamic_label,
             "Feature List": cluster_labels
         })
 
-    # Save final summary CSV
     final_csv_path = os.path.join(app_folder, f"{application_name}_clusters_summary.csv")
     final_csv_df = pd.DataFrame(final_csv_data)
     final_csv_df.to_csv(final_csv_path, index=False, sep=',')
     print(f"Final summary CSV saved at: {final_csv_path}")
-
 
 def generate_dendrogram_visualization(model_file):
     model_info = joblib.load(model_file)
