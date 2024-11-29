@@ -27,7 +27,6 @@ def reset_folder(folder_path):
         shutil.rmtree(folder_path)
     os.makedirs(folder_path, exist_ok=True)
 
-
 def generate_dynamic_label(cluster_labels):
     unique_labels = list(set(cluster_labels))
     input_text = (
@@ -64,12 +63,10 @@ def build_hierarchical_json(linkage_matrix, labels):
 
     return traverse_node(len(linkage_matrix) + n_samples - 1)
 
-
 def save_json(data, file_path):
     with open(file_path, 'w') as json_file:
         json.dump(data, json_file, indent=4)
     print(f"JSON saved at: {file_path}")
-
 
 def extract_sub_linkage_matrix_from_parent(original_data, cluster_indices):
     sub_data = original_data[cluster_indices]
@@ -137,7 +134,6 @@ def render_dendrogram_and_process_clusters(model_info, labels, color_threshold, 
 
     return cluster_map
 
-
 def process_and_save_clusters(cluster_map, application_name, app_folder, original_data, color_threshold):
     final_csv_data = []
 
@@ -147,18 +143,15 @@ def process_and_save_clusters(cluster_map, application_name, app_folder, origina
 
         print(f"Processing Cluster {cluster_id} (Color: {color}): Labels = {cluster_labels}")
 
-        # Generate a dynamic label for the cluster
         dynamic_label = generate_dynamic_label(cluster_labels)
         print(f"Generated label for Cluster {cluster_id}: {dynamic_label}")
 
-        # Create cluster folder and file paths
         cluster_label = f"Cluster_{cluster_id}_{dynamic_label.replace(' ', '_')}"
         cluster_folder = os.path.join(app_folder, cluster_label)
         os.makedirs(cluster_folder, exist_ok=True)
 
         sub_linkage_matrix = extract_sub_linkage_matrix_from_parent(original_data, cluster_indices)
 
-        # Prepare labels for the sub-cluster dendrogram
         sub_labels = [cluster_labels[i] for i in range(len(cluster_labels))]
 
         plt.figure(figsize=(30, 10))
@@ -177,9 +170,12 @@ def process_and_save_clusters(cluster_map, application_name, app_folder, origina
         plt.close()
         print(f"Sub-dendrogram for Cluster {cluster_id} saved at: {sub_dendrogram_path}")
 
-        # Save individual cluster CSV
         cluster_csv_path = os.path.join(cluster_folder, f"{cluster_label}_features.csv")
-        cluster_df = pd.DataFrame({'Feature': cluster_labels})
+        cluster_df = pd.DataFrame([{
+            "Cluster Name": dynamic_label,
+            "Feature List": ", ".join(cluster_labels)
+        }])
+
         cluster_df.to_csv(cluster_csv_path, index=False)
         print(f"CSV for Cluster {cluster_id} saved at: {cluster_csv_path}")
 
@@ -189,7 +185,6 @@ def process_and_save_clusters(cluster_map, application_name, app_folder, origina
         save_json(sub_json, sub_json_path)
         print(f"Hierarchical JSON for Cluster {cluster_id} saved at: {sub_json_path}")
 
-        # Append cluster data to final CSV summary
         final_csv_data.append({
             "Cluster ID": cluster_id,
             "Cluster Name": dynamic_label,
@@ -201,7 +196,6 @@ def process_and_save_clusters(cluster_map, application_name, app_folder, origina
     final_csv_df = pd.DataFrame(final_csv_data)
     final_csv_df.to_csv(final_csv_path, index=False, sep=',')
     print(f"Final summary CSV saved at: {final_csv_path}")
-
 
 def generate_dendrogram_visualization(model_file):
     model_info = joblib.load(model_file)
