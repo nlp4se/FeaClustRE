@@ -169,7 +169,7 @@ def process_and_save_clusters(cluster_map, application_name, app_folder, origina
             orientation='right',
             color_threshold=color_threshold
         )
-        plt.title(f"Dendrogram for Cluster {cluster_id} ({color})")
+        plt.title(f"Dendrogram for Cluster {cluster_id} ({color}) | label: {dynamic_label}")
         plt.xlabel("Distance")
         plt.ylabel("Cluster Labels")
         sub_dendrogram_path = os.path.join(cluster_folder, f"{cluster_label}_dendrogram.png")
