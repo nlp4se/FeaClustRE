@@ -1,6 +1,5 @@
 import joblib
 import os
-import numpy as np
 import matplotlib.pyplot as plt
 from scipy.cluster.hierarchy import dendrogram, linkage
 import shutil
@@ -46,7 +45,6 @@ def generate_dynamic_label(cluster_labels):
     label = response[0]['generated_text'].replace(input_text, "").strip()
     return label.split('\n')[0]
 
-
 def build_hierarchical_json(linkage_matrix, labels):
     n_samples = len(labels)
 
@@ -73,6 +71,12 @@ def save_json(data, file_path):
     print(f"JSON saved at: {file_path}")
 
 
+def extract_sub_linkage_matrix_from_parent(original_data, cluster_indices):
+    sub_data = original_data[cluster_indices]
+    sub_linkage_matrix = linkage(sub_data, method='average', metric='euclidean')
+    return sub_linkage_matrix
+
+
 def render_dendrogram_and_process_clusters(model_info, labels, color_threshold, original_data):
     application_name = model_info['application_name']
     affinity = model_info['affinity']
@@ -86,7 +90,7 @@ def render_dendrogram_and_process_clusters(model_info, labels, color_threshold, 
     reset_folder(app_folder)
     os.makedirs(app_folder, exist_ok=True)
 
-    # Ensure linkage_matrix is computed based on the correct data
+    # Compute the linkage matrix
     linkage_matrix = linkage(original_data, method='average', metric='euclidean')
 
     # Generate and save the general dendrogram
@@ -118,9 +122,10 @@ def render_dendrogram_and_process_clusters(model_info, labels, color_threshold, 
         if color == 'grey':
             continue  # Skip grey clusters
         if color not in cluster_map:
-            cluster_map[color] = {'labels': [], 'distances': [], 'linkage_data': []}
+            cluster_map[color] = {'labels': [], 'indices': []}
         label = labels[leaf]
         cluster_map[color]['labels'].append(label)
+        cluster_map[color]['indices'].append(leaf)
 
     # Save hierarchical JSON for the general dendrogram
     general_json = build_hierarchical_json(linkage_matrix, labels)
@@ -133,23 +138,12 @@ def render_dendrogram_and_process_clusters(model_info, labels, color_threshold, 
     return cluster_map
 
 
-def extract_sub_linkage_matrix_from_parent(original_data, cluster_indices):
-
-    # Filter the original data points to include only the cluster indices
-    sub_data = original_data[cluster_indices]
-
-    # Recalculate the linkage matrix for the subset of data
-    sub_linkage_matrix = linkage(sub_data, method='average', metric='euclidean')
-
-    return sub_linkage_matrix
-
-
 def process_and_save_clusters(cluster_map, application_name, app_folder, original_data, color_threshold):
     final_csv_data = []
 
     for cluster_id, (color, cluster_data) in enumerate(cluster_map.items(), start=1):
         cluster_labels = cluster_data['labels']
-        cluster_indices = [i for i, label in enumerate(cluster_labels)]
+        cluster_indices = cluster_data['indices']
 
         print(f"Processing Cluster {cluster_id} (Color: {color}): Labels = {cluster_labels}")
 
@@ -162,23 +156,15 @@ def process_and_save_clusters(cluster_map, application_name, app_folder, origina
         cluster_folder = os.path.join(app_folder, cluster_label)
         os.makedirs(cluster_folder, exist_ok=True)
 
-        # Extract sub-linkage matrix directly from the parent
         sub_linkage_matrix = extract_sub_linkage_matrix_from_parent(original_data, cluster_indices)
 
         # Prepare labels for the sub-cluster dendrogram
         sub_labels = [cluster_labels[i] for i in range(len(cluster_labels))]
 
-        if len(sub_labels) != sub_linkage_matrix.shape[0] + 1:
-            raise ValueError(
-                f"Inconsistent dimensions: {len(sub_labels)} labels for {sub_linkage_matrix.shape[0] + 1} leaves."
-            )
-
-        # Save the dendrogram as a horizontal plot
-        plt.figure(figsize=(30, 5))
+        plt.figure(figsize=(30, 10))
         dendrogram(
             sub_linkage_matrix,
             labels=sub_labels,
-            leaf_rotation=0,  # Rotate leaves for horizontal alignment
             leaf_font_size=10,
             orientation='right',
             color_threshold=color_threshold
@@ -186,12 +172,17 @@ def process_and_save_clusters(cluster_map, application_name, app_folder, origina
         plt.title(f"Dendrogram for Cluster {cluster_id} ({color})")
         plt.xlabel("Distance")
         plt.ylabel("Cluster Labels")
-        dendrogram_path = os.path.join(cluster_folder, f"{cluster_label}_dendrogram.png")
-        plt.savefig(dendrogram_path)
+        sub_dendrogram_path = os.path.join(cluster_folder, f"{cluster_label}_dendrogram.png")
+        plt.savefig(sub_dendrogram_path)
         plt.close()
-        print(f"Dendrogram for Cluster {cluster_id} saved at: {dendrogram_path}")
+        print(f"Sub-dendrogram for Cluster {cluster_id} saved at: {sub_dendrogram_path}")
 
-        # Save hierarchical JSON for the sub-cluster
+        # Save individual cluster CSV
+        cluster_csv_path = os.path.join(cluster_folder, f"{cluster_label}_features.csv")
+        cluster_df = pd.DataFrame({'Feature': cluster_labels})
+        cluster_df.to_csv(cluster_csv_path, index=False)
+        print(f"CSV for Cluster {cluster_id} saved at: {cluster_csv_path}")
+
         print(f"Saving hierarchical JSON for Cluster {cluster_id}...")
         sub_json = build_hierarchical_json(sub_linkage_matrix, sub_labels)
         sub_json_path = os.path.join(cluster_folder, f"{cluster_label}_hierarchy.json")
@@ -202,7 +193,7 @@ def process_and_save_clusters(cluster_map, application_name, app_folder, origina
         final_csv_data.append({
             "Cluster ID": cluster_id,
             "Cluster Name": dynamic_label,
-            "Feature List": cluster_labels
+            "Feature List": ", ".join(cluster_labels)
         })
 
     # Save final summary CSV
