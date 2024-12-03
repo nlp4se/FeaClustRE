@@ -4,7 +4,6 @@ import argparse
 import logging
 import os
 
-# Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def generate_dendogram(input_file):
@@ -26,7 +25,6 @@ def generate_dendogram(input_file):
     
     logging.info(f"Preparing request for app: {app_name}")
 
-    # Send the request
     try:
         response = requests.post(url, headers=headers, json={'app_name': app_name, 'features': data})
         logging.info(f"Request sent to {url}")
@@ -34,10 +32,8 @@ def generate_dendogram(input_file):
         logging.error(f"Error sending request: {e}")
         return
 
-    # Check if the request was successful
     if response.status_code == 200:
         logging.info("Dendogram generated successfully.")
-        # You can add more code here to handle the response if needed
     else:
         logging.error(f"Error generating dendogram. Status code: {response.status_code}")
         logging.error(f"Response: {response.text}")

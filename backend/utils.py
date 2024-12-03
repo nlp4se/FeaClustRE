@@ -5,9 +5,11 @@ import torch
 import numpy as np
 import spacy
 
-MODEL_DIRECTORY_PATH = 'static' + os.path.sep + 'pkls'
-MODEL_DIRECTORY_CSV_PATH = 'static' + os.path.sep + 'csv'
-MODEL_DIRECTORY_CSV_EMBEDDIGNS_PATH = 'static' + os.path.sep + 'csv' + os.path.sep + 'embeddings'
+BASE_DATA_PATH = os.path.join('data', 'Stage 2 - Hierarchical Clustering', 'output')
+
+MODEL_DIRECTORY_PATH = os.path.join(BASE_DATA_PATH, 'pkls')
+MODEL_DIRECTORY_CSV_PATH = os.path.join(BASE_DATA_PATH, 'csv')
+MODEL_DIRECTORY_CSV_EMBEDDINGS_PATH = os.path.join('static', 'csv', 'embeddings')
 
 class Utils:
     @staticmethod
