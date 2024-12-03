@@ -3,8 +3,9 @@ import requests
 import glob
 
 # Configurable parameters
-INPUT_FOLDER = r'C:\Users\Max\NLP4RE\Dendogram-Generator\data\Stage 1 - Feature extraction\input-preprocessed'
+INPUT_FOLDER = r'C:\Users\Max\NLP4RE\Dendogram-Generator\data\Stage 2 - Hierarchical Clustering\input'
 BASE_URL = 'http://127.0.0.1:3008/dendogram/generate_kg'
+
 DEFAULT_PARAMS = {
     'preprocessing': 'true',
     'affinity': 'bert',

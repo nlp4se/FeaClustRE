@@ -7,7 +7,7 @@ import spacy
 
 BASE_DATA_PATH = os.path.join('data', 'Stage 2 - Hierarchical Clustering', 'output')
 
-MODEL_DIRECTORY_PATH = os.path.join(BASE_DATA_PATH, 'pkls')
+MODEL_DIRECTORY_PATH = os.path.join(BASE_DATA_PATH)
 MODEL_DIRECTORY_CSV_PATH = os.path.join(BASE_DATA_PATH, 'csv')
 MODEL_DIRECTORY_CSV_EMBEDDINGS_PATH = os.path.join('static', 'csv', 'embeddings')
 
