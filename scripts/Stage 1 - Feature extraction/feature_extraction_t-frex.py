@@ -17,22 +17,9 @@ def extract_features_from_review(review, ner_pipeline):
     extracted_features = []
     for sentence in sentences:
         ner_results = ner_pipeline(sentence)
-        current_feature = []
         for entity in ner_results:
-            if (len(entity['word']) > 2):
+            if entity['score'] > 0.5:
                 extracted_features.append(entity['word'])
-            # print(entity)
-            # if entity['entity'] == 'B-feature':
-                # Start of a new feature
-                # if current_feature:
-                    # extracted_features.append(" ".join(current_feature))
-                # current_feature = [entity['word']]
-            # elif entity['entity'] == 'I-feature':
-                # Continuation of a feature
-                # current_feature.append(entity['word'])
-        # Append the last feature, if any
-        # if current_feature:
-            # extracted_features.append(" ".join(current_feature))
 
     return ";".join(extracted_features)
 
@@ -66,7 +53,7 @@ def process_folder(input_folder, output_folder):
     Process all CSV files in the input folder.
     """
     # Load the NER pipeline
-    ner_pipeline = pipeline("ner", model="quim-motger/t-frex-xlnet-large-cased", aggregation_strategy="simple")
+    ner_pipeline = pipeline("ner", model="quim-motger/t-frex-bert-base-uncased", aggregation_strategy="simple")
 
     # Ensure the output folder exists
     os.makedirs(output_folder, exist_ok=True)
