@@ -199,7 +199,8 @@ def process_and_save_clusters(cluster_map, application_name, app_folder, origina
 
 def generate_dendrogram_visualization(model_file):
     model_info = joblib.load(model_file)
-    distance_threshold = 5
+    distance_threshold = model_info['distance_threshold']
+    distance_threshold *= 10
     labels = model_info['labels']
     original_data = model_info['data_points']
 
@@ -213,8 +214,9 @@ def generate_dendrogram_visualization(model_file):
 
 
 # TODO split stage 3 before and after llama
+# TODO dynamic paths, remove hardcoded
 if __name__ == "__main__":
-    pkls_directory = r"C:\Users\Max\NLP4RE\Dendogram-Generator\static\pkls"
+    pkls_directory = r"C:\Users\Max\NLP4RE\Dendogram-Generator\data\Stage 2 - Hierarchical Clustering\output"
     for filename in os.listdir(pkls_directory):
         if filename.endswith('.pkl'):
             model_file = os.path.join(pkls_directory, filename)
