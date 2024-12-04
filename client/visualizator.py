@@ -73,7 +73,6 @@ def extract_sub_linkage_matrix_from_parent(original_data, cluster_indices):
     sub_linkage_matrix = linkage(sub_data, method='average', metric='euclidean')
     return sub_linkage_matrix
 
-
 def render_dendrogram_and_process_clusters(model_info, labels, color_threshold, original_data):
     application_name = model_info['application_name']
     affinity = model_info['affinity']
@@ -102,6 +101,7 @@ def render_dendrogram_and_process_clusters(model_info, labels, color_threshold, 
         above_threshold_color='grey',
         ax=ax
     )
+    ax.axvline(x=color_threshold, color='red', linestyle='--', linewidth=2)
     ax.set_title(
         f"{application_name} | {affinity} | Distance Threshold: {color_threshold} "
         f"| Verb Weight: {verb_weight} | Object Weight: {object_weight}",
@@ -124,6 +124,8 @@ def render_dendrogram_and_process_clusters(model_info, labels, color_threshold, 
         cluster_map[color]['labels'].append(label)
         cluster_map[color]['indices'].append(leaf)
 
+    print(f"Detected {len(cluster_map)} unique clusters for processing.")
+
     # Save hierarchical JSON for the general dendrogram
     general_json = build_hierarchical_json(linkage_matrix, labels)
     general_json_path = os.path.join(app_folder, f"{application_name}_general_hierarchy.json")
@@ -142,6 +144,7 @@ def process_and_save_clusters(cluster_map, application_name, app_folder, origina
         cluster_indices = cluster_data['indices']
 
         print(f"Processing Cluster {cluster_id} (Color: {color}): Labels = {cluster_labels}")
+        print(f"Detected {len(cluster_labels)} labels in Cluster {cluster_id}.")
 
         dynamic_label = generate_dynamic_label(cluster_labels)
         print(f"Generated label for Cluster {cluster_id}: {dynamic_label}")
@@ -158,7 +161,7 @@ def process_and_save_clusters(cluster_map, application_name, app_folder, origina
         dendrogram(
             sub_linkage_matrix,
             labels=sub_labels,
-            leaf_font_size=10,
+            leaf_font_size=15,  # Increased font size for readability
             orientation='right',
             color_threshold=color_threshold
         )
@@ -216,10 +219,12 @@ def generate_dendrogram_visualization(model_file):
 # TODO split stage 3 before and after llama
 # TODO dynamic paths, remove hardcoded
 if __name__ == "__main__":
-    pkls_directory = r"C:\Users\Max\NLP4RE\Dendogram-Generator\data\Stage 2 - Hierarchical Clustering\output"
+    pkls_directory = r"C:\Users\Max\NLP4RE\Dendogram-Generator\data\Stage 3 - Topic Modelling\input"
     for filename in os.listdir(pkls_directory):
         if filename.endswith('.pkl'):
+            print("----")
+            print(f"STARTING PROCESSING: {filename}")
             model_file = os.path.join(pkls_directory, filename)
-            print(f"Processing: {model_file}")
             clusters = generate_dendrogram_visualization(model_file)
-            print(f"Clusters for {filename}: {clusters}")
+            print(f"FINISHED PROCESSING: {filename}")
+            print("----")
