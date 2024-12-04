@@ -213,7 +213,6 @@ def generate_dendrogram_visualization(model_file):
 
 
 # TODO split stage 3 before and after llama
-# TODO add csv as input instead of json
 if __name__ == "__main__":
     pkls_directory = r"C:\Users\Max\NLP4RE\Dendogram-Generator\static\pkls"
     for filename in os.listdir(pkls_directory):
