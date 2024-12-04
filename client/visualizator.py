@@ -7,6 +7,8 @@ import pandas as pd
 import json
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 import torch
+from matplotlib import cm
+from matplotlib.colors import to_hex
 
 model_name = "meta-llama/Llama-3.2-3B"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -89,6 +91,16 @@ def render_dendrogram_and_process_clusters(model_info, labels, color_threshold, 
     # Compute the linkage matrix
     linkage_matrix = linkage(original_data, method='average', metric='euclidean')
 
+    # Generate a palette of infinite colors for subclusters
+    n_clusters = len(linkage_matrix) + 1  # Number of clusters (number of data points + internal nodes)
+    color_palette = [to_hex(cm.tab20b(i / n_clusters)) for i in range(n_clusters)]
+
+    # Define a function to assign colors to clusters dynamically
+    def link_color_func(link_id):
+        if linkage_matrix[link_id - len(labels), 2] > color_threshold:  # Check the distance for internal nodes
+            return '#808080'  # Grey color for above-threshold links
+        return color_palette[link_id % len(color_palette)]  # Dynamic color for subclusters
+
     # Generate and save the general dendrogram
     fig, ax = plt.subplots(figsize=(30, 30))
     dendrogram_result = dendrogram(
@@ -99,6 +111,7 @@ def render_dendrogram_and_process_clusters(model_info, labels, color_threshold, 
         orientation='right',
         distance_sort='descending',
         above_threshold_color='grey',
+        link_color_func=link_color_func,
         ax=ax
     )
     ax.axvline(x=color_threshold, color='red', linestyle='--', linewidth=2)
@@ -116,7 +129,7 @@ def render_dendrogram_and_process_clusters(model_info, labels, color_threshold, 
     # Extract clusters based on colors
     cluster_map = {}
     for leaf, color in zip(dendrogram_result['leaves'], dendrogram_result['leaves_color_list']):
-        if color == 'grey':
+        if color == '#808080':
             continue  # Skip grey clusters
         if color not in cluster_map:
             cluster_map[color] = {'labels': [], 'indices': []}
