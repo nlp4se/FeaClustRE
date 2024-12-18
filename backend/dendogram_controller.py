@@ -1,10 +1,8 @@
-from flask import Blueprint, request, make_response
+import csv
+from flask import Blueprint, request, make_response, jsonify
 from . import dendogram_service
-import json
+
 bp = Blueprint('dendogram', __name__, url_prefix='/dendogram')
-
-
-from flask import jsonify
 
 @bp.route('/generate', methods=['POST'])
 def generate_dendogram():
@@ -40,10 +38,8 @@ def generate_dendogram():
     return jsonify({"message": "Dendrogram generated successfully", "dendrogram_path": dendogram_file}), 200
 
 
-
-
 @bp.route('/generate_kg', methods=['POST'])
-def generate_dendogram_from_body():
+def generate_dendogram_from_csv():
     preprocessing = request.args.get('preprocessing', 'false')
     affinity = request.args.get('affinity', 'bert')
     linkage = request.args.get('linkage', 'average')
@@ -57,21 +53,30 @@ def generate_dendogram_from_body():
           f"affinity={affinity}, "
           f"metric={metric}, "
           f"linkage={linkage}, "
-          f"threshold={threshold} ",
-          f"object_weight={object_weight} ",
-          f"verb_weight={verb_weight} ",
+          f"threshold={threshold}, "
+          f"object_weight={object_weight}, "
+          f"verb_weight={verb_weight}, "
           f"app_name={app_name}")
 
-    request_content = request.get_json()
-    if request_content is None:
-        return make_response("Invalid JSON body", 400)
+    if 'file' not in request.files:
+        return make_response("CSV file is required", 400)
+
+    file = request.files['file']
+    if not file.filename.endswith('.csv'):
+        return make_response("File must be a CSV", 400)
 
     features = []
-    for review in request_content.get("analyzed_reviews", []):
-        for sentence in review.get("sentences", []):
-            feature = sentence.get("featureData", {}).get("feature", "")
-            if feature:
-                features.append(feature)
+    try:
+        # Read the file directly using TextIOWrapper
+        file_content = file.stream.read().decode('utf-8')
+        csv_reader = csv.DictReader(file_content.splitlines())
+        for row in csv_reader:
+            extracted_features = row.get("extracted_features_TransFeatEx", "")
+            if extracted_features:
+                features.extend(extracted_features.split(';'))
+    except Exception as e:
+        print(f"Error processing CSV: {e}")
+        return make_response("Error processing CSV file", 500)
 
     request_content = {
         "app_name": app_name,

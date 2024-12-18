@@ -13,9 +13,7 @@ dist/
 build/
 *.egg-info/
 *.lock
-*.pkl
 *.png
-*.csv
 *.zip
 
 /.idea
