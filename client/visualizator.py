@@ -140,7 +140,7 @@ def render_dendrogram_and_process_clusters(model_info, labels, color_threshold, 
     affinity = model_info['affinity']
     verb_weight = model_info.get('verb_weight', 'N/A')
     object_weight = model_info.get('object_weight', 'N/A')
-    static_folder = r"C:\Users\Max\Dendogram-Generator\static\png"
+    static_folder = os.path.join("..", "data", "Stage 3 - Topic Modelling", "output")
     app_folder = os.path.join(
         static_folder,
         f"{affinity}_{application_name}_dt-{color_threshold}_vw-{verb_weight}_ow-{object_weight}".replace(" ", "_")
@@ -230,6 +230,7 @@ def process_and_save_clusters(cluster_map, application_name, app_folder, origina
         cluster_folder = os.path.join(app_folder, cluster_label)
         os.makedirs(cluster_folder, exist_ok=True)
 
+        # Process dendrogram
         sub_linkage_matrix = extract_sub_linkage_matrix_from_parent(original_data, cluster_indices)
         sub_labels = [cluster_labels[i] for i in range(len(cluster_labels))]
 
@@ -244,10 +245,14 @@ def process_and_save_clusters(cluster_map, application_name, app_folder, origina
         plt.title(f"Dendrogram for Cluster {cluster_id} ({color}) | label: {dynamic_label}")
         plt.xlabel("Distance")
         plt.ylabel("Cluster Labels")
+
+        # Save dendrogram image
         sub_dendrogram_path = os.path.join(cluster_folder, f"{cluster_label}_dendrogram.png")
+        os.makedirs(os.path.dirname(sub_dendrogram_path), exist_ok=True)  # Create directory if missing
         plt.savefig(sub_dendrogram_path)
         plt.close()
 
+        # Save cluster CSV
         cluster_csv_path = os.path.join(cluster_folder, f"{cluster_label}_features.csv")
         cluster_df = pd.DataFrame([{
             "Cluster Name": dynamic_label,
@@ -255,6 +260,7 @@ def process_and_save_clusters(cluster_map, application_name, app_folder, origina
         }])
         cluster_df.to_csv(cluster_csv_path, index=False)
 
+        # Save hierarchical JSON
         sub_json = build_hierarchical_json(sub_linkage_matrix, sub_labels)
         sub_json_path = os.path.join(cluster_folder, f"{cluster_label}_hierarchy.json")
         save_json(sub_json, sub_json_path)
@@ -265,6 +271,7 @@ def process_and_save_clusters(cluster_map, application_name, app_folder, origina
             "Feature List": ", ".join(cluster_labels)
         })
 
+    # Save final summary CSV
     final_csv_path = os.path.join(app_folder, f"{application_name}_clusters_summary.csv")
     final_csv_df = pd.DataFrame(final_csv_data)
     final_csv_df.to_csv(final_csv_path, index=False)
