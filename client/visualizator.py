@@ -97,7 +97,6 @@ def reassign_dendrogram_colors(dendrogram_result, num_colors):
 
     for i, color in enumerate(dendrogram_result['color_list']):
         if color == 'grey':
-            # Preserve grey as is, representing branches above the color threshold
             new_color_list.append('grey')
             continue
 
@@ -111,7 +110,6 @@ def reassign_dendrogram_colors(dendrogram_result, num_colors):
         else:
             new_color_list.append(cluster_color_map[current_color])
 
-    # Process `leaves_color_list` similarly
     current_color = None
     cluster_color_map = {}  # Reset cluster mapping for leaves
     current_cluster_id = 0  # Reset cluster ID for leaves
@@ -130,7 +128,6 @@ def reassign_dendrogram_colors(dendrogram_result, num_colors):
 
         new_leaves_color_list.append(cluster_color_map[current_color])
 
-    # Update dendrogram result
     dendrogram_result['color_list'] = new_color_list
     dendrogram_result['leaves_color_list'] = new_leaves_color_list
 
@@ -151,24 +148,6 @@ def render_dendrogram_and_process_clusters(model_info, labels, color_threshold, 
     linkage_matrix = linkage(original_data, method='average', metric='euclidean')
 
     fig, ax = plt.subplots(figsize=(30, 30))
-    dendrogram_result = dendrogram(
-        linkage_matrix,
-        labels=labels,
-        color_threshold=color_threshold,
-        leaf_font_size=10,
-        orientation='right',
-        distance_sort='descending',
-        above_threshold_color='grey',
-        ax=ax,
-        no_plot=True
-    )
-    num_colors = len(labels)
-    reassigned_colors = reassign_dendrogram_colors(dendrogram_result, num_colors)
-
-    def link_color_func(link_id):
-        if link_id < len(reassigned_colors['color_list']):
-            return reassigned_colors['color_list'][link_id]
-        return 'grey'
 
     dendrogram(
         linkage_matrix,
@@ -194,6 +173,20 @@ def render_dendrogram_and_process_clusters(model_info, labels, color_threshold, 
     print(f"Final dendrogram saved at: {final_dendrogram_path}")
 
     cluster_map = {}
+    dendrogram_result = dendrogram(
+        linkage_matrix,
+        labels=labels,
+        color_threshold=color_threshold,
+        leaf_font_size=10,
+        orientation='right',
+        distance_sort='descending',
+        above_threshold_color='grey',
+        ax=ax,
+        no_plot=True
+    )
+    num_colors = len(labels)
+    reassign_dendrogram_colors(dendrogram_result, num_colors)
+
     for leaf, color in zip(dendrogram_result['leaves'], dendrogram_result['leaves_color_list']):
         if color == 'grey':
             continue
