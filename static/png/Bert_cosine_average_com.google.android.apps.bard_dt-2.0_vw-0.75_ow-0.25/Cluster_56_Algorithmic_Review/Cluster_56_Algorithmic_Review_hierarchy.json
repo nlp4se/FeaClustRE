@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.7755262838308679,
-    "children": [
-        {
-            "id": 0,
-            "label": "revise own algorithm"
-        },
-        {
-            "id": 1,
-            "label": "revise review"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:30a7f9227c6e8a46e459b5009097ba7811495440059afb906c09b891ef7ba810
+size 253

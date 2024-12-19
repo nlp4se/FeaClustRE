@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "take time"
-        },
-        {
-            "id": 1,
-            "label": "take lot"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:8ee677673fd4e5842b48d8424f4e84a73ced549be7bb88037496b9880f6b67ec
+size 222

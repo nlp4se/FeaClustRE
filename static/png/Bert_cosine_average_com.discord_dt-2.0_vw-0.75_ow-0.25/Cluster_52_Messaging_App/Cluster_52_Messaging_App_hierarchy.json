@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 3,
-            "label": "very good messaging app"
-        },
-        {
-            "id": 5,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "good messaging app"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.0,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "abyssmal messaging service"
-                        },
-                        {
-                            "id": 1,
-                            "label": "fun messaging app"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:ea935d7fb61987bbcba9fe13fc69c20dcd5fe366a53aa85b8cb320ea86ad45fd
+size 869

@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "like but login problem"
-        },
-        {
-            "id": 1,
-            "label": "have login"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:3574ad1f5072af57ae012bfdcfe644eb8371517ea160e9cade22a9fe9a8b2cab
+size 237

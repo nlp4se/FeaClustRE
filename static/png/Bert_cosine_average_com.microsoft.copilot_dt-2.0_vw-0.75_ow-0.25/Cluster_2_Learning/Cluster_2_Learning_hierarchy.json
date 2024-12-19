@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.9058475837946145,
-    "children": [
-        {
-            "id": 0,
-            "label": "enhance learning"
-        },
-        {
-            "id": 1,
-            "label": "understand grading"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:918aa227ed38e0ab2579b46bb6fbce68022082ea2552b296c826a60d333e176f
+size 254

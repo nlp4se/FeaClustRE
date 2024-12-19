@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 1.6842033407231027,
-    "children": [
-        {
-            "id": 4,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "check server"
-                },
-                {
-                    "id": 3,
-                    "label": "check patch note"
-                }
-            ]
-        },
-        {
-            "id": 5,
-            "distance": 1.3723623622631984,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "check set"
-                },
-                {
-                    "id": 1,
-                    "label": "check app setting"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:b280903544f990a44b0471785349a9ebdab68132b0256bee1e02721a2c1fec04
+size 789

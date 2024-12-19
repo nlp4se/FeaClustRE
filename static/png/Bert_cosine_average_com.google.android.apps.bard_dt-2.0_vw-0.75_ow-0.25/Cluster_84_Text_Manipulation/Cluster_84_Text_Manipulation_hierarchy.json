@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "cut word"
-        },
-        {
-            "id": 1,
-            "label": "0261pixie cut"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:3df5babe7c3c1692e4fa72a09d1a594f8914740569564928eb4a564c46773a98
+size 226

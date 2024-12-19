@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.7038101185332309,
-    "children": [
-        {
-            "id": 0,
-            "label": "force ai"
-        },
-        {
-            "id": 1,
-            "label": "force move"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:b1d6bc76ed9c4f5c149ea31f8fdea005aae4f7ba9b13f652d23d624485ebf9a2
+size 238

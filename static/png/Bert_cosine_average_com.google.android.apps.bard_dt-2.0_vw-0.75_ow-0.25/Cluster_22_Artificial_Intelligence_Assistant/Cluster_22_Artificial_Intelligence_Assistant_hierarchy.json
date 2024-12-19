@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 1.246219766239421,
-    "children": [
-        {
-            "id": 3,
-            "label": "beat device ai assistant"
-        },
-        {
-            "id": 5,
-            "distance": 1.0702126267141554,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "beat other ai app"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.8126411104371145,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "beat competition"
-                        },
-                        {
-                            "id": 1,
-                            "label": "beat siri"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:b05036fc9385ad00153bc141730d04d3cb16c8fcee25399d3716e1ecf77313fe
+size 895

@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.895878239821961,
-    "children": [
-        {
-            "id": 0,
-            "label": "click verify"
-        },
-        {
-            "id": 1,
-            "label": "click watch screenshare"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:0f2858577fd0140d239b6740b2aa2a6b3d439c814e58dc12b9b0391968596f95
+size 254

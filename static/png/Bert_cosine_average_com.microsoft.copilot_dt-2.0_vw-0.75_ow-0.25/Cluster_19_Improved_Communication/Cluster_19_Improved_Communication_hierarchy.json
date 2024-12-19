@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.9683694585073896,
-    "children": [
-        {
-            "id": 0,
-            "label": "improve vic chat"
-        },
-        {
-            "id": 1,
-            "label": "ensure precise communication"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:6270e4a6bde619483118a9a941af5666746849e7a1b57df3cb7d3b1380a98f0b
+size 264

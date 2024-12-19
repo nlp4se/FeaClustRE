@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 1.049515549773908,
-    "children": [
-        {
-            "id": 3,
-            "label": "build real stargate"
-        },
-        {
-            "id": 5,
-            "distance": 0.5915559056367133,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "build relationship"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.5573064704421904,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "build idea"
-                        },
-                        {
-                            "id": 1,
-                            "label": "build knowledge"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:845f4acaf15d37c826a49b6084283c468b22a01c2b2dd0f544e4bc4270a1fab3
+size 891
