@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.824984207026782,
-    "children": [
-        {
-            "id": 0,
-            "label": "set dp"
-        },
-        {
-            "id": 1,
-            "label": "make dp"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:448801a5b32d44a3f930ee00777aa11c7d3e8d21b1bd50770bd506c9269bcb14
+size 232

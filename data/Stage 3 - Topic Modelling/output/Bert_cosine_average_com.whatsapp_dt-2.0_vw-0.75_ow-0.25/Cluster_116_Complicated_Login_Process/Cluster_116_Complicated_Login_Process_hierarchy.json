@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.5220622679155055,
-    "children": [
-        {
-            "id": 0,
-            "label": "complicate thing"
-        },
-        {
-            "id": 1,
-            "label": "complicate app login process"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:ef6002ab77ae812ce70c2ae5fc4115f7ffa59195127bb192bbfc35fb46707123
+size 264

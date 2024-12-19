@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "limit"
-        },
-        {
-            "id": 1,
-            "label": "limit file upload"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:a9d84f69a8234316a531b425d77bd2ac06a9b5d10cde7108b398524e1e489201
+size 227

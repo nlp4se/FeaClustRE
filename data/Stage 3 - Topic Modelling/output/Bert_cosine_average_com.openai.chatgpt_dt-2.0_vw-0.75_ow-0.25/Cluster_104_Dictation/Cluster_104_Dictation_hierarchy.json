@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.7172404867576346,
-    "children": [
-        {
-            "id": 0,
-            "label": "dictate society"
-        },
-        {
-            "id": 1,
-            "label": "dictate important stuff"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:3228e549ffd25aad8a3512dc0894b324ebcd0689f98209d41fbf64e280623886
+size 258

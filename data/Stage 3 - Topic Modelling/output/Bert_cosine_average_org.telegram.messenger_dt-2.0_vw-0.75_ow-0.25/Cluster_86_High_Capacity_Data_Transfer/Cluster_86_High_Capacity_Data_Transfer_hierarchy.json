@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "upload100mb"
-        },
-        {
-            "id": 1,
-            "label": "have100mb"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:fe96d4860b2c4b3bb2381fd31241b4ccb73c5e66470b2b6ce40c46842d42d4cd
+size 225

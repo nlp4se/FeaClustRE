@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "review account"
-        },
-        {
-            "id": 1,
-            "label": "not review"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:64c2231703889ef2f6e34c92ff5ebfabe3369dcf2cfeea10ff23867416f42b42
+size 229

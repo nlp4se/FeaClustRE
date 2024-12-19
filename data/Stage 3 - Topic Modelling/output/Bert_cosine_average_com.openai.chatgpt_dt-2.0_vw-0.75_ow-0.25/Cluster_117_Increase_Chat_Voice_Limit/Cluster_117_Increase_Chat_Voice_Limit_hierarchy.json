@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "increase chat voice"
-        },
-        {
-            "id": 1,
-            "label": "increase chat limit"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:39b9d90422436a8472b45d63c98ecc1ccd5b17ff82bda42c27bb72b4cfadb4c0
+size 243

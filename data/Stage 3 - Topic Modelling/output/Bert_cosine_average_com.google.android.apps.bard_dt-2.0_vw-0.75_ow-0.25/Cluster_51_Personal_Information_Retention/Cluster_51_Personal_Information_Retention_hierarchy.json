@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.7017119192731438,
-    "children": [
-        {
-            "id": 2,
-            "label": "retain context"
-        },
-        {
-            "id": 3,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "retain information"
-                },
-                {
-                    "id": 1,
-                    "label": "retain personal information"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:e9ebbf99a610f140ac0f86ae28e23f6dfa7cff98591132513457a0aaf2404c4d
+size 529

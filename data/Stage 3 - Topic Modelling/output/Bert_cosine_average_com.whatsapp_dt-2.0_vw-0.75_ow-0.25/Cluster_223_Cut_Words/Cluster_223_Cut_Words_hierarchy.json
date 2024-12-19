@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "cut word"
-        },
-        {
-            "id": 1,
-            "label": "cut lot"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:7dd6df5606570d2b6d3fc0fe27ec258167f657b4ff1d3b85311475037135eeea
+size 220

@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.9189463313096702,
-    "children": [
-        {
-            "id": 0,
-            "label": "improve status saving"
-        },
-        {
-            "id": 1,
-            "label": "improve set"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:30da84690c85e19f3d96b65bb541dd4d4cd6389d0c74601bf5bbf949fcfc602b
+size 252

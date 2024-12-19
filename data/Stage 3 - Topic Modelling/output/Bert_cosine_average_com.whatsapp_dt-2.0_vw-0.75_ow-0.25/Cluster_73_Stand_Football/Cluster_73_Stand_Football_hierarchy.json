@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.9508657724074803,
-    "children": [
-        {
-            "id": 0,
-            "label": "stand football"
-        },
-        {
-            "id": 1,
-            "label": "out stand app"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:fa58c11161cff9f25b2e703423d0342475d279d48377c57e860563eed041113c
+size 247

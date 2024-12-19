@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 1.5061567285119286,
-    "children": [
-        {
-            "id": 3,
-            "label": "exchange crypto"
-        },
-        {
-            "id": 5,
-            "distance": 1.0634690219533143,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "good crypto earn app"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.713540494475563,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "do crypto mining"
-                        },
-                        {
-                            "id": 1,
-                            "label": "have crypto wallet"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:89be44e7c979b5c9ff547bed79a6e20f3836805c78c0f5af56abd8d03243ff03
+size 898

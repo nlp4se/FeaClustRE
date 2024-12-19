@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 1.7909956226564223,
-    "children": [
-        {
-            "id": 4,
-            "distance": 0.6045520218611933,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "shut chat"
-                },
-                {
-                    "id": 3,
-                    "label": "shut conversation"
-                }
-            ]
-        },
-        {
-            "id": 5,
-            "distance": 0.6064368288827932,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "open many app"
-                },
-                {
-                    "id": 1,
-                    "label": "open other chat"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:01bd51b93b104373a8910f3777f7bc2655bf909b9baeec91acd444a86e51b1a4
+size 804

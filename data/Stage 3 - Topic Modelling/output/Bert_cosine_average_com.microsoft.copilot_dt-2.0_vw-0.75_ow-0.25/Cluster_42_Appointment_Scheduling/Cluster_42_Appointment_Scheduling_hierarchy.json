@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "set apppintment"
-        },
-        {
-            "id": 1,
-            "label": "and set"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:b69acce7f324c6d0ef1277f6cb1774dd9aca5cec12009cda57d62cb02cefa4c3
+size 227

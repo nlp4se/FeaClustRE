@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 2,
-            "label": "why not work"
-        },
-        {
-            "id": 3,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "do work"
-                },
-                {
-                    "id": 1,
-                    "label": "not work"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:dd0c238fa186c1dd7879c113ecb4ab20f16062830c834d7898e39b10881f0551
+size 482

@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.5525922870713869,
-    "children": [
-        {
-            "id": 2,
-            "label": "draw idea"
-        },
-        {
-            "id": 3,
-            "distance": 0.46018445533819474,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "draw pattern"
-                },
-                {
-                    "id": 1,
-                    "label": "draw attention"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:4d866c280773cf9d54b3c1f9e4c32e3628354d7ebc195ccc561a6c80c20233c4
+size 521

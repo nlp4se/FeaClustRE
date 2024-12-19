@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.848120976209658,
-    "children": [
-        {
-            "id": 0,
-            "label": "very spacious and accommodate application"
-        },
-        {
-            "id": 1,
-            "label": "disturb eardrum"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:8f425b1d8c909ea77583e794e4074ce2a59afa7c094e2cbf2e2d1d2e5951963e
+size 275

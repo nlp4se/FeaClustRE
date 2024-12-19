@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "ask4digit pin"
-        },
-        {
-            "id": 1,
-            "label": "pin message"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:6d821e91c63f739853c65d60b5267d9462988428881a285aa2ee2f1778f30cf0
+size 229

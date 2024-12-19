@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 0.808562913666017,
-    "children": [
-        {
-            "id": 3,
-            "label": "recieve sms"
-        },
-        {
-            "id": 5,
-            "distance": 0.6774211012989253,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "recieve call"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.6152163918419267,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "recieve code"
-                        },
-                        {
-                            "id": 1,
-                            "label": "recieve waste"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:b8511728e805bacb2e48671c23de2cde89d4b97f37812571945736a301881070
+size 877

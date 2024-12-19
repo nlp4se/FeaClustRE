@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.5682430187591785,
-    "children": [
-        {
-            "id": 0,
-            "label": "scam money"
-        },
-        {
-            "id": 1,
-            "label": "scam other people"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:76ff94dd95bc250494db9873e150fdfb3b64220f8fe0d77fc581ab102598a5b6
+size 247

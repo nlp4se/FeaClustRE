@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.9219672438517931,
-    "children": [
-        {
-            "id": 2,
-            "label": "streamline goal"
-        },
-        {
-            "id": 3,
-            "distance": 0.6556773121130953,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "streamline work"
-                },
-                {
-                    "id": 1,
-                    "label": "streamline research"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:4c0e824f9aec476280c96465ad9ef6ee5dc2af9a19f4ae764fb58dfa4f454146
+size 534

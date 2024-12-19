@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "currently bff"
-        },
-        {
-            "id": 1,
-            "label": "bff"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:254a9efd2a301ae4c6d4a6f0648d4845eab47cb40cc61b5ebb16296f51ab9a59
+size 221

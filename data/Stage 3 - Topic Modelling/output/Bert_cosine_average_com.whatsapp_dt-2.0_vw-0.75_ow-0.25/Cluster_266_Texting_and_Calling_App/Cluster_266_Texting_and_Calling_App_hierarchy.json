@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 2,
-            "label": "easy safe texting app"
-        },
-        {
-            "id": 3,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "free good calling and texting app"
-                },
-                {
-                    "id": 1,
-                    "label": "good texting app"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:339c316355a9503d3b9177ccc97fcb71e83c277f14ee47cfcdc00c5f0cbd0f16
+size 525

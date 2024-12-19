@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "log account"
-        },
-        {
-            "id": 1,
-            "label": "log app"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:70b5134dd63638a3c8d99baafc635a48e53e491c1b15ea120a424bda0cdeb65d
+size 223

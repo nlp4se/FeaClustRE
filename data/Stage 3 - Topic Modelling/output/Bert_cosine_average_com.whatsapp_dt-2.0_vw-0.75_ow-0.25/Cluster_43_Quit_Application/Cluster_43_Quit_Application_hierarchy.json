@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.104567776700746,
-    "children": [
-        {
-            "id": 0,
-            "label": "quit app"
-        },
-        {
-            "id": 1,
-            "label": "quit whatsapp"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:92494d067d7d60a94943c106eb657b98ddfa383d6568ce4319610ff690bd0647
+size 240

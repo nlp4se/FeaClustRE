@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 2,
-            "label": "know basic"
-        },
-        {
-            "id": 3,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "know alot"
-                },
-                {
-                    "id": 1,
-                    "label": "know right way"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:50f63a60049e91aa2e41e02a5c2e79a97e3926f149fd38e3fd21aeac7b1c0409
+size 488

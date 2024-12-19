@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "telegram connect problem"
-        },
-        {
-            "id": 1,
-            "label": "connect thinh"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:866c68b24d178243fdccbab33e3e51ec5208b9e70f5edf1318f3f703fb9173d9
+size 242

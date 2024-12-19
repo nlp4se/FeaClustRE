@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 3,
-            "label": "well thank"
-        },
-        {
-            "id": 5,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "so thank"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.0,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "thank lot"
-                        },
-                        {
-                            "id": 1,
-                            "label": "thank"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:4b2c7d81b76ef73a79cd2573b41770eda6e3ac1383518fb4ec92a58c9c965c04
+size 817

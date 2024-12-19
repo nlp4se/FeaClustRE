@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 1.755856221189533,
-    "children": [
-        {
-            "id": 2,
-            "label": "include follow"
-        },
-        {
-            "id": 3,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "have follow"
-                },
-                {
-                    "id": 1,
-                    "label": "follow owner"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:fcea1b66d88a725738add98b1f1cafc43afb8101cd96c00e4ee867c67f4ce21f
+size 506

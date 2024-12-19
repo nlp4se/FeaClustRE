@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 3,
-            "label": "open great path"
-        },
-        {
-            "id": 5,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "open new chat"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.0,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "open tab"
-                        },
-                        {
-                            "id": 1,
-                            "label": "open ap"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:3e725ab429d6f4624b584c7db35ba5d8415959694e7849c0f1a3272f539ed950
+size 828

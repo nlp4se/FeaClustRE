@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "beat google"
-        },
-        {
-            "id": 1,
-            "label": "beat"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:f358d58e7b22eb5e8d49d63c7e33dbe9162cb34e8662cd8cdb6d327d94c96c27
+size 220

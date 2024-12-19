@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "jump dozen"
-        },
-        {
-            "id": 1,
-            "label": "jump scroll"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:ed0e58eebfcf21eaf99179851839f7735366922a61453c7c1457b9a1d553bb3a
+size 226

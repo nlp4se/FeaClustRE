@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 1.9178945432067218,
-    "children": [
-        {
-            "id": 2,
-            "label": "conduct suspicious activity"
-        },
-        {
-            "id": 3,
-            "distance": 0.7110863212466166,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "establish many communication"
-                },
-                {
-                    "id": 1,
-                    "label": "establish meaningful contact"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:b4ba39ef9104510b6dea546b842b230df2481e9cd6677af488c9d81a8c534413
+size 568

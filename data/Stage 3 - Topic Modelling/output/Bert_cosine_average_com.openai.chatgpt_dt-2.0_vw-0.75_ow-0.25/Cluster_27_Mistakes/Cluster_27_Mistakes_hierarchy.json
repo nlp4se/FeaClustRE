@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "sometimes mistake"
-        },
-        {
-            "id": 1,
-            "label": "do mistake"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:464fa566cc2e4f5eadfecacf9787bab9cafcae2bf2abc3d791e126a056c6d057
+size 232

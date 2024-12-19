@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 3,
-            "label": "remember last day"
-        },
-        {
-            "id": 5,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "remember past conversation"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.0,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "remember olden day"
-                        },
-                        {
-                            "id": 1,
-                            "label": "remember bshelter night nmmkuy kiss bbbygbdbooh"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:ab6da65b366153a5ae71db5b5ddbd817a8601f98ed319f12fa44785a6e815500
+size 893

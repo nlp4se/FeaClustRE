@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.8064762701380876,
-    "children": [
-        {
-            "id": 0,
-            "label": "assert boundary"
-        },
-        {
-            "id": 1,
-            "label": "imply fact"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:02f24dd518fb817a172bd67caff4c0eb57dfc9b798ff322e8c24f626fded1b7e
+size 245

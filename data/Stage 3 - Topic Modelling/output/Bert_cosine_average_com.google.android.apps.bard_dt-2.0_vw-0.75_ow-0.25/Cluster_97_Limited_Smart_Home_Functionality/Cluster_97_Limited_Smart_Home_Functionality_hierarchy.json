@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 3,
-            "label": "limited ability"
-        },
-        {
-            "id": 5,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "limited function"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.0,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "limited image"
-                        },
-                        {
-                            "id": 1,
-                            "label": "limited smart home capability"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:b5249993fda839c3fefd57bb8c45d5ac5fb692739ba21c11b47e772c17f70610
+size 858

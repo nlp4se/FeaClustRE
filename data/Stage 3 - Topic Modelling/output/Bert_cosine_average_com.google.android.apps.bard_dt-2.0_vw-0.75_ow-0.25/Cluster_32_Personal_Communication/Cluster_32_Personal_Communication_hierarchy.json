@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.7951847709179733,
-    "children": [
-        {
-            "id": 0,
-            "label": "work though utha kar yaar aaja aaja main bhi nahi jantha hai mujhko bhi ho app"
-        },
-        {
-            "id": 1,
-            "label": "work granny"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:4922378ad9a1a64a4a82cd82e8e9c6cd131c5f3ec1544f75478740c4e658a552
+size 309

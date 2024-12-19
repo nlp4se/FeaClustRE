@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.952820578588686,
-    "children": [
-        {
-            "id": 0,
-            "label": "rigisiter whatsap"
-        },
-        {
-            "id": 1,
-            "label": "upadate new whatsapp"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:1f9f76cfc6f5e23c56fa0c35f5f9f91a142e3594c1b13410212431554221e360
+size 256

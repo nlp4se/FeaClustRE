@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.9693260210241754,
-    "children": [
-        {
-            "id": 0,
-            "label": "thanksgiving"
-        },
-        {
-            "id": 1,
-            "label": "not worm mobile"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:39470c8b5344226149767cca7c82216bdce698f167379f5aa2a8729567170f69
+size 247

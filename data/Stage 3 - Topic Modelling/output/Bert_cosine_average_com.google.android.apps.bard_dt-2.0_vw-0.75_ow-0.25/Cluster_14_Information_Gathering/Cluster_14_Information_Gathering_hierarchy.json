@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.8808130835540464,
-    "children": [
-        {
-            "id": 2,
-            "label": "gather more datum"
-        },
-        {
-            "id": 3,
-            "distance": 0.6765128789997635,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "gather information"
-                },
-                {
-                    "id": 1,
-                    "label": "gather knowledge"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:07365faedb59484e6e057d719894a42c549e095bb797b33596df7246f3c4702b
+size 536

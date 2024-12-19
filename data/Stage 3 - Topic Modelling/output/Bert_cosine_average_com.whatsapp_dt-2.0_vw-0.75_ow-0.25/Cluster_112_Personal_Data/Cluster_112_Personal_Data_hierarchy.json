@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 1.990017922212972,
-    "children": [
-        {
-            "id": 3,
-            "label": "assume life"
-        },
-        {
-            "id": 5,
-            "distance": 0.8905772659871625,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "obtain datum"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.6075517673736693,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "obtain grant"
-                        },
-                        {
-                            "id": 1,
-                            "label": "obtain personal detail"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:aa0e95b253fab62f59866844fb280691ee3806e07297ae9247c29df40b881793
+size 886

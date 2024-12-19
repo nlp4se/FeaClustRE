@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.6161778630802106,
-    "children": [
-        {
-            "id": 2,
-            "label": "view online member list"
-        },
-        {
-            "id": 3,
-            "distance": 0.5340370184453287,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "view image"
-                },
-                {
-                    "id": 1,
-                    "label": "view new message"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:a20c74bc8e629d257f66845076559731467d1b554b223987d6f6ffa795666d3b
+size 534

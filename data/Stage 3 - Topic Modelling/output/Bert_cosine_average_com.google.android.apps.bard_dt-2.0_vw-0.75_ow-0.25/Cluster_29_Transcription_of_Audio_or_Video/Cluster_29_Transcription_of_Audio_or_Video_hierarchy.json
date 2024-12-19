@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 1.8993845635055249,
-    "children": [
-        {
-            "id": 2,
-            "label": "export entire transcript"
-        },
-        {
-            "id": 3,
-            "distance": 0.6965305417613386,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "translate conversation"
-                },
-                {
-                    "id": 1,
-                    "label": "translate chinese"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:e211fe2b28349fcdb9ff6807b40fbc937ac70ea88b5de898b6d691c68d12d77b
+size 548

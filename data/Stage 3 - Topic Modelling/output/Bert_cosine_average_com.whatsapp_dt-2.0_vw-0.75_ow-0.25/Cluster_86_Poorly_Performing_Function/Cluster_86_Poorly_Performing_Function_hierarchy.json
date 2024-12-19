@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.881411884717525,
-    "children": [
-        {
-            "id": 2,
-            "label": "perform function"
-        },
-        {
-            "id": 3,
-            "distance": 0.7505703526601326,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "perform bad result"
-                },
-                {
-                    "id": 1,
-                    "label": "perform huge conference"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:99c92120e6958b761a20dbb6d173d02738bae99fe79ad60bc57cfdc7903a8311
+size 541

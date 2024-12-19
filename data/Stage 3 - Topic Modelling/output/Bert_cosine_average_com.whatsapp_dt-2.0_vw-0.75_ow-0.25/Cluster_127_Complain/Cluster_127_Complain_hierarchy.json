@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 1.8556824926155813,
-    "children": [
-        {
-            "id": 3,
-            "label": "want complain"
-        },
-        {
-            "id": 5,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "complain"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.0,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "complain athousand time"
-                        },
-                        {
-                            "id": 1,
-                            "label": "and complain"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:a6a18cca9e473c390f8d6078a7103617886f93729155d9cb825abfbb2772583f
+size 856

@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 1.935327181403159,
-    "children": [
-        {
-            "id": 3,
-            "label": "bengali algorithm update"
-        },
-        {
-            "id": 5,
-            "distance": 1.717186425537066,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "repair own gadget"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.6904203326889008,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "upgrade pashto language"
-                        },
-                        {
-                            "id": 1,
-                            "label": "upgrade brain"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:82bd6540d091b795a4349641f163e50d15c16a89dd196fa33065356802713f73
+size 905

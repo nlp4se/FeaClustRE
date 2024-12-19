@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.8925445060328512,
-    "children": [
-        {
-            "id": 0,
-            "label": "2year experience"
-        },
-        {
-            "id": 1,
-            "label": "1year experience"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:66336f73f6f3571ac1ce24031a2e8362121c25f4db13c75f18ae8a0ef93f1ade
+size 252

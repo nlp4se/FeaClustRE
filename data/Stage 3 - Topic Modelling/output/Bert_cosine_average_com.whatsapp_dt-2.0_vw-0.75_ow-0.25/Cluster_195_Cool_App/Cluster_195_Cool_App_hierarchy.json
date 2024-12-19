@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 2,
-            "label": "cool milk"
-        },
-        {
-            "id": 3,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "cool nice app"
-                },
-                {
-                    "id": 1,
-                    "label": "cool well app"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:e521ca4e363dec8ca51996ac91f70229aa20fbbb11bf1f2100fcef38fc820ed4
+size 490

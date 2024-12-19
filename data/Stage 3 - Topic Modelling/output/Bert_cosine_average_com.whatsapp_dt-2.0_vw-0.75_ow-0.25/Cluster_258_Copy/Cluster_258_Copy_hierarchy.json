@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "result"
-        },
-        {
-            "id": 1,
-            "label": "copy result"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:0fa3edb54e1ac54ff2f8ac20a60cad7e21b0162df1a00a6f58de8200c5a9a5a8
+size 222

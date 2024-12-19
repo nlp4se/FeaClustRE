@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.097708066814574,
-    "children": [
-        {
-            "id": 0,
-            "label": "pass information"
-        },
-        {
-            "id": 1,
-            "label": "pass whatsapp"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:7c1fdc40ca37c1497f18d2d0d7e630c65810b0de4f058c8bbf6de083f1ae7bb0
+size 248

@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.8046664107778039,
-    "children": [
-        {
-            "id": 0,
-            "label": "ineed fast servi"
-        },
-        {
-            "id": 1,
-            "label": "invent aap"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:80753d8637f65d1651e012e54326c60fbc465f7b5d9c8bd9c3698f0147d0ad30
+size 246

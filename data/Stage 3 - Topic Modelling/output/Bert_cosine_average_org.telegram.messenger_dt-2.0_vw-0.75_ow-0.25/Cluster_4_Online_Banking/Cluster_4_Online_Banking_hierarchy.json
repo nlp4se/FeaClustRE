@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 1.775072432527453,
-    "children": [
-        {
-            "id": 2,
-            "label": "bangladeshi gramin login sms problem"
-        },
-        {
-            "id": 3,
-            "distance": 1.4951554005977037,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "bangladesh gramin login sms problem"
-                },
-                {
-                    "id": 1,
-                    "label": "bangladesh login gramin sms problem"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:534f589eec426db9f5efac3155ba679447cb6b564e777a919b344fc8476f0189
+size 590

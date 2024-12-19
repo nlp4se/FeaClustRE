@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.8900501043384135,
-    "children": [
-        {
-            "id": 0,
-            "label": "good bit feel"
-        },
-        {
-            "id": 1,
-            "label": "spell simple word"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:6af9c02f648cf0083072fc17e251a274c883ff8e2bbdaedb25d3ddbcde3eb48c
+size 250

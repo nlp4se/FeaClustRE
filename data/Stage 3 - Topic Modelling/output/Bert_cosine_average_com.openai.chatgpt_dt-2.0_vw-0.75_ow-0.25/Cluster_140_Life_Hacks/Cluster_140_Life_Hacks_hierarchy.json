@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "shortly life hack"
-        },
-        {
-            "id": 1,
-            "label": "life hack"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:f076847220d59e5a235ab3e05c83987b0659f3138d26e6b44f1ec43e53cb100a
+size 231

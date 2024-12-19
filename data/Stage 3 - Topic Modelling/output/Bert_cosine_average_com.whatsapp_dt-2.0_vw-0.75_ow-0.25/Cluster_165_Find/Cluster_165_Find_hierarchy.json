@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.6512480222041825,
-    "children": [
-        {
-            "id": 0,
-            "label": "give find"
-        },
-        {
-            "id": 1,
-            "label": "find set"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:d65b59b3b447511c8a5b20ed05a38f543fb149cf42de47b8721e3e1035076ed2
+size 237

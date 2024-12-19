@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "complete tast"
-        },
-        {
-            "id": 1,
-            "label": "complete simple google home command"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:1832677dcc217a8e15ce5e801e93e1a6e655589aaaed8dfb23deeacfb855a9fa
+size 253

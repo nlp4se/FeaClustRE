@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.534335579535365,
-    "children": [
-        {
-            "id": 0,
-            "label": "now unable to reinstall due to parental lock"
-        },
-        {
-            "id": 1,
-            "label": "reinstall normal version"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:7b488dfae527667a91570c97f2553e49021327c6f90ed1d4220d750c4d825f81
+size 287

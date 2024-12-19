@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.9505525222097704,
-    "children": [
-        {
-            "id": 0,
-            "label": "mess chat"
-        },
-        {
-            "id": 1,
-            "label": "suck query"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:ac010246fa0167eee48006eed4c5749f098f6d0f1db12cbc9d8859fafc17dc3f
+size 239

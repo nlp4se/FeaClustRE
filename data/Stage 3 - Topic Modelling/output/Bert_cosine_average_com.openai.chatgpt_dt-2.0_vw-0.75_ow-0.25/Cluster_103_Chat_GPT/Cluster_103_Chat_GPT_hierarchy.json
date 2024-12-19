@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 1.2076382175068805,
-    "children": [
-        {
-            "id": 3,
-            "label": "tnx chat gpt"
-        },
-        {
-            "id": 5,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "like chat gpt"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.0,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "like gpt"
-                        },
-                        {
-                            "id": 1,
-                            "label": "like app gpt"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:6d43d236c8c4f9b1a7756559f643105e31cacaa7676bce556673b30bd2c659dc
+size 845

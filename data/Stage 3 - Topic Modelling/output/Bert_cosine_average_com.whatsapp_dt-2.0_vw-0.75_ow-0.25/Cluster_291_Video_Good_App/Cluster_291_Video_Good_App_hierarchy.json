@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.9005137645180437,
-    "children": [
-        {
-            "id": 0,
-            "label": "vvgood app"
-        },
-        {
-            "id": 1,
-            "label": "vgood app"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:1982f16d8dbdba4b25c8b664ce3cbc6981814dd74746214927d8790b7b58d8b7
+size 239

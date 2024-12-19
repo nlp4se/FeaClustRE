@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 1.7334045097343924,
-    "children": [
-        {
-            "id": 3,
-            "label": "give switch"
-        },
-        {
-            "id": 5,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "switch account"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.0,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "switch account option"
-                        },
-                        {
-                            "id": 1,
-                            "label": "switch theme"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:22f002c9a71b72b5966fe25c7ee9a2150387d094a271c8f54429da65b065c284
+size 858

@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.5203043182870701,
-    "children": [
-        {
-            "id": 0,
-            "label": "guide app"
-        },
-        {
-            "id": 1,
-            "label": "guide learning disability"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:eb2957a205811e80b23f2aa143d43fa2a20e6be62f98fa0dc4aab771b78b1e94
+size 254

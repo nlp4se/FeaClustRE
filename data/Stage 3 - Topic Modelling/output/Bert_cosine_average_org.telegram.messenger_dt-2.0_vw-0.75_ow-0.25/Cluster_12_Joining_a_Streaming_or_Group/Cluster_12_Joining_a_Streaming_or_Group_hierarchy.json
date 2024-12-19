@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 1.729321530239625,
-    "children": [
-        {
-            "id": 2,
-            "label": "join streaming"
-        },
-        {
-            "id": 3,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "join telegram group"
-                },
-                {
-                    "id": 1,
-                    "label": "join telegram"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:35a6b23b48d08fe31fdcd7905430e94428ee0b1d4361a0512d665056c588c34b
+size 515

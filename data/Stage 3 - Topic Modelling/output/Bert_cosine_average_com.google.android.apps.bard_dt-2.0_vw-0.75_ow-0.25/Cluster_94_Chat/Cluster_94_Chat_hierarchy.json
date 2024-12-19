@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "chat gtp"
-        },
-        {
-            "id": 1,
-            "label": "chat"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:ab5799a338d037d4d316cfeb2638e2e03537f70818b725d6a0c6d9dfbbe837da
+size 217

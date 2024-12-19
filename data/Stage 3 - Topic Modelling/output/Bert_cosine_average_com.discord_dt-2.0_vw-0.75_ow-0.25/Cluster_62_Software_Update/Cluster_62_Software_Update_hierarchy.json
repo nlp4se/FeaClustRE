@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 2,
-            "label": "update"
-        },
-        {
-            "id": 3,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "force update"
-                },
-                {
-                    "id": 1,
-                    "label": "download update"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:28477f7ee830f6285b296441fc471eb551885e9d1aba4a2f704346291d9fee25
+size 488

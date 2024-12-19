@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.7105422991098034,
-    "children": [
-        {
-            "id": 0,
-            "label": "bring reposting feature"
-        },
-        {
-            "id": 1,
-            "label": "have repost command"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:566768f98c0bd012766de98fb5d99f6e89beeca246c7a61fa29b013b64540245
+size 262

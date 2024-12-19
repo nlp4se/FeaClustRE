@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.8123424426610357,
-    "children": [
-        {
-            "id": 0,
-            "label": "run three party"
-        },
-        {
-            "id": 1,
-            "label": "run business"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:8c6974058f74bf690eb87eac6aea987cd831094cf46b04b9e2d71917ddb05181
+size 247

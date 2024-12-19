@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "steal whatsapp account"
-        },
-        {
-            "id": 1,
-            "label": "steal account"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:0f46f405d2369acaa562fd11a81994554bac63e51dca57dfef0f0bd599987cb8
+size 240

@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 1.6781448359943585,
-    "children": [
-        {
-            "id": 3,
-            "label": "know help"
-        },
-        {
-            "id": 5,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "know hd"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.0,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "know time"
-                        },
-                        {
-                            "id": 1,
-                            "label": "know way"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:abafce0df6d60725e45a38684c886b67104088950da46c424e669a218b2541a1
+size 833

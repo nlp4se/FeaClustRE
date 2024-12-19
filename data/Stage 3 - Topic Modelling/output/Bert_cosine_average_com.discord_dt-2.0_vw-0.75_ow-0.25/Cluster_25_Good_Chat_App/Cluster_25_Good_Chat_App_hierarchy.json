@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.809571122527479,
-    "children": [
-        {
-            "id": 0,
-            "label": "good chat app"
-        },
-        {
-            "id": 1,
-            "label": "neat more optimization"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:0ad7e83a385ff83b8182743cc4622ce4257f861ea8c45bd6a39b549e4554a0f0
+size 254

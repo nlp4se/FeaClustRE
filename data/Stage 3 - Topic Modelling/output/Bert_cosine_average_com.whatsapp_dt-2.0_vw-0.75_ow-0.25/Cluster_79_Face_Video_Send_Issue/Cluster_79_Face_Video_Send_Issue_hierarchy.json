@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.477688073966126,
-    "children": [
-        {
-            "id": 0,
-            "label": "when video calling"
-        },
-        {
-            "id": 1,
-            "label": "face video send issue"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:7003de7dc71b1c78955d06d140d5f8c11c5a8cf7a663b108c60927a44ba60a47
+size 258

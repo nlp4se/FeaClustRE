@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.79192741532879,
-    "children": [
-        {
-            "id": 2,
-            "label": "recommend other server emote"
-        },
-        {
-            "id": 3,
-            "distance": 0.6351297438195664,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "recommend developer"
-                },
-                {
-                    "id": 1,
-                    "label": "recommend app"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:40de930e8c71ba299233a94e85b6b9635169892d98183026164a352ddd476d24
+size 543

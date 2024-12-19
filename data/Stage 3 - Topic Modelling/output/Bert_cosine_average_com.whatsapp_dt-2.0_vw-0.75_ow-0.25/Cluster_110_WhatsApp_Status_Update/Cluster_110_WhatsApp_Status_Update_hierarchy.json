@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 0.8254404705815115,
-    "children": [
-        {
-            "id": 3,
-            "label": "arrange other app"
-        },
-        {
-            "id": 5,
-            "distance": 0.7896993283785125,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "arrange separate dedicated column"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.6883309494742936,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "arrange whatsapp status update"
-                        },
-                        {
-                            "id": 1,
-                            "label": "arrange status"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:98ba45f4455a92cdd87303817dcfdc4211d81a22e1c16d69f9a59d287c4c6f8a
+size 924

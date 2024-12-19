@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.7365703556167076,
-    "children": [
-        {
-            "id": 2,
-            "label": "share full review"
-        },
-        {
-            "id": 3,
-            "distance": 0.653689757847796,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "share incredible experience"
-                },
-                {
-                    "id": 1,
-                    "label": "share conversation"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:9ec082d2fa1c0b09e2adb6eddbe7b852f0661223be70c2b9713508683035f2e3
+size 546

@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "always spam"
-        },
-        {
-            "id": 1,
-            "label": "do spam"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:083a563d00001cf473bb8ec8a85df7e0e8a706edb64ecbbe6d2c027bae67a959
+size 223

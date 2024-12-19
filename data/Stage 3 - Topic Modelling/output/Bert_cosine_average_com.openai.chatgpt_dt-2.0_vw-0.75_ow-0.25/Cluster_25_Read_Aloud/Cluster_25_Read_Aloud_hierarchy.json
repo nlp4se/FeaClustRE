@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "use read aloud function"
-        },
-        {
-            "id": 1,
-            "label": "read bruh"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:6516d87e54a26ef54bf637bff75627a173a588bab04468c53db03f8013faa292
+size 237

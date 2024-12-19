@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "do talk"
-        },
-        {
-            "id": 1,
-            "label": "talk andhra"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:1a7aeaa268f853afa71d95458e668880960c94bdd399c4ad95034f4c6a9a5d70
+size 223

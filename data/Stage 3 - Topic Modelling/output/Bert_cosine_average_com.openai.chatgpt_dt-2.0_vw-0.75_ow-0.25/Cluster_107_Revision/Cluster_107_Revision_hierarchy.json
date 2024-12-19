@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.7996086358636116,
-    "children": [
-        {
-            "id": 2,
-            "label": "revise email"
-        },
-        {
-            "id": 3,
-            "distance": 0.603646131970905,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "revise difficult question"
-                },
-                {
-                    "id": 1,
-                    "label": "revise paragraph"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:b16dc80bbdd6a18cfeac5cbf21c04050ec24e39dd5e0cfe0d7cd4625f0733d89
+size 537

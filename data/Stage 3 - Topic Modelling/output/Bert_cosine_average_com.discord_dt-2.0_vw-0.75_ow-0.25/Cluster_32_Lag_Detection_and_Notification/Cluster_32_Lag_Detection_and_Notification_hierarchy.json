@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.7220451807030001,
-    "children": [
-        {
-            "id": 0,
-            "label": "lag good quality"
-        },
-        {
-            "id": 1,
-            "label": "lag notification"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:688b7ffe2facf432ae2366c607067929ad823ab392421de42b300bba2fa4049d
+size 252

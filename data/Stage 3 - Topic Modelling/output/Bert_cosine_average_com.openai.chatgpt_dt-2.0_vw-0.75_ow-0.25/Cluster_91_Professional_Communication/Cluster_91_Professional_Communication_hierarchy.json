@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.8119753504503058,
-    "children": [
-        {
-            "id": 0,
-            "label": "compose poem"
-        },
-        {
-            "id": 1,
-            "label": "compose professional email"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:bf1564703e9bea6fb8d6949120557893a7844255198da92b8b233572b081e11d
+size 258

@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.244353186086043,
-    "children": [
-        {
-            "id": 0,
-            "label": "message mom"
-        },
-        {
-            "id": 1,
-            "label": "message dad"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:54dcb40d257818e15f78475312de0bb26acf7c915457bf97dc620c6bd9035538
+size 241

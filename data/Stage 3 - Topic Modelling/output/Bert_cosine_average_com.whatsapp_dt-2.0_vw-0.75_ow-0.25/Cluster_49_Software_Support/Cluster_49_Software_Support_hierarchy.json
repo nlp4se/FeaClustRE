@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 1.9530353132518077,
-    "children": [
-        {
-            "id": 3,
-            "label": "s good and very simple reliable application"
-        },
-        {
-            "id": 5,
-            "distance": 1.8471435990755531,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "pl support"
-                },
-                {
-                    "id": 4,
-                    "distance": 1.7843344146065792,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "sm issue"
-                        },
-                        {
-                            "id": 1,
-                            "label": "sk say"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:0d2330e6d0f73f92d24763e3e97618e79b44a91a2525e83ada3c86e1c431ade2
+size 897

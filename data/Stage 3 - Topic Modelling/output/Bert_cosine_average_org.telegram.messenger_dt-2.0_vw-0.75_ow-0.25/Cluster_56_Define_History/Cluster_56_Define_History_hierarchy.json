@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.9790407765981838,
-    "children": [
-        {
-            "id": 0,
-            "label": "define thank"
-        },
-        {
-            "id": 1,
-            "label": "define history"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:691c5735966ca0da21a6ba37e076325d85da2f669537ab93a0388e89addb2554
+size 246

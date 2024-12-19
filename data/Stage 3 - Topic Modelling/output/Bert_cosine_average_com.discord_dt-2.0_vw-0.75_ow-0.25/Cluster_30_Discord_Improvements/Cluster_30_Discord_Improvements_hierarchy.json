@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 1.9150956187797306,
-    "children": [
-        {
-            "id": 4,
-            "distance": 0.6405962476798049,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "increase stream bitrate"
-                },
-                {
-                    "id": 3,
-                    "label": "increase size"
-                }
-            ]
-        },
-        {
-            "id": 5,
-            "distance": 0.6991032332147804,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "improve notification system"
-                },
-                {
-                    "id": 1,
-                    "label": "improve discord experience"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:76e156a5caec63b49f65b1026dc13fe5b3b97507a9d0f3661e89dcc89f1bee02
+size 839

@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "turn mic"
-        },
-        {
-            "id": 1,
-            "label": "turn bluetooth"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:37fae2afaefe182a2f0e366a3680c26b1625cf870b666626583d0969eb7b054f
+size 227

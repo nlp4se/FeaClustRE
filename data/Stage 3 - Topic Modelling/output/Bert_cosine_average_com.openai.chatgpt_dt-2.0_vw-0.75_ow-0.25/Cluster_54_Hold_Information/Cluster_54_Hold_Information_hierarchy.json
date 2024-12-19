@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 1.1164316593379089,
-    "children": [
-        {
-            "id": 3,
-            "label": "hold number one spot"
-        },
-        {
-            "id": 5,
-            "distance": 0.7655518912725994,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "hold button"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.659832508157258,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "hold information"
-                        },
-                        {
-                            "id": 1,
-                            "label": "hold much more memory"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:2dcb7f36c453ada5b8d1b1789545d2b9f70bb9584326bf97be7e4b6da3747bd2
+size 897

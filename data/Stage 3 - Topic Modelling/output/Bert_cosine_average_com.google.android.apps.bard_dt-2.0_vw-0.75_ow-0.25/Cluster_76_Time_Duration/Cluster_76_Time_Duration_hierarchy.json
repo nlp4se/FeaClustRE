@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 2,
-            "label": "take time"
-        },
-        {
-            "id": 3,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "take second"
-                },
-                {
-                    "id": 1,
-                    "label": "take forever"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:9f37840b42c18d0d100b1d438462976140c922984d29ce3894356b6f633a1ef4
+size 487

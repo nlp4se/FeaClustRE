@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "have assignment"
-        },
-        {
-            "id": 1,
-            "label": "do assignment"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:9c61c18c8b9100f189fc519a68940353d83385743ddc2f2bab1eb9fe40683662
+size 233

@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "good communicating app"
-        },
-        {
-            "id": 1,
-            "label": "most cheap and easy communicating app"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:bb255e0c3cf9cec42e975092386f9bd0a786010363b59605280e83eae9336746
+size 264

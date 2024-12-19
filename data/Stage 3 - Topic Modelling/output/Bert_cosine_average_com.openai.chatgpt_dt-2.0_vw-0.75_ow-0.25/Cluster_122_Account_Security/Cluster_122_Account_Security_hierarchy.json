@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "change password"
-        },
-        {
-            "id": 1,
-            "label": "change algorithm"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:0317c880d85494595420e6464e76607f307bbe710e080f2d012bdd83525c2289
+size 236

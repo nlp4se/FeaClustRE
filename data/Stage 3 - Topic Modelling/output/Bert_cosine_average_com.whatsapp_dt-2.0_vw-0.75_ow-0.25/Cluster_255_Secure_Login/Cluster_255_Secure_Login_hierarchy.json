@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "enter full page"
-        },
-        {
-            "id": 1,
-            "label": "enter password"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:0c3be6c09328f17f368f05e1b252ebb8c7888931e400269160205231100457ec
+size 234

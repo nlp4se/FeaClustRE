@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "contact help center"
-        },
-        {
-            "id": 1,
-            "label": "whatsapp help center"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:651defa64849512068c4ad7f2b62d91f00a0d35e5fe8c8efb89b4cfea2b0fd16
+size 244

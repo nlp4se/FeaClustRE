@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 2,
-            "label": "talk"
-        },
-        {
-            "id": 3,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "talk een"
-                },
-                {
-                    "id": 1,
-                    "label": "talk agian"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:a55193f22a30bd9598b0e4c2e644cc4faa4b5b29b2adc434c4b645e7e8343463
+size 477

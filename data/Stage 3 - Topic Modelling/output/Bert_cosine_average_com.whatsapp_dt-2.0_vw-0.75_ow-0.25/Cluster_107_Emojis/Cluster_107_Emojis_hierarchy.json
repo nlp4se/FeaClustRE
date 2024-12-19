@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "have fold arm emoji"
-        },
-        {
-            "id": 1,
-            "label": "share emoji"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:d71bba39b4ebd6ff2da9826fde1969a61b7a30be2694b5949ad6c95325e7edfb
+size 235

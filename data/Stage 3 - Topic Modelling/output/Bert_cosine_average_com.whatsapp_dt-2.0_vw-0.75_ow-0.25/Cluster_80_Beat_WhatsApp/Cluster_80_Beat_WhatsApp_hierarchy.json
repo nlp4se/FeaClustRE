@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 1.064389593959573,
-    "children": [
-        {
-            "id": 3,
-            "label": "beat whatsapp"
-        },
-        {
-            "id": 5,
-            "distance": 0.6747397575858093,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "beat whole purpose"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.0,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "beat app"
-                        },
-                        {
-                            "id": 1,
-                            "label": "beat other communication app"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:3f3ebde0c94ef2534959d36862a8e5de0f980430877f21ac32e7f4aeb9b569a4
+size 881

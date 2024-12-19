@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.7084466549736328,
-    "children": [
-        {
-            "id": 0,
-            "label": "neglect android version"
-        },
-        {
-            "id": 1,
-            "label": "bother other"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:0d16b02b3262358819077544c28032ac08d9679c3c79766db16047f154b03bbc
+size 255

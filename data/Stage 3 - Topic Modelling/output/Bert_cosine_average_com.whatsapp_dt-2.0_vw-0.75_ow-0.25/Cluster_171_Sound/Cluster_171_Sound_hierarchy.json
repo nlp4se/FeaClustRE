@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "have sound"
-        },
-        {
-            "id": 1,
-            "label": "sound"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:823cc2a27a7cb25fa0bca0c8df4a5773b37e1efa01c0d8485a38acd1a666aac7
+size 220

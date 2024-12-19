@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.8746527377639426,
-    "children": [
-        {
-            "id": 0,
-            "label": "understand hacking"
-        },
-        {
-            "id": 1,
-            "label": "bother installing"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:1bda428251aa84b1aed66193087d1307567bbe008dff3c943bff79bd066917a7
+size 255

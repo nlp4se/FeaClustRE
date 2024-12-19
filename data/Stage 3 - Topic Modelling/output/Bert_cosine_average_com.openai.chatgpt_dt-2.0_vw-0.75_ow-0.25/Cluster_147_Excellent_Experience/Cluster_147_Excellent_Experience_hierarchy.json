@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 1.957620114612038,
-    "children": [
-        {
-            "id": 2,
-            "label": "unbelievable experience"
-        },
-        {
-            "id": 3,
-            "distance": 1.6289324973346242,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "incredible experience"
-                },
-                {
-                    "id": 1,
-                    "label": "amazing experience"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:5d8dce125edcba9f59e1fc289b7a0aead436e984aa976d4cf18db6ca2045b830
+size 546

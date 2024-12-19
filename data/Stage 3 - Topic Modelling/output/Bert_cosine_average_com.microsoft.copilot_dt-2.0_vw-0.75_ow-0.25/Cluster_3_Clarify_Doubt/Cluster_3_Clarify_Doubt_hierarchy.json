@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "clarify doubt"
-        },
-        {
-            "id": 1,
-            "label": "clarify all doubt"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:9c744dbd353a14e246a83e09733b85c01f2bf9e75fa3d1d8ea925b942cc142e8
+size 235

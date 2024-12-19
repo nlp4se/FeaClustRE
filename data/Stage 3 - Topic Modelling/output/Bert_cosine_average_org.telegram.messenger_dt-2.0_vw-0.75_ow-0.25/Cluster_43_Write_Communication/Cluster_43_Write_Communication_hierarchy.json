@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 0.9520960066309142,
-    "children": [
-        {
-            "id": 3,
-            "label": "write mail"
-        },
-        {
-            "id": 5,
-            "distance": 0.8052545152421121,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "write policy"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.6056327610528552,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "write one and only messenger"
-                        },
-                        {
-                            "id": 1,
-                            "label": "write phone number"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:da5f7c7a400e8f5b08730d6c6f0eafafa73f65f3d023c779585cf27d403596cd
+size 898

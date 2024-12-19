@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 2,
-            "label": "watch anime"
-        },
-        {
-            "id": 3,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "watch lot"
-                },
-                {
-                    "id": 1,
-                    "label": "watch third season"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:fb7808724889fe043101deb360b8c7ea6a73140ea2bdcbba573e00733ecaa8a3
+size 493

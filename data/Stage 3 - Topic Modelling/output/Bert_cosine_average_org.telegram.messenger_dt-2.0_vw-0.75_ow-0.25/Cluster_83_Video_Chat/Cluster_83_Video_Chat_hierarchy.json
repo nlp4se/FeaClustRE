@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "show telegram time"
-        },
-        {
-            "id": 1,
-            "label": "download show"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:b85df3dea440fb9b2e1ba01611e08a9688d4b87cdaf6f1594ac701e2687a4bde
+size 236

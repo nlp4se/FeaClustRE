@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "close"
-        },
-        {
-            "id": 1,
-            "label": "close particular account"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:e5d08eb5ad097ff04f36bf6f1fee54ab059eb9df3bc78deefadf3464b2e4f744
+size 234

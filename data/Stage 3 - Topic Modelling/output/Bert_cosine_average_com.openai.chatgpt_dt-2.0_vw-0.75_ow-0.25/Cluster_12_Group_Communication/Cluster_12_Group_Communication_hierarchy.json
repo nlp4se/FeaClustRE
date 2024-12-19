@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 1.867480440189089,
-    "children": [
-        {
-            "id": 3,
-            "label": "want to idea"
-        },
-        {
-            "id": 5,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "want voice chat"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.0,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "want quick way"
-                        },
-                        {
-                            "id": 1,
-                            "label": "want more updateshon"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:3eeba92acb6ec09d8c7c76eb5f5c71c1b0e5dfc0ff42b9091250eac66e6cdf28
+size 860

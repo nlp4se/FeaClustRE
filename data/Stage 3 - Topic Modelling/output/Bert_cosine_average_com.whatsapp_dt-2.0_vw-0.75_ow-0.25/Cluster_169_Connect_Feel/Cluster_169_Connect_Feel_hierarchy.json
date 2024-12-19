@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.7651137036930264,
-    "children": [
-        {
-            "id": 0,
-            "label": "connect feel"
-        },
-        {
-            "id": 1,
-            "label": "feel way"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:87d31843b71268a4c5c51cba6922d668e5a045b2a432aff00c6aabf893a9fca3
+size 240

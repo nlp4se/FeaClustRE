@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "say good morning"
-        },
-        {
-            "id": 1,
-            "label": "say time"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:3ab6e6fdacea10e4109ecee36802d12cec45db43775c3aca136f5bb4c9497bf9
+size 229

@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 2,
-            "label": "do study"
-        },
-        {
-            "id": 3,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "study"
-                },
-                {
-                    "id": 1,
-                    "label": "and study purpose"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:508529bba23900a858ed3566143fc6e7eef5c998eed9c7232f093dd324ecef48
+size 485

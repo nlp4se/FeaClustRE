@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.7109655419477268,
-    "children": [
-        {
-            "id": 0,
-            "label": "hold oue community"
-        },
-        {
-            "id": 1,
-            "label": "hold button"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:00b82218f5f3c718138ce1ae224c5bcb335143b0c1f4a976bc1f13f5daf48517
+size 249

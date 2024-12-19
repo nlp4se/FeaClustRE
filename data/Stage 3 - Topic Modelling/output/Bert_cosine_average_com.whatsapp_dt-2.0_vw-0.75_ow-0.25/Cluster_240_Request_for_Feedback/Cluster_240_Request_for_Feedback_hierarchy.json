@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.6912087442712327,
-    "children": [
-        {
-            "id": 0,
-            "label": "include plz"
-        },
-        {
-            "id": 1,
-            "label": "receive plz"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:fb2a98000f93ad4cb9783459bd21e1d40a02d27bcb47554e7815c0723116a2d4
+size 242

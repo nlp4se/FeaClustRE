@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.9304436642002205,
-    "children": [
-        {
-            "id": 0,
-            "label": "open messaging app"
-        },
-        {
-            "id": 1,
-            "label": "open bluetooth setting"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:23b228ed7b5559ced910791f370a78116104462b10f97ba63ee703ab87c1007b
+size 260

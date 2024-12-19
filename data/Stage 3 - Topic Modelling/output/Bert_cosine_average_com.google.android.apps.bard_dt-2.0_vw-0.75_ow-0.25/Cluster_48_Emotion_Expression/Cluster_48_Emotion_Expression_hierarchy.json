@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.6911303858365992,
-    "children": [
-        {
-            "id": 2,
-            "label": "express feel"
-        },
-        {
-            "id": 3,
-            "distance": 0.6096108101554026,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "express emotion"
-                },
-                {
-                    "id": 1,
-                    "label": "express strong interest"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:d3913da8e5270c639995d1fb5c5d32d7cbd17c7529e8af52e25d2f54dfc11b6a
+size 535

@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 2,
-            "label": "enjoy day"
-        },
-        {
-            "id": 3,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "enjoy"
-                },
-                {
-                    "id": 1,
-                    "label": "enjoy bit"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:5d44af042f51c110cb969f529d52e21c5960d450584edf348c7a7cdb99d9238c
+size 478

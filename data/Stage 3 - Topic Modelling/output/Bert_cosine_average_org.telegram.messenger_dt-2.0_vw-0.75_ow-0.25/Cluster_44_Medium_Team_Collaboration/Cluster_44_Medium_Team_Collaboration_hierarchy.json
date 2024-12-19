@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.6218734434655215,
-    "children": [
-        {
-            "id": 0,
-            "label": "run medium"
-        },
-        {
-            "id": 1,
-            "label": "run people"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:e8787d20a8db61619c305fe23b98ca18ab2c8e096cb32ce9d1382b42d1bae602
+size 240

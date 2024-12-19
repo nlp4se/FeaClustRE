@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.0076091790975115,
-    "children": [
-        {
-            "id": 0,
-            "label": "regurgitate useless repeat awser"
-        },
-        {
-            "id": 1,
-            "label": "regurgitate too much useless information"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:10c4c31d6d6c20c23c6665cd062cdeb599c2bcd12cb3248873be943c41299806
+size 292

@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 2,
-            "label": "wait entire day"
-        },
-        {
-            "id": 3,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "wait ten minute"
-                },
-                {
-                    "id": 1,
-                    "label": "wait asiment"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:f62ef86ba7e0e8d5140669e990a9f64b987836eb7d93b85145f6587a632ea574
+size 497

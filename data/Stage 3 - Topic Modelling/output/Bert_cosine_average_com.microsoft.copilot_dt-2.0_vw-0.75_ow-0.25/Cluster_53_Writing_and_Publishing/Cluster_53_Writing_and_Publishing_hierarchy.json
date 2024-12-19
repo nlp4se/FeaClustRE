@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 2,
-            "label": "write promt"
-        },
-        {
-            "id": 3,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "write book"
-                },
-                {
-                    "id": 1,
-                    "label": "write review"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:b83652084bfc3fbf7adc3fc9d52ad86b9dc96152c26bf828a7a263bc6b8e6f4c
+size 488

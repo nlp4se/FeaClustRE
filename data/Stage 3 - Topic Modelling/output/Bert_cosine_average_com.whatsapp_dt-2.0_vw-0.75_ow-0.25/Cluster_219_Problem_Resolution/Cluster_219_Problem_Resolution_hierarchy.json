@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "resolve problem"
-        },
-        {
-            "id": 1,
-            "label": "resolve whatsapp"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:acfa09f64db8cbfd6ad5f4a80d81b0daf07b1c8fc18099bcd787240232a9620f
+size 236

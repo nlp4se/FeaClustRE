@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.8980407387443083,
-    "children": [
-        {
-            "id": 2,
-            "label": "share datum"
-        },
-        {
-            "id": 3,
-            "distance": 0.6709578299076095,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "share picture"
-                },
-                {
-                    "id": 1,
-                    "label": "share personal problem"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:7aba9db9bf97eb58f3806c6a263be9cd25b35f687ee05d4d3206318a2d3cdbf9
+size 531

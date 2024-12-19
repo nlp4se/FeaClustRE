@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "do wonder"
-        },
-        {
-            "id": 1,
-            "label": "wonder"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:3c2b9fe12041278784103b42ac4dfb4a9fa6d4f9d64646578e426ce7cc0c7c4f
+size 220

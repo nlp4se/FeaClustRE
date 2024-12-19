@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.8922957997066525,
-    "children": [
-        {
-            "id": 0,
-            "label": "very good shi"
-        },
-        {
-            "id": 1,
-            "label": "very good ap"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:a18002a748ae0e6d90202539c74fd63423e37744e0dc564ab1f4215cb04f73ad
+size 245

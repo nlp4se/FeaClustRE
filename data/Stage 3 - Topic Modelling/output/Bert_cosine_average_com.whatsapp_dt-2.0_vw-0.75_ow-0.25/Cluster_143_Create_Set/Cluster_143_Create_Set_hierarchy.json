@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.788807641454822,
-    "children": [
-        {
-            "id": 0,
-            "label": "create set"
-        },
-        {
-            "id": 1,
-            "label": "appreciate create"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:6955cf95cbf7b44444fd1b030545fe3bc5833ce2f0861adefd2f5917319f8c5f
+size 246

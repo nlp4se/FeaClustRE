@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "look buyer"
-        },
-        {
-            "id": 1,
-            "label": "have look"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:f7e686874fdda8dbb94fdd07a547a1141dbf2dea3065d53b4d7c564d10555212
+size 224

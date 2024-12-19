@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.7062768144330496,
-    "children": [
-        {
-            "id": 2,
-            "label": "encounter issue"
-        },
-        {
-            "id": 3,
-            "distance": 0.5912391368429991,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "encounter error"
-                },
-                {
-                    "id": 1,
-                    "label": "encounter problem"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:0b655afce9fba4659a3e9dbe47c670bda433f907489c63f0887e208fac4af859
+size 532

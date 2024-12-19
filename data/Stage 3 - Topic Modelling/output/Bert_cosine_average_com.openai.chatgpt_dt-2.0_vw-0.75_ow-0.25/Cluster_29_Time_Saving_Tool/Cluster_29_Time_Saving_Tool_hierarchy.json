@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "amazing time saving"
-        },
-        {
-            "id": 1,
-            "label": "time saving tool"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:b40a652a6d1e458d44f8cdf4fe9bf22ba1d487ed720145a757e37edc46c967ba
+size 240

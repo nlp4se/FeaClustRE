@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 2,
-            "label": "start process"
-        },
-        {
-            "id": 3,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "start oppo"
-                },
-                {
-                    "id": 1,
-                    "label": "start sapp"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:d27ee3c43553a01b0c9076ac7f5be798289ca309ba0c471a725a81a85bfce739
+size 488

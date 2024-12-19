@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "hack"
-        },
-        {
-            "id": 1,
-            "label": "hack mail idnumber"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:652d5e994bf77d0af3b584072ec823f7a58a9f66a83607540f062069ab4069e4
+size 227

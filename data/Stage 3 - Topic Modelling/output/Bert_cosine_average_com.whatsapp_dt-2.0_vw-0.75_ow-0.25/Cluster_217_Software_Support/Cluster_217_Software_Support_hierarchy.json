@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.9241667433183873,
-    "children": [
-        {
-            "id": 0,
-            "label": "solve may problem"
-        },
-        {
-            "id": 1,
-            "label": "solve all wish"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:37abb711735239d4ce5a72bbab490c097a5bea2d153a826ffec98fe66773b425
+size 251

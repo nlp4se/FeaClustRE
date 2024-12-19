@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.5089778742137929,
-    "children": [
-        {
-            "id": 2,
-            "label": "remember thing"
-        },
-        {
-            "id": 3,
-            "distance": 0.4763989827410111,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "remember conversation"
-                },
-                {
-                    "id": 1,
-                    "label": "remember situation"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:70973fe6f1d32bc63657c76d28d1e51d5730a8d3ba089c1722736a675ccd85e4
+size 538

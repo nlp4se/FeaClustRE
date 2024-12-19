@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.0373592467104784,
-    "children": [
-        {
-            "id": 0,
-            "label": "for you page"
-        },
-        {
-            "id": 1,
-            "label": "not bad for now and delay"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:81336cae068d9a71379672adcde0e45016a6fbfb161a2e312e6e3ac7a436d7df
+size 257

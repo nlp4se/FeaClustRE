@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "well live"
-        },
-        {
-            "id": 1,
-            "label": "live simple life"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:ed858630bd788f9baee7b7902d57a736d75a0482282bf59024b85e21c36d8f2f
+size 230

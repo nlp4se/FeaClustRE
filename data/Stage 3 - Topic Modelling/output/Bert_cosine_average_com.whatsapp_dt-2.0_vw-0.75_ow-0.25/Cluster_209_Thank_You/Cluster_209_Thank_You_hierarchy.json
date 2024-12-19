@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 1.745934428165841,
-    "children": [
-        {
-            "id": 2,
-            "label": "appreciate thank"
-        },
-        {
-            "id": 3,
-            "distance": 1.562413345925438,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "do hi google play thank"
-                },
-                {
-                    "id": 1,
-                    "label": "say thank"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:1387695e4983e6bcf69f10e63213b41582d46100e18577025299b47ce413c8b3
+size 531

@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 1.3422677024137997,
-    "children": [
-        {
-            "id": 3,
-            "label": "hit enter key"
-        },
-        {
-            "id": 5,
-            "distance": 0.8538751719471726,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "enter app"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.7678248226794706,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "enter official website"
-                        },
-                        {
-                            "id": 1,
-                            "label": "enter all information"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:987abe347a6a6163c60ab111687689c6d19c13f4c02745f31cce6ec59af4fc38
+size 895

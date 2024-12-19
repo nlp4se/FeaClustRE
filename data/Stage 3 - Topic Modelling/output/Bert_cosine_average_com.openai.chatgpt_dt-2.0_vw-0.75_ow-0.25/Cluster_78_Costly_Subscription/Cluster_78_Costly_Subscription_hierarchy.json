@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 1.967294126493508,
-    "children": [
-        {
-            "id": 3,
-            "label": "paid subscription"
-        },
-        {
-            "id": 5,
-            "distance": 0.7165849318692978,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "cost earth"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.0,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "cost too much money"
-                        },
-                        {
-                            "id": 1,
-                            "label": "cost money"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:e1f8c195713a26e77e2fabba09bba01e12c58864251cbbb23a64cb7d107100b8
+size 870

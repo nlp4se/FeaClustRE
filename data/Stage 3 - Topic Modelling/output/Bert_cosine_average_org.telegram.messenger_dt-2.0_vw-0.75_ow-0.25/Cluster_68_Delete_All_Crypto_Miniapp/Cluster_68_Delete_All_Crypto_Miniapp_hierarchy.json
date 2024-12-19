@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.8791034792017002,
-    "children": [
-        {
-            "id": 2,
-            "label": "delete all crypto miniapp"
-        },
-        {
-            "id": 3,
-            "distance": 0.5919803500021831,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "delete all chat"
-                },
-                {
-                    "id": 1,
-                    "label": "delete many thing"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:b0fd937492cdd1cb82c99229584c217003e40a2dc706542d6d05c7be2a0efd85
+size 542

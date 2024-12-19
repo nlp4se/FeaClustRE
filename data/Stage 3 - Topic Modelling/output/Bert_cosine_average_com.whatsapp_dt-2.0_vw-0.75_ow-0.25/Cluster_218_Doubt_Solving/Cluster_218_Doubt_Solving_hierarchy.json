@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "solve doubt"
-        },
-        {
-            "id": 1,
-            "label": "solve matter"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:29b2c325457e99ffe26968717f52e3c5d63311bac85b2d0b4a5719bc15377cb9
+size 228

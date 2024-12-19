@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 1.8573362585895594,
-    "children": [
-        {
-            "id": 3,
-            "label": "convert json"
-        },
-        {
-            "id": 5,
-            "distance": 1.6534868543056875,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "integrate telegram"
-                },
-                {
-                    "id": 4,
-                    "distance": 1.56909739326016,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "simulate issue"
-                        },
-                        {
-                            "id": 1,
-                            "label": "opt feature"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:14608efaa13a52f267c7be7a9e1859e060267d660401aace3e384ff457740f82
+size 883

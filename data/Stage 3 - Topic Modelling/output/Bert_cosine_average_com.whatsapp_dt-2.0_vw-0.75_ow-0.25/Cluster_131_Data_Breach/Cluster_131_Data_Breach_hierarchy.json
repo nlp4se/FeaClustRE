@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "breach"
-        },
-        {
-            "id": 1,
-            "label": "privacy breach"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:7baa16f1a4fd6755f1e452c4e6169af4886c4e41cb1250b74fb8aefa1b31a7d6
+size 225

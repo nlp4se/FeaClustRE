@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 3,
-            "label": "excellent helping app"
-        },
-        {
-            "id": 5,
-            "distance": 0.0,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "full helping app"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.0,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "very helping and social hospitally and motherly manner"
-                        },
-                        {
-                            "id": 1,
-                            "label": "very good helping app"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:7b1e54d8dbb485617b3ac643c0490b12f901425ef87f90cc9677ca97fa40ba8e
+size 897

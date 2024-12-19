@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "jai shree ram"
-        },
-        {
-            "id": 1,
-            "label": "jay shree ram"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:ed529a84e54dcb4769ad6de7a20d8e951161185ef0428ed57991bce9a36c9eb9
+size 231

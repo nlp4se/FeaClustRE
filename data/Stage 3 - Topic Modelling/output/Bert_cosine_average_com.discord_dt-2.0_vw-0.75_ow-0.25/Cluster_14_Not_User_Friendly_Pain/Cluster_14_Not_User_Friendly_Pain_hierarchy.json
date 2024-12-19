@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.9219860625083371,
-    "children": [
-        {
-            "id": 0,
-            "label": "not user friendly pain"
-        },
-        {
-            "id": 1,
-            "label": "hire crusty"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:b8e8866ed255f608d0018e38ebc12abcdbe5bba9750173dec1d74dfd51c98f36
+size 253

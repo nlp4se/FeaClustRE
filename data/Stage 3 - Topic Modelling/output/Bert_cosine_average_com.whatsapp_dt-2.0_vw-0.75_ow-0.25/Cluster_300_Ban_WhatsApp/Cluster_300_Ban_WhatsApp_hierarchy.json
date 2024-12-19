@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "ban whatsap"
-        },
-        {
-            "id": 1,
-            "label": "plz unbnad whatsap"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:72d801d3ffc4f0cd193f3669a4c3ab7e62072419f6c7374ec822b076e71d8044
+size 234

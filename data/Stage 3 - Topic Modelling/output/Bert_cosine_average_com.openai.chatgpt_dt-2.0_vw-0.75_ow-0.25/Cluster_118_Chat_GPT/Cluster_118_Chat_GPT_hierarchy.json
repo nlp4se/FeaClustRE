@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 1.6524738687067597,
-    "children": [
-        {
-            "id": 3,
-            "label": "chat gpt late version"
-        },
-        {
-            "id": 5,
-            "distance": 1.4343962426466041,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "want chat gpt"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.9868336030217407,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "chat gpt good friend"
-                        },
-                        {
-                            "id": 1,
-                            "label": "chat gpt need chat gpt"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:6286b27143422da240c32d31178281df6e6cf22e5fd412f918a3e54ad517cc38
+size 906

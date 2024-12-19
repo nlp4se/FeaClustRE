@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.7230815473224994,
-    "children": [
-        {
-            "id": 0,
-            "label": "very very poor service"
-        },
-        {
-            "id": 1,
-            "label": "very poor service"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:cbc72985f54f8f3e3069bd6f14460adb35e46bcc36066dc977f1f301fd014d52
+size 259

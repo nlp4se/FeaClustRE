@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.185917531107918,
-    "children": [
-        {
-            "id": 0,
-            "label": "execute account"
-        },
-        {
-            "id": 1,
-            "label": "execute enquiry"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:8db6c4db5320b2d2020647ec26cf709e5213df48376b600e9c9347250c89ec66
+size 249

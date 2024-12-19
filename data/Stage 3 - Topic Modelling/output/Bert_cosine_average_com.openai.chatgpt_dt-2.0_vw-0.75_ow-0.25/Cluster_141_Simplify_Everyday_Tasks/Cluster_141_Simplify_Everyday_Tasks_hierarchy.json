@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 0.0,
-    "children": [
-        {
-            "id": 0,
-            "label": "simplify arithmetic"
-        },
-        {
-            "id": 1,
-            "label": "simplify everyday task"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:b9538f5be14b42b97d808751085a8eb1a57b795ba9e64dfec35f5ba19c4c3bdd
+size 246

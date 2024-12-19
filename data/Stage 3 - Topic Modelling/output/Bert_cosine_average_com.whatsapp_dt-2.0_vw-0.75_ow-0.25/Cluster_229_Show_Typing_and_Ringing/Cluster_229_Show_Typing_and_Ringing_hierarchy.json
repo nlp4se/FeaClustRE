@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.8620925382575486,
-    "children": [
-        {
-            "id": 0,
-            "label": "show ringing"
-        },
-        {
-            "id": 1,
-            "label": "show typing"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:648f73ff63f217701d31b04726697eac5243ca1a3a6e8d99334668956b64e26f
+size 243

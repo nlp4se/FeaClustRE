@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.6088719656607153,
-    "children": [
-        {
-            "id": 2,
-            "label": "draw man"
-        },
-        {
-            "id": 3,
-            "distance": 0.4984594556149633,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "draw glass"
-                },
-                {
-                    "id": 1,
-                    "label": "draw image"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:e8f132a3066360f5519176ffdf4e71bf15ebbd87a541b589fe5ae8adb7c373ba
+size 513

@@ -1,24 +1,3 @@
-{
-    "id": 4,
-    "distance": 0.6973265048336994,
-    "children": [
-        {
-            "id": 2,
-            "label": "satisfy customer"
-        },
-        {
-            "id": 3,
-            "distance": 0.37607778819980126,
-            "children": [
-                {
-                    "id": 0,
-                    "label": "satisfy need"
-                },
-                {
-                    "id": 1,
-                    "label": "satisfy want"
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:d06a0c6b65d6b8d88a1f6b24bf4449c8db0820e8150aed71bd6cc54fd448fd95
+size 526

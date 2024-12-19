@@ -1,14 +1,3 @@
-{
-    "id": 2,
-    "distance": 1.8139821802176992,
-    "children": [
-        {
-            "id": 0,
-            "label": "improve listen"
-        },
-        {
-            "id": 1,
-            "label": "improve prompting"
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:80c1486d14accadafb6982da5fa8ed20af935e3745a819be0cbb0b539ba28d3f
+size 251

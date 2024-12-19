@@ -1,34 +1,3 @@
-{
-    "id": 6,
-    "distance": 0.8299601246011438,
-    "children": [
-        {
-            "id": 3,
-            "label": "browse gifs"
-        },
-        {
-            "id": 5,
-            "distance": 0.6317983656101284,
-            "children": [
-                {
-                    "id": 2,
-                    "label": "browse public stream"
-                },
-                {
-                    "id": 4,
-                    "distance": 0.5096393872437042,
-                    "children": [
-                        {
-                            "id": 0,
-                            "label": "browse channel"
-                        },
-                        {
-                            "id": 1,
-                            "label": "browse public server"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:37d1eccb4a59c8b221cdc8b664927f776660b05ee74403ca3d86daa89ef2b196
+size 895
