@@ -30,7 +30,10 @@ def reset_folder(folder_path):
 
 def generate_dynamic_label(cluster_labels):
     unique_labels = list(set(cluster_labels))
-    input_text = (
+    zero_shot_input_text = ("Assign a unique family name that best describes the following set of mobile app features extracted from user reviews. "
+                            "Your output should be the family name only, with no additional explanation or formatting. "
+                            "Features:")
+    few_shot_input_text = (
         "Generate a single concise label summarizing the following actions:\n\n"
         "Examples:\n"
         "Video meeting, online meeting, team video chat, conference call\n"
@@ -41,8 +44,8 @@ def generate_dynamic_label(cluster_labels):
         "Label: Secure Video Conferencing\n\n"
         + ", ".join(unique_labels) + "\nLabel:"
     )
-    response = pipe(input_text, max_new_tokens=10, do_sample=True)
-    label = response[0]['generated_text'].replace(input_text, "").strip()
+    response = pipe(few_shot_input_text, max_new_tokens=10, do_sample=True)
+    label = response[0]['generated_text'].replace(few_shot_input_text, "").strip()
     return label.split('\n')[0]
 
 def build_hierarchical_json(linkage_matrix, labels):
