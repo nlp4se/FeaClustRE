@@ -5,10 +5,13 @@ import torch
 import numpy as np
 import spacy
 
-BASE_DATA_PATH = os.path.join('data', 'Stage 2 - Hierarchical Clustering', 'output')
+STAGE_2_OUTPUT_PATH = os.path.join('data', 'Stage 2 - Hierarchical Clustering', 'output')
+STAGE_3_INPUT_PATH = os.path.join('data', 'Stage 3 - Topic Modelling', 'input')
 
-MODEL_DIRECTORY_PATH = os.path.join(BASE_DATA_PATH)
-MODEL_DIRECTORY_CSV_PATH = os.path.join(BASE_DATA_PATH, 'csv')
+STAGE_2_MODEL_DIRECTORY_PATH = os.path.join(STAGE_2_OUTPUT_PATH)
+STAGE_3_MODEL_DIRECTORY_PATH = os.path.join(STAGE_3_INPUT_PATH)
+
+MODEL_DIRECTORY_CSV_PATH = os.path.join(STAGE_2_OUTPUT_PATH, 'csv')
 MODEL_DIRECTORY_CSV_EMBEDDINGS_PATH = os.path.join('static', 'csv', 'embeddings')
 
 class Utils:
@@ -46,9 +49,13 @@ class Utils:
 
     @staticmethod
     def save_to_pkl(model_info: dict, pkl_filename: str):
-        if not os.path.exists(MODEL_DIRECTORY_PATH):
-            os.makedirs(MODEL_DIRECTORY_PATH)
-        pkl_file_path = os.path.join(os.getcwd(), MODEL_DIRECTORY_PATH, pkl_filename)
+        if not os.path.exists(STAGE_2_MODEL_DIRECTORY_PATH):
+            os.makedirs(STAGE_2_MODEL_DIRECTORY_PATH)
+        pkl_file_path = os.path.join(os.getcwd(), STAGE_2_MODEL_DIRECTORY_PATH, pkl_filename)
+        print(f"Saving model to {pkl_file_path}...")
+        joblib.dump(model_info, pkl_file_path)
+
+        pkl_file_path = os.path.join(os.getcwd(), STAGE_3_INPUT_PATH, pkl_filename)
         print(f"Saving model to {pkl_file_path}...")
         joblib.dump(model_info, pkl_file_path)
         return pkl_file_path
@@ -80,13 +87,13 @@ class Utils:
         if hasattr(clustering_model, 'cluster_centers_'):
             model_info['cluster_centers'] = clustering_model.cluster_centers_
 
-        pkl_file_name = (f"{application_name}_"
-                         f"{model_name.lower()}_"
+        pkl_file_name = (f"{model_name.lower()}_"
                          f"{metric}_"
                          f"{linkage}_"
-                         f"thr-{distance_threshold}_"
-                         f"vw-{verb_weight}_"
-                         f"ow-{object_weight}.pkl")
+                         f"thr_{distance_threshold}_"
+                         f"vw_{verb_weight}_"
+                         f"ow_{object_weight}"
+                         f"-{application_name}.pkl")
         return Utils.save_to_pkl(model_info, pkl_file_name)
 
     @staticmethod
