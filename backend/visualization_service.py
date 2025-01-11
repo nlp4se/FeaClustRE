@@ -224,7 +224,7 @@ def generate_dendrogram_visualization(dendogram_file):
 
     app_folder = os.path.join(
         STAGE_3_OUTPUT_PATH,
-        f"{affinity}_{application_name}_dt-{distance_threshold}_vw-{verb_weight}_ow-{object_weight}".replace(" ", "_")
+        f"{affinity}_dt_{distance_threshold}_vw_{verb_weight}_ow_{object_weight}-{application_name}".replace(" ", "_")
     )
     reset_folder(app_folder)
 
