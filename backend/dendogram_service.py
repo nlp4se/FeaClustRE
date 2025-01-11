@@ -1,10 +1,15 @@
 import requests
 import json
+import logging
 import os
 from .Context import Context
 from . import Affinity_strategy
 from dotenv import load_dotenv
 from .preprocessing_service import preprocess_features
+
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 load_dotenv()
 def preprocessed_app(app_name):
@@ -18,7 +23,7 @@ def save_preprocessed_features(features, app_name):
         json.dump(features, json_file)
 
 def load_saved_preprocessed_features(app_name):
-    file_path = f"Stage 2 - Hierarchical Clustering/preprocessed_jsons/{app_name}Features.json"
+    file_path = os.path.join(BASE_DIR, "data", "Stage 2 - Hierarchical Clustering", "preprocessed_jsons", f"{app_name}Features.json")
     if not os.path.exists(file_path):
         return None
     with open(file_path, "r") as json_file:
@@ -43,6 +48,12 @@ def generate_dendogram(preprocessing,
     elif preprocessing and preprocessed_app(app_name):
         features = load_saved_preprocessed_features(app_name)
 
+    # Remove duplicate features
+    logging.info(f"Initial number of features: {len(features)}")
+    features = list(set(features))
+    logging.info(f"Number of unique features after deduplication: {len(features)}")
+
+    # Select the appropriate embedding strategy
     if embedding == 'bert':
         context = Context(Affinity_strategy.BertEmbeddingAffinity())
     elif embedding == 'paraphrase':
@@ -52,6 +63,7 @@ def generate_dendogram(preprocessing,
     else:
         raise ValueError(f"Unsupported embedding method: {embedding}")
 
+    # Use the affinity algorithm
     return context.use_affinity_algorithm(application_name=app_name,
                                           data=features,
                                           linkage=linkage,
@@ -59,6 +71,7 @@ def generate_dendogram(preprocessing,
                                           verb_weight=verb_weight,
                                           distance_threshold=distance_threshold,
                                           metric=metric)
+
 
 
 

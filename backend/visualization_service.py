@@ -10,6 +10,15 @@ import torch
 import matplotlib.colors as mcolors
 import numpy as np
 
+# Define base directories
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+STAGE_3_INPUT_PATH = os.path.join(BASE_DIR, 'data', 'Stage 3 - Topic Modelling', 'input')
+STAGE_3_OUTPUT_PATH = os.path.join(BASE_DIR, 'data', 'Stage 3 - Topic Modelling', 'output')
+
+os.makedirs(STAGE_3_INPUT_PATH, exist_ok=True)
+os.makedirs(STAGE_3_OUTPUT_PATH, exist_ok=True)
+
+# Load model and tokenizer
 model_name = "meta-llama/Llama-3.2-3B"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.bfloat16).to(
@@ -28,11 +37,9 @@ def reset_folder(folder_path):
         shutil.rmtree(folder_path)
     os.makedirs(folder_path, exist_ok=True)
 
+
 def generate_dynamic_label(cluster_labels):
     unique_labels = list(set(cluster_labels))
-    zero_shot_input_text = ("Assign a unique family name that best describes the following set of mobile app features extracted from user reviews. "
-                            "Your output should be the family name only, with no additional explanation or formatting. "
-                            "Features:")
     few_shot_input_text = (
         "Generate a single concise label summarizing the following actions:\n\n"
         "Examples:\n"
@@ -47,6 +54,7 @@ def generate_dynamic_label(cluster_labels):
     response = pipe(few_shot_input_text, max_new_tokens=10, do_sample=True)
     label = response[0]['generated_text'].replace(few_shot_input_text, "").strip()
     return label.split('\n')[0]
+
 
 def build_hierarchical_json(linkage_matrix, labels):
     n_samples = len(labels)
@@ -67,33 +75,32 @@ def build_hierarchical_json(linkage_matrix, labels):
 
     return traverse_node(len(linkage_matrix) + n_samples - 1)
 
+
 def save_json(data, file_path):
     with open(file_path, 'w') as json_file:
         json.dump(data, json_file, indent=4)
     print(f"JSON saved at: {file_path}")
+
 
 def extract_sub_linkage_matrix_from_parent(original_data, cluster_indices):
     sub_data = original_data[cluster_indices]
     sub_linkage_matrix = linkage(sub_data, method='average', metric='euclidean')
     return sub_linkage_matrix
 
-def generate_infinite_colors(num_colors):
-    """
-    Generate visually distinct colors using HSV space with diverse hue, saturation, and value.
-    """
-    hues = np.linspace(0, 1, num_colors, endpoint=False)  # Evenly spaced hues
-    saturation = 0.9  # Fixed saturation for vivid colors
-    value = 0.9  # Fixed value for brightness
 
-    # Create colors by varying hue, saturation, and value
+def generate_infinite_colors(num_colors):
+    hues = np.linspace(0, 1, num_colors, endpoint=False)
+    saturation = 0.9
+    value = 0.9
     colors = [mcolors.hsv_to_rgb((hue, saturation, value)) for hue in hues]
     return list(set([mcolors.rgb2hex(color) for color in colors]))
+
+
 def reassign_dendrogram_colors(dendrogram_result, num_colors):
     infinite_colors = generate_infinite_colors(num_colors)
     new_color_list = []
     new_leaves_color_list = []
 
-    # Track clusters by analyzing color blocks in `color_list`
     current_color = None
     current_cluster_id = 0
     cluster_color_map = {}
@@ -103,7 +110,6 @@ def reassign_dendrogram_colors(dendrogram_result, num_colors):
             new_color_list.append('grey')
             continue
 
-        # Detect new clusters when the color changes
         if color != current_color:
             cluster_color_map = {}
             current_color = color
@@ -114,15 +120,13 @@ def reassign_dendrogram_colors(dendrogram_result, num_colors):
             new_color_list.append(cluster_color_map[current_color])
 
     current_color = None
-    cluster_color_map = {}  # Reset cluster mapping for leaves
-    current_cluster_id = 0  # Reset cluster ID for leaves
+    cluster_color_map = {}
+    current_cluster_id = 0
     for color in dendrogram_result['leaves_color_list']:
         if color == 'grey':
-            # Preserve grey for leaves associated with grey branches
             new_leaves_color_list.append('grey')
             continue
 
-        # Detect new clusters when the color changes
         if color != current_color:
             cluster_color_map = {}
             current_color = color
@@ -135,79 +139,7 @@ def reassign_dendrogram_colors(dendrogram_result, num_colors):
     dendrogram_result['leaves_color_list'] = new_leaves_color_list
 
     return dendrogram_result
-def render_dendrogram_and_process_clusters(model_info, labels, color_threshold, original_data):
-    application_name = model_info['application_name']
-    affinity = model_info['affinity']
-    verb_weight = model_info.get('verb_weight', 'N/A')
-    object_weight = model_info.get('object_weight', 'N/A')
-    static_folder = os.path.join("..", "data", "Stage 3 - Topic Modelling", "output")
-    app_folder = os.path.join(
-        static_folder,
-        f"{affinity}_{application_name}_dt-{color_threshold}_vw-{verb_weight}_ow-{object_weight}".replace(" ", "_")
-    )
-    reset_folder(app_folder)
-    os.makedirs(app_folder, exist_ok=True)
 
-    linkage_matrix = linkage(original_data, method='average', metric='euclidean')
-
-    fig, ax = plt.subplots(figsize=(30, 30))
-
-    dendrogram(
-        linkage_matrix,
-        labels=labels,
-        color_threshold=color_threshold,
-        leaf_font_size=10,
-        orientation='right',
-        distance_sort='descending',
-        above_threshold_color='grey',
-        ax=ax,
-    )
-
-    ax.axvline(x=color_threshold, color='red', linestyle='--', linewidth=2)
-    ax.set_title(
-        f"{application_name} | {affinity} | Distance Threshold: {color_threshold} "
-        f"| Verb Weight: {verb_weight} | Object Weight: {object_weight}",
-        fontsize=14
-    )
-    plt.tight_layout()
-    final_dendrogram_path = os.path.join(app_folder, f"{application_name}_final_dendrogram.png")
-    plt.savefig(final_dendrogram_path)
-    plt.close(fig)
-    print(f"Final dendrogram saved at: {final_dendrogram_path}")
-
-    cluster_map = {}
-    dendrogram_result = dendrogram(
-        linkage_matrix,
-        labels=labels,
-        color_threshold=color_threshold,
-        leaf_font_size=10,
-        orientation='right',
-        distance_sort='descending',
-        above_threshold_color='grey',
-        ax=ax,
-        no_plot=True
-    )
-    num_colors = len(labels)
-    reassign_dendrogram_colors(dendrogram_result, num_colors)
-
-    for leaf, color in zip(dendrogram_result['leaves'], dendrogram_result['leaves_color_list']):
-        if color == 'grey':
-            continue
-        if color not in cluster_map:
-            cluster_map[color] = {'labels': [], 'indices': []}
-        label = labels[leaf]
-        cluster_map[color]['labels'].append(label)
-        cluster_map[color]['indices'].append(leaf)
-
-    print(f"Detected {len(cluster_map)} unique clusters for processing.")
-
-    general_json = build_hierarchical_json(linkage_matrix, labels)
-    general_json_path = os.path.join(app_folder, f"{application_name}_general_hierarchy.json")
-    save_json(general_json, general_json_path)
-
-    process_and_save_clusters(cluster_map, application_name, app_folder, original_data, color_threshold)
-
-    return cluster_map
 
 def process_and_save_clusters(cluster_map, application_name, app_folder, original_data, color_threshold):
     final_csv_data = []
@@ -219,14 +151,19 @@ def process_and_save_clusters(cluster_map, application_name, app_folder, origina
         print(f"Processing Cluster {cluster_id} (Color: {color}): Labels = {cluster_labels}")
         print(f"Detected {len(cluster_labels)} labels in Cluster {cluster_id}.")
 
+        # Generate a dynamic label for the cluster
         dynamic_label = generate_dynamic_label(cluster_labels)
         print(f"Generated label for Cluster {cluster_id}: {dynamic_label}")
 
-        cluster_label = f"Cluster_{cluster_id}_{dynamic_label.replace(' ', '_')}"
+        # Sanitize folder name
+        sanitized_label = dynamic_label.replace(" ", "_").replace("/", "_").replace("\\", "_")
+        cluster_label = f"Cluster_{cluster_id}_{sanitized_label}"
         cluster_folder = os.path.join(app_folder, cluster_label)
+
+        # Ensure the cluster folder exists
         os.makedirs(cluster_folder, exist_ok=True)
 
-        # Process dendrogram
+        # Process sub-dendrogram
         sub_linkage_matrix = extract_sub_linkage_matrix_from_parent(original_data, cluster_indices)
         sub_labels = [cluster_labels[i] for i in range(len(cluster_labels))]
 
@@ -244,11 +181,10 @@ def process_and_save_clusters(cluster_map, application_name, app_folder, origina
 
         # Save dendrogram image
         sub_dendrogram_path = os.path.join(cluster_folder, f"{cluster_label}_dendrogram.png")
-        os.makedirs(os.path.dirname(sub_dendrogram_path), exist_ok=True)  # Create directory if missing
         plt.savefig(sub_dendrogram_path)
         plt.close()
 
-        # Save cluster CSV
+        # Save cluster details to CSV
         cluster_csv_path = os.path.join(cluster_folder, f"{cluster_label}_features.csv")
         cluster_df = pd.DataFrame([{
             "Cluster Name": dynamic_label,
@@ -261,6 +197,7 @@ def process_and_save_clusters(cluster_map, application_name, app_folder, origina
         sub_json_path = os.path.join(cluster_folder, f"{cluster_label}_hierarchy.json")
         save_json(sub_json, sub_json_path)
 
+        # Append cluster summary for the final CSV
         final_csv_data.append({
             "Cluster ID": cluster_id,
             "Cluster Name": dynamic_label,
@@ -273,28 +210,64 @@ def process_and_save_clusters(cluster_map, application_name, app_folder, origina
     final_csv_df.to_csv(final_csv_path, index=False)
     print(f"Final summary CSV saved at: {final_csv_path}")
 
-def generate_dendrogram_visualization(model_file):
-    model_info = joblib.load(model_file)
-    distance_threshold = model_info['distance_threshold']
-    distance_threshold *= 10
+
+def generate_dendrogram_visualization(dendogram_file):
+    model_info = joblib.load(dendogram_file)
+    distance_threshold = model_info['distance_threshold'] * 10
     labels = model_info['labels']
     original_data = model_info['data_points']
 
-    clusters = render_dendrogram_and_process_clusters(
-        model_info,
-        labels,
-        distance_threshold,
-        original_data
-    )
-    return clusters
+    application_name = model_info['application_name']
+    affinity = model_info['affinity']
+    verb_weight = model_info.get('verb_weight', 'N/A')
+    object_weight = model_info.get('object_weight', 'N/A')
 
-if __name__ == "__main__":
-    pkls_directory = r"C:\Users\Max\Dendogram-Generator\data\Stage 3 - Topic Modelling\input"
-    for filename in os.listdir(pkls_directory):
-        if filename.endswith('.pkl'):
-            print("----")
-            print(f"STARTING PROCESSING: {filename}")
-            model_file = os.path.join(pkls_directory, filename)
-            clusters = generate_dendrogram_visualization(model_file)
-            print(f"FINISHED PROCESSING: {filename}")
-            print("----")
+    app_folder = os.path.join(
+        STAGE_3_OUTPUT_PATH,
+        f"{affinity}_{application_name}_dt-{distance_threshold}_vw-{verb_weight}_ow-{object_weight}".replace(" ", "_")
+    )
+    reset_folder(app_folder)
+
+    linkage_matrix = linkage(original_data, method='average', metric='euclidean')
+
+    fig, ax = plt.subplots(figsize=(30, 30))
+    dendrogram_result = dendrogram(
+        linkage_matrix,
+        labels=labels,
+        color_threshold=distance_threshold,
+        leaf_font_size=10,
+        orientation='right',
+        distance_sort='descending',
+        above_threshold_color='grey',
+        ax=ax,
+        no_plot=True
+    )
+
+    reassign_dendrogram_colors(dendrogram_result, len(labels))
+    ax.axvline(x=distance_threshold, color='red', linestyle='--', linewidth=2)
+    plt.tight_layout()
+
+    final_dendrogram_path = os.path.join(app_folder, f"{application_name}_final_dendrogram.png")
+    plt.savefig(final_dendrogram_path)
+    plt.close(fig)
+
+    cluster_map = {}
+    for leaf, color in zip(dendrogram_result['leaves'], dendrogram_result['leaves_color_list']):
+        if color == 'grey':
+            continue
+        if color not in cluster_map:
+            cluster_map[color] = {'labels': [], 'indices': []}
+        cluster_map[color]['labels'].append(labels[leaf])
+        cluster_map[color]['indices'].append(leaf)
+
+    process_and_save_clusters(cluster_map, application_name, app_folder, original_data, distance_threshold)
+
+    general_json = build_hierarchical_json(linkage_matrix, labels)
+    general_json_path = os.path.join(app_folder, f"{application_name}_general_hierarchy.json")
+    save_json(general_json, general_json_path)
+
+    return {
+        "dendrogram_path": final_dendrogram_path,
+        "json_path": general_json_path,
+        "clusters_summary_csv": os.path.join(app_folder, f"{application_name}_clusters_summary.csv"),
+    }
