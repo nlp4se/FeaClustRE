@@ -1,3 +1,5 @@
+import argparse
+
 import joblib
 import os
 import matplotlib.pyplot as plt
@@ -229,15 +231,40 @@ def generate_dendrogram_visualization(model_file):
     return clusters
 
 
-# TODO split stage 3 before and after llama
-# TODO dynamic paths, remove hardcoded
-if __name__ == "__main__":
+def main():
+    parser = argparse.ArgumentParser(description="Dendrogram Visualization Generator")
+    parser.add_argument(
+        "--file",
+        type=str,
+        default=None,
+        help="Optional: Specific .pkl file to process. If not provided, all .pkl files in the directory will be processed.",
+    )
+    args = parser.parse_args()
+    specified_file = args.file
+
     pkls_directory = r"C:\Users\Max\NLP4RE\Dendogram-Generator\data\Stage 3 - Topic Modelling\input"
-    for filename in os.listdir(pkls_directory):
-        if filename.endswith('.pkl'):
+
+    if specified_file:
+        model_file = os.path.join(pkls_directory, specified_file)
+        if os.path.isfile(model_file) and model_file.endswith(".pkl"):
             print("----")
-            print(f"STARTING PROCESSING: {filename}")
-            model_file = os.path.join(pkls_directory, filename)
+            print(f"STARTING PROCESSING: {specified_file}")
             clusters = generate_dendrogram_visualization(model_file)
-            print(f"FINISHED PROCESSING: {filename}")
+            print(f"FINISHED PROCESSING: {specified_file}")
             print("----")
+        else:
+            print(f"ERROR: The specified file '{specified_file}' does not exist or is not a .pkl file.")
+    else:
+        # Process all .pkl files in the directory
+        for filename in os.listdir(pkls_directory):
+            if filename.endswith(".pkl"):
+                print("----")
+                print(f"STARTING PROCESSING: {filename}")
+                model_file = os.path.join(pkls_directory, filename)
+                clusters = generate_dendrogram_visualization(model_file)
+                print(f"FINISHED PROCESSING: {filename}")
+                print("----")
+
+
+if __name__ == "__main__":
+    main()
