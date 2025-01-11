@@ -1,8 +1,7 @@
 import csv
 from flask import Blueprint, request, make_response, jsonify
-from . import dendogram_service
+from . import dendogram_service, visualization_service
 import os
-import subprocess
 
 import sys
 import io
@@ -14,13 +13,15 @@ logging.basicConfig(level=logging.INFO, encoding='utf-8')
 bp = Blueprint('dendogram', __name__, url_prefix='/dendogram')
 
 
+
+
 @bp.route('/generate', methods=['POST'])
 def generate_dendogram():
     preprocessing = request.args.get('preprocessing', 'false').lower() == 'true'
     affinity = request.args.get('affinity', 'bert')
     linkage = request.args.get('linkage', 'average')
     metric = request.args.get('metric', 'cosine')
-    threshold = float(request.args.get('threshold', 0.2))
+    threshold = float(request.args.get('threshold', None))
     object_weight = float(request.args.get('obj-weight', 0.25))
     verb_weight = float(request.args.get('verb-weight', 0.75))
     app_name = request.args.get('app_name', 'unknown')
@@ -53,28 +54,13 @@ def generate_dendogram():
             verb_weight=verb_weight,
             request_content=request_simplified
         )
-
-        # Call the visualizator.py script with the generated .pkl file
-        pkls_directory = r"C:\Users\Max\NLP4RE\Dendogram-Generator\data\Stage 3 - Topic Modelling\input"
-        visualizator_script_path = os.path.abspath("visualizator.py")
-
-        process = subprocess.run(
-            ["python", visualizator_script_path, "--file", dendogram_file],
-            cwd=pkls_directory,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True
-        )
-
-        # Check if the process ran successfully
-        if process.returncode != 0:
-            raise Exception(f"Visualizator script error: {process.stderr}")
+        if threshold is not None:
+            visualization_service.generate_dendrogram_visualization(dendogram_file)
 
         return jsonify({
             "message": "Dendrogram generated successfully",
             "features": all_features,
             "dendrogram_path": dendogram_file,
-            "visualization_log": process.stdout
         }), 200
 
     except ValueError as e:
