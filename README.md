@@ -9,6 +9,8 @@ This tool uses **Meta's LLaMA model** for feature embedding and **Hugging Face's
 
 With a flexible **backend API**, a **CLI client**, and **visualization tools**, FeaClustRE supports both **interactive analysis and automated batch processing**.
 
+This tool is part of the RE-Miner Ecosystem, which can be explored in the [GESSI-NLP4SE repository](https://github.com/nlp4se).
+
 ### Key Features
 - **Custom Clustering Algorithm** – Uses a hand-made affinity-based clustering approach to automatically group similar features.
 - **Dendrogram Visualization** – Generates hierarchical visualizations to explore feature relationships.
