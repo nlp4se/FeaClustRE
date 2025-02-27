@@ -2,11 +2,9 @@ FROM python:3.9
 
 WORKDIR /wsgi
 
-COPY Pipfile /wsgi/
+COPY Pipfile Pipfile.lock /wsgi/
 
-RUN pip install pipenv
-
-RUN pipenv install --deploy --ignore-pipfile
+RUN pip install pipenv && pipenv install --deploy --ignore-pipfile
 
 RUN pipenv run python -m spacy download en_core_web_sm
 
