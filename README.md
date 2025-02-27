@@ -48,7 +48,7 @@ This project uses **Meta's LLaMA model**, which is **gated** and requires **manu
 ### **Using Your Hugging Face Token**
 To authenticate, you **must set your Hugging Face token** before running the project.
 
-#### **1️⃣ Set the Token in `.env`**
+#### **Set the Token in `.env`**
 In the `.env` file in the project root, add:
 
 ```
