@@ -5,27 +5,41 @@ Documentation writing in progress...
 
 ---
 
-### Demo & Screenshots
+## Demo & Screenshots
 
-### Installation
-
-#### Local
-
-#### Docker
-
-before using install spacy en_core_web_sm
-
-```python -m spacy download en_core_web_sm```
+---
+## Installation
 
 
-Example for calling csv_to_json.py
 
-```python backend/data-preprocessing/csv_to_json.py -i data/COMMUNICATION/reviews_with_features.csv -o data/COMMUNICATION/features --from 2023-01-01 --to 2023-12-31```
+### Hugging Face Token Authentication & LLaMA Access
 
-Example for calling dendogram_generation.py client
+This project uses **Meta's LLaMA model**, which is **gated** and requires **manual approval** from Hugging Face.
 
-```python client/dendogram_generation.py data/COMMUNICATION/all/features_org.telegram.messenger.json```
+#### **How to Get Access to LLaMA**
+1. Visit the [LLaMA Model 3.2-3B Page](https://huggingface.co/meta-llama/Llama-3.2-3B).
+2. Click **Request Access** and follow the instructions.
+3. Wait for Hugging Face to approve your request.
 
-Example for calling visualizator.py client
+#### **Using Your Hugging Face Token**
+To authenticate, you **must set your Hugging Face token** before running the project.
 
-```python client/dendogram_generation.py ./data/COMMUNICATION/all/features_com.discord.json bert-embedding-cosine average 0.2```
+In the `.env` file in the project root add:
+
+```
+HUGGING_FACE_HUB_TOKEN=your_huggingface_token
+```
+---
+
+### Local Installation
+
+Before using, install the required spaCy model:
+```sh
+python -m spacy download en_core_web_sm
+```
+### Docker Installation
+
+---
+
+
+
