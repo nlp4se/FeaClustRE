@@ -1,3 +1,4 @@
+import logging
 import joblib
 import os
 import matplotlib.pyplot as plt
@@ -12,6 +13,10 @@ import torch
 import matplotlib.colors as mcolors
 import numpy as np
 
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
 # Define base directories
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 STAGE_3_INPUT_PATH = os.path.join(BASE_DIR, 'data', 'Stage 3 - Topic Modelling', 'input')
@@ -23,10 +28,12 @@ os.makedirs(STAGE_3_OUTPUT_PATH, exist_ok=True)
 load_dotenv()
 HUGGINGFACE_TOKEN = os.getenv("HUGGING_FACE_HUB_TOKEN")
 if not HUGGINGFACE_TOKEN:
+    logger.error("Hugging Face token is missing. Set HUGGING_FACE_HUB_TOKEN in your .env file.")
     raise ValueError("Hugging Face token is missing. Set HUGGING_FACE_HUB_TOKEN in your .env file.")
 login(HUGGINGFACE_TOKEN)
 
 model_name = "meta-llama/Llama-3.2-3B"
+logger.info(f"Loading tokenizer and model: {model_name}")
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.bfloat16).to(
     'cuda' if torch.cuda.is_available() else 'cpu'
@@ -41,6 +48,7 @@ pipe = pipeline(
 
 def reset_folder(folder_path):
     if os.path.exists(folder_path):
+        logger.info(f"Resetting folder: {folder_path}")
         shutil.rmtree(folder_path)
     os.makedirs(folder_path, exist_ok=True)
 
@@ -58,6 +66,7 @@ def generate_dynamic_label(cluster_labels):
         "Label: Secure Video Conferencing\n\n"
         + ", ".join(unique_labels) + "\nLabel:"
     )
+    logger.info("Generating dynamic label for cluster")
     response = pipe(few_shot_input_text, max_new_tokens=10, do_sample=True)
     label = response[0]['generated_text'].replace(few_shot_input_text, "").strip()
     return label.split('\n')[0]
@@ -86,7 +95,7 @@ def build_hierarchical_json(linkage_matrix, labels):
 def save_json(data, file_path):
     with open(file_path, 'w') as json_file:
         json.dump(data, json_file, indent=4)
-    print(f"JSON saved at: {file_path}")
+    logger.info(f"JSON saved at: {file_path}")
 
 
 def extract_sub_linkage_matrix_from_parent(original_data, cluster_indices):
@@ -155,12 +164,12 @@ def process_and_save_clusters(cluster_map, application_name, app_folder, origina
         cluster_labels = cluster_data['labels']
         cluster_indices = cluster_data['indices']
 
-        print(f"Processing Cluster {cluster_id} (Color: {color}): Labels = {cluster_labels}")
-        print(f"Detected {len(cluster_labels)} labels in Cluster {cluster_id}.")
+        logger.info(f"Processing Cluster {cluster_id} (Color: {color}): Labels = {cluster_labels}")
+        logger.info(f"Detected {len(cluster_labels)} labels in Cluster {cluster_id}.")
 
         # Generate a dynamic label for the cluster
         dynamic_label = generate_dynamic_label(cluster_labels)
-        print(f"Generated label for Cluster {cluster_id}: {dynamic_label}")
+        logger.info(f"Generated label for Cluster {cluster_id}: {dynamic_label}")
 
         # Sanitize folder name
         sanitized_label = dynamic_label.replace(" ", "_").replace("/", "_").replace("\\", "_")
@@ -215,10 +224,11 @@ def process_and_save_clusters(cluster_map, application_name, app_folder, origina
     final_csv_path = os.path.join(app_folder, f"{application_name}_clusters_summary.csv")
     final_csv_df = pd.DataFrame(final_csv_data)
     final_csv_df.to_csv(final_csv_path, index=False)
-    print(f"Final summary CSV saved at: {final_csv_path}")
+    logger.info(f"Final summary CSV saved at: {final_csv_path}")
 
 
 def generate_dendrogram_visualization(dendogram_file):
+    logger.info(f"Loading dendrogram data from: {dendogram_file}")
     model_info = joblib.load(dendogram_file)
     distance_threshold = model_info['distance_threshold'] * 10
     labels = model_info['labels']
@@ -272,6 +282,8 @@ def generate_dendrogram_visualization(dendogram_file):
     general_json = build_hierarchical_json(linkage_matrix, labels)
     general_json_path = os.path.join(app_folder, f"{application_name}_general_hierarchy.json")
     save_json(general_json, general_json_path)
+
+    logger.info(f"Generated dendrogram visualization and saved results to: {app_folder}")
 
     return {
         "dendrogram_path": final_dendrogram_path,
