@@ -6,6 +6,8 @@ import shutil
 import pandas as pd
 import json
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
+from huggingface_hub import login
+from dotenv import load_dotenv
 import torch
 import matplotlib.colors as mcolors
 import numpy as np
@@ -18,7 +20,12 @@ STAGE_3_OUTPUT_PATH = os.path.join(BASE_DIR, 'data', 'Stage 3 - Topic Modelling'
 os.makedirs(STAGE_3_INPUT_PATH, exist_ok=True)
 os.makedirs(STAGE_3_OUTPUT_PATH, exist_ok=True)
 
-# Load model and tokenizer
+load_dotenv()
+HUGGINGFACE_TOKEN = os.getenv("HUGGING_FACE_HUB_TOKEN")
+if not HUGGINGFACE_TOKEN:
+    raise ValueError("Hugging Face token is missing. Set HUGGING_FACE_HUB_TOKEN in your .env file.")
+login(HUGGINGFACE_TOKEN)
+
 model_name = "meta-llama/Llama-3.2-3B"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.bfloat16).to(
