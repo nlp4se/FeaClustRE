@@ -17,6 +17,7 @@ python-dotenv = "*"
 pandas = "*"
 requests = "*"
 bertopic = "*"
+sentence-transformers = "*"
 
 [requires]
 python_version = "3.9"
