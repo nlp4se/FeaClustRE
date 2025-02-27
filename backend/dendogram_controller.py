@@ -12,16 +12,13 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 logging.basicConfig(level=logging.INFO, encoding='utf-8')
 bp = Blueprint('dendogram', __name__, url_prefix='/dendogram')
 
-
-
-
 @bp.route('/generate', methods=['POST'])
 def generate_dendogram():
     preprocessing = request.args.get('preprocessing', 'false').lower() == 'true'
     affinity = request.args.get('affinity', 'bert')
     linkage = request.args.get('linkage', 'average')
     metric = request.args.get('metric', 'cosine')
-    threshold = float(request.args.get('threshold', None))
+    threshold = float(request.args.get('threshold', 0.2))
     object_weight = float(request.args.get('obj-weight', 0.25))
     verb_weight = float(request.args.get('verb-weight', 0.75))
     app_name = request.args.get('app_name', 'unknown')
@@ -91,7 +88,7 @@ def generate_dendogram_from_csv():
         return make_response("CSV file is required", 400)
 
     file = request.files['file']
-    if not file.filename.endswith('.model_embeddings'):
+    if not file.filename.endswith('.csv'):
         return make_response("File must be a CSV", 400)
 
     features = []
@@ -110,14 +107,26 @@ def generate_dendogram_from_csv():
         "app_name": app_name,
         "features": features
     }
+    try:
+        dendogram_file = dendogram_service.generate_dendogram(preprocessing,
+                                                               affinity,
+                                                               metric,
+                                                               linkage,
+                                                               threshold,
+                                                               object_weight,
+                                                               verb_weight,
+                                                               request_content)
 
-    dendrogram_file = dendogram_service.generate_dendogram(preprocessing,
-                                                           affinity,
-                                                           metric,
-                                                           linkage,
-                                                           threshold,
-                                                           object_weight,
-                                                           verb_weight,
-                                                           request_content)
+        if threshold is not None:
+            visualization_service.generate_dendrogram_visualization(dendogram_file)
 
-    return jsonify({"message": "Dendrogram generated successfully", "dendrogram_path": dendrogram_file}), 200
+        return jsonify({
+            "message": "Dendrogram generated successfully",
+            "features": features,
+            "dendrogram_path": dendogram_file,
+        }), 200
+    except ValueError as e:
+        return make_response({"error": str(e)}, 400)
+    except Exception as e:
+        return make_response({"error": "An unexpected error occurred", "details": str(e)}, 500)
+
