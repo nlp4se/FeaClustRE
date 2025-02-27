@@ -91,7 +91,7 @@ def generate_dendogram_from_csv():
         return make_response("CSV file is required", 400)
 
     file = request.files['file']
-    if not file.filename.endswith('.csv'):
+    if not file.filename.endswith('.model_embeddings'):
         return make_response("File must be a CSV", 400)
 
     features = []

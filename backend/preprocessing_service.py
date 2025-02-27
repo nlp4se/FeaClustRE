@@ -33,17 +33,17 @@ def preprocess():
         return jsonify({"error": str(e)}), 500
 
 def preprocessed_app(app_name):
-    file_path = f"static/preprocessed_jsons/{app_name}Features.json"
+    file_path = f"data/Stage 3 - Topic Modelling/preprocessed_features_jsons/{app_name}Features.json"
     return os.path.exists(file_path) and os.path.getsize(file_path) > 0
 
 def save_preprocessed_features(features, app_name):
-    file_path = f"static/preprocessed_jsons/{app_name}Features.json"
+    file_path = f"data/Stage 3 - Topic Modelling/preprocessed_features_jsons/{app_name}Features.json"
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
     with open(file_path, "w") as json_file:
         json.dump(features, json_file)
 
 def load_saved_preprocessed_features(app_name):
-    file_path = f"static/preprocessed_jsons/{app_name}Features.json"
+    file_path = f"data/Stage 3 - Topic Modelling/preprocessed_features_jsons/{app_name}Features.json"
     if os.path.exists(file_path):
         with open(file_path, "r") as json_file:
             return json.load(json_file)

@@ -11,8 +11,8 @@ STAGE_3_INPUT_PATH = os.path.join('data', 'Stage 3 - Topic Modelling', 'input')
 STAGE_2_MODEL_DIRECTORY_PATH = os.path.join(STAGE_2_OUTPUT_PATH)
 STAGE_3_MODEL_DIRECTORY_PATH = os.path.join(STAGE_3_INPUT_PATH)
 
-MODEL_DIRECTORY_CSV_PATH = os.path.join(STAGE_2_OUTPUT_PATH, 'csv')
-MODEL_DIRECTORY_CSV_EMBEDDINGS_PATH = os.path.join('static', 'csv', 'embeddings')
+MODEL_DIRECTORY_CSV_PATH = os.path.join(STAGE_2_OUTPUT_PATH, 'model_embeddings')
+MODEL_DIRECTORY_CSV_EMBEDDINGS_PATH = os.path.join('data', 'model_embeddings', 'embeddings')
 
 class Utils:
     @staticmethod

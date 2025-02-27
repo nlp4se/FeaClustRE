@@ -13,17 +13,17 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 load_dotenv()
 def preprocessed_app(app_name):
-    file_path = f"data/Stage 2 - Hierarchical Clustering/preprocessed_jsons/{app_name}Features.json"
+    file_path = f"data/Stage 2 - Hierarchical Clustering/preprocessed_features_jsons/{app_name}Features.json"
     return os.path.exists(file_path) and os.path.getsize(file_path) > 0
 
 def save_preprocessed_features(features, app_name):
-    file_path = f"data/Stage 2 - Hierarchical Clustering/preprocessed_jsons/{app_name}Features.json"
+    file_path = f"data/Stage 2 - Hierarchical Clustering/preprocessed_features_jsons/{app_name}Features.json"
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
     with open(file_path, "w") as json_file:
         json.dump(features, json_file)
 
 def load_saved_preprocessed_features(app_name):
-    file_path = os.path.join(BASE_DIR, "data", "Stage 2 - Hierarchical Clustering", "preprocessed_jsons", f"{app_name}Features.json")
+    file_path = os.path.join(BASE_DIR, "data", "Stage 2 - Hierarchical Clustering", "preprocessed_features_jsons", f"{app_name}Features.json")
     if not os.path.exists(file_path):
         return None
     with open(file_path, "r") as json_file:

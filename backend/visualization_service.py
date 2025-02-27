@@ -49,7 +49,7 @@ def generate_dynamic_label(cluster_labels):
     unique_labels = list(set(cluster_labels))
     few_shot_input_text = (
         "Generate a single concise label summarizing the following actions:\n\n"
-        "Examples:\n"
+        "Input_Examples:\n"
         "Video meeting, online meeting, team video chat, conference call\n"
         "Label: Virtual Team Communication\n\n"
         "Secure chat, encrypted messaging, private message\n"
