@@ -6,6 +6,8 @@ COPY Pipfile Pipfile.lock /wsgi/
 
 RUN pip install pipenv && pipenv install --deploy --ignore-pipfile
 
+RUN pipenv run pip install torch --index-url https://download.pytorch.org/whl/cpu
+
 RUN pipenv run python -m spacy download en_core_web_sm
 
 COPY . /wsgi
