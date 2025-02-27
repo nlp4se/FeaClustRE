@@ -3,11 +3,13 @@
 ---
 
 ## Introduction
-FeaClustRE (**Feature Clustering and Analysis Visualization Tool**) is an advanced tool designed to **analyze, cluster, and visualize structured data features** using machine learning techniques. It provides **hierarchical clustering, dendrogram visualizations, and feature-based insights** to help researchers and data scientists explore complex datasets.
+FeaClustRE (**Feature Clustering and Analysis Visualization Tool**) is an advanced tool designed to **analyze, cluster, and visualize structured hierarchical features** using NLP and LLM models and techniques. It provides **hierarchical clustering, dendrogram visualizations, and evaluations** to help to explore complex lists of features.
 
 This tool uses **Meta's LLaMA model** for feature embedding and **Hugging Face's Transformers** for feature family clustering. 
 
 With a flexible **backend API**, a **CLI client**, and **visualization tools**, FeaClustRE supports both **interactive analysis and automated batch processing**.
+
+This tool is part of the RE-Miner Ecosystem, which can be explored in the [GESSI-NLP4SE repository](https://github.com/nlp4se).
 
 ### Key Features
 - **Custom Clustering Algorithm** – Uses a hand-made affinity-based clustering approach to automatically group similar features.
@@ -48,7 +50,7 @@ This project uses **Meta's LLaMA model**, which is **gated** and requires **manu
 ### **Using Your Hugging Face Token**
 To authenticate, you **must set your Hugging Face token** before running the project.
 
-#### **1️⃣ Set the Token in `.env`**
+#### **Set the Token in `.env`**
 In the `.env` file in the project root, add:
 
 ```
