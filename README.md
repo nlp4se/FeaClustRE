@@ -3,7 +3,7 @@
 ---
 
 ## Introduction
-FeaClustRE (**Feature Clustering and Analysis Visualization Tool**) is an advanced tool designed to **analyze, cluster, and visualize structured data features** using machine learning techniques. It provides **hierarchical clustering, dendrogram visualizations, and feature-based insights** to help researchers and data scientists explore complex datasets.
+FeaClustRE (**Feature Clustering and Analysis Visualization Tool**) is an advanced tool designed to **analyze, cluster, and visualize structured hierarchical features** using NLP and LLM models and techniques. It provides **hierarchical clustering, dendrogram visualizations, and evaluations** to help to explore complex lists of features.
 
 This tool uses **Meta's LLaMA model** for feature embedding and **Hugging Face's Transformers** for feature family clustering. 
 
