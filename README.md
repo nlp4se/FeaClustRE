@@ -60,26 +60,29 @@ HUGGING_FACE_HUB_TOKEN=your_huggingface_token
 ## 🛠 Installation
 
 ### Local Installation
-1) Before using, install the required spaCy model:
+1) **Before using, install the required spaCy model**:
 ```sh
 python -m spacy download en_core_web_sm
 ```
 
-2) Set your `HUGGING_FACE_HUB_TOKEN` in the .env file
+2) **Set your `HUGGING_FACE_HUB_TOKEN` in the .env file**
 ```
 HUGGING_FACE_HUB_TOKEN=${HUGGINGFACE_TOKEN}
 ```
-3) Install dependencies
+3) **Install dependencies**
 ```sh
 pipenv install
 ```
-4) Execute API
+4) **Execute API**
 ```sh
 flask run --port=3008
 ```
 
 ### Docker Installation
-_(Instructions to be added)_
+1) **Build and run the Docker Image**
+```sh
+docker build -t release . && docker run -p 3008:3008 --name feaclustre release 
+```
 
 ---
 
