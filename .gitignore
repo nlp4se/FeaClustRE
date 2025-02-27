@@ -12,7 +12,6 @@ htmlcov/
 dist/
 build/
 *.egg-info/
-*.lock
 *.png
 *.zip
 
