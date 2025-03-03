@@ -1,3 +1,4 @@
+import csv
 import logging
 import joblib
 import os
@@ -6,6 +7,7 @@ from scipy.cluster.hierarchy import dendrogram, linkage
 import shutil
 import pandas as pd
 import json
+from scipy.spatial.distance import pdist
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 from huggingface_hub import login
 from dotenv import load_dotenv
@@ -46,6 +48,7 @@ pipe = pipeline(
     device=0 if torch.cuda.is_available() else -1
 )
 
+
 def reset_folder(folder_path):
     if os.path.exists(folder_path):
         logger.info(f"Resetting folder: {folder_path}")
@@ -56,15 +59,15 @@ def reset_folder(folder_path):
 def generate_dynamic_label(cluster_labels):
     unique_labels = list(set(cluster_labels))
     few_shot_input_text = (
-        "Generate a single concise label summarizing the following actions:\n\n"
-        "Input_Examples:\n"
-        "Video meeting, online meeting, team video chat, conference call\n"
-        "Label: Virtual Team Communication\n\n"
-        "Secure chat, encrypted messaging, private message\n"
-        "Label: Private Messaging\n\n"
-        "Video call, group video call, secure video call, video conference\n"
-        "Label: Secure Video Conferencing\n\n"
-        + ", ".join(unique_labels) + "\nLabel:"
+            "Generate a single concise label summarizing the following actions:\n\n"
+            "Input_Examples:\n"
+            "Video meeting, online meeting, team video chat, conference call\n"
+            "Label: Virtual Team Communication\n\n"
+            "Secure chat, encrypted messaging, private message\n"
+            "Label: Private Messaging\n\n"
+            "Video call, group video call, secure video call, video conference\n"
+            "Label: Secure Video Conferencing\n\n"
+            + ", ".join(unique_labels) + "\nLabel:"
     )
     logger.info("Generating dynamic label for cluster")
     response = pipe(few_shot_input_text, max_new_tokens=10, do_sample=True)
@@ -156,9 +159,67 @@ def reassign_dendrogram_colors(dendrogram_result, num_colors):
 
     return dendrogram_result
 
+def save_json(data, path):
+    with open(path, "w") as f:
+        json.dump(data, f, indent=4)
+
+def save_csv(data, path, fieldnames):
+    with open(path, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(data)
+
+def compute_metrics(cluster_map, original_data):
+    logger.info("Starting metric computation...")
+
+    num_clusters = len(cluster_map)
+    logger.info(f"Number of clusters: {num_clusters}")
+
+    cluster_sizes = [len(data['labels']) for data in cluster_map.values()]
+    avg_size = np.round(np.mean(cluster_sizes), 3)
+    logger.info(f"Average cluster size: {avg_size}")
+
+    # Compute inter-cluster and intra-cluster distances
+    all_indices = [data['indices'] for data in cluster_map.values()]
+    intra_distances = []
+    inter_distances = []
+
+    logger.info("Computing intra-cluster distances...")
+    for idx, indices in enumerate(all_indices):
+        if len(indices) > 1:
+            pairwise_distances = pdist(original_data[indices])
+            intra_mean = np.round(np.mean(pairwise_distances), 3)
+            intra_distances.append(intra_mean)
+            logger.debug(f"Cluster {idx + 1} Intra-distance: {intra_mean}")
+
+    logger.info("Computing inter-cluster distances...")
+    for i in range(len(all_indices)):
+        for j in range(i + 1, len(all_indices)):
+            pairwise_distances = pdist(original_data[np.concatenate([all_indices[i], all_indices[j]])])
+            inter_mean = np.round(np.mean(pairwise_distances), 3)
+            inter_distances.append(inter_mean)
+            logger.debug(f"Between Cluster {i + 1} and Cluster {j + 1}: {inter_mean}")
+
+    intra_dist = np.round(np.mean(intra_distances), 3) if intra_distances else 0.000
+    inter_dist = np.round(np.mean(inter_distances), 3) if inter_distances else 0.000
+
+    logger.info(f"Final Intra-cluster distance: {intra_dist}")
+    logger.info(f"Final Inter-cluster distance: {inter_dist}")
+
+    # Compute entropy (using label distributions)
+    label_counts = np.array(cluster_sizes) / sum(cluster_sizes)
+    entropy = -np.sum(label_counts * np.log2(label_counts))
+    entropy = np.round(entropy, 3)
+
+    logger.info(f"Entropy: {entropy}")
+
+    return num_clusters, avg_size, inter_dist, intra_dist, entropy
 
 def process_and_save_clusters(cluster_map, application_name, app_folder, original_data, color_threshold):
-    final_csv_data = []
+    all_summary_csv = []
+    all_metrics_csv = []
+
+    num_clusters, avg_size, inter_dist, intra_dist, entropy = compute_metrics(cluster_map, original_data)
 
     for cluster_id, (color, cluster_data) in enumerate(cluster_map.items(), start=1):
         cluster_labels = cluster_data['labels']
@@ -213,18 +274,29 @@ def process_and_save_clusters(cluster_map, application_name, app_folder, origina
         sub_json_path = os.path.join(cluster_folder, f"{cluster_label}_hierarchy.json")
         save_json(sub_json, sub_json_path)
 
-        # Append cluster summary for the final CSV
-        final_csv_data.append({
+        # Append to summary CSV
+        all_summary_csv.append({
             "Cluster ID": cluster_id,
             "Cluster Name": dynamic_label,
             "Feature List": ", ".join(cluster_labels)
         })
 
     # Save final summary CSV
-    final_csv_path = os.path.join(app_folder, f"{application_name}_clusters_summary.csv")
-    final_csv_df = pd.DataFrame(final_csv_data)
-    final_csv_df.to_csv(final_csv_path, index=False)
-    logger.info(f"Final summary CSV saved at: {final_csv_path}")
+    summary_csv_path = os.path.join(app_folder, f"{application_name}_clusters_summary.csv")
+    save_csv(all_summary_csv, summary_csv_path, ["Cluster ID", "Cluster Name", "Feature List"])
+    logger.info(f"Final summary CSV saved at: {summary_csv_path}")
+
+    # Save final metrics CSV
+    metrics_csv_path = os.path.join(app_folder, f"{application_name}_clusters_metrics.csv")
+    all_metrics_csv.append({
+        "#clusters": num_clusters,
+        "Avg. size": avg_size,
+        "Inter-dist": inter_dist,
+        "Intra-dist": intra_dist,
+        "Entropy": entropy
+    })
+    save_csv(all_metrics_csv, metrics_csv_path, ["#clusters", "Avg. size", "Inter-dist", "Intra-dist", "Entropy"])
+    logger.info(f"Final metrics CSV saved at: {metrics_csv_path}")
 
 
 def generate_dendrogram_visualization(dendogram_file):
