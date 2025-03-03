@@ -43,10 +43,10 @@ def parse_and_add_column(csv_folder, json_folder, output_folder):
                 # Concatenate features separated by ';'
                 review_features_map[review_id] = ";".join(filter(None, features))
         
-        # Add the 'extracted_features_TransFeatEx' column
-        df['extracted_features_TransFeatEx'] = df['reviewId'].map(review_features_map)
-        # Filter out rows where extracted_features_TransFeatEx is empty
-        df = df[df['extracted_features_TransFeatEx'].notna() & (df['extracted_features_TransFeatEx'] != '')]
+        # Add the 'extracted_features' column
+        df['extracted_features'] = df['reviewId'].map(review_features_map)
+        # Filter out rows where extracted_features is empty
+        df = df[df['extracted_features'].notna() & (df['extracted_features'] != '')]
         # Save the updated DataFrame to the output folder
         output_path = os.path.join(output_folder, csv_file)
         df.to_csv(output_path, sep=',', index=False)

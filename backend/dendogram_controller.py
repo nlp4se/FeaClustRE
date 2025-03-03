@@ -125,7 +125,7 @@ def generate_dendogram_from_csv():
             file_content = file.stream.read().decode('utf-8')
             csv_reader = csv.DictReader(file_content.splitlines())
             for row in csv_reader:
-                extracted_features = row.get("extracted_features_TransFeatEx", "")
+                extracted_features = row.get("extracted_features", "")
                 if extracted_features:
                     features.extend(extracted_features.split(';'))
             logger.info(f"Extracted {len(features)} features from CSV file")

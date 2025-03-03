@@ -35,7 +35,7 @@ def process_files(input_folder, output_folder, top_n):
         
         # Extract and flatten features
         all_features = []
-        for cell in df['extracted_features_TransFeatEx'].dropna():
+        for cell in df['extracted_features'].dropna():
             features = cell.split(';')
             all_features.extend(features)
             
@@ -112,7 +112,7 @@ def process_files(input_folder, output_folder, top_n):
                 category_features[category] = []
                 
             # Extract and flatten features for this category
-            for cell in group['extracted_features_TransFeatEx'].dropna():
+            for cell in group['extracted_features'].dropna():
                 features = cell.split(';')
                 category_features[category].extend(features)
     
