@@ -103,9 +103,8 @@ class TfidfEmbeddingService(AffinityStrategy):
         self.object_weight = object_weight
 
     def get_dense_data_array(self, data: List) -> np.ndarray:
-        tfidf_vectorizer = TfidfVectorizer()
-        tf_idf_data_vector = tfidf_vectorizer.fit_transform(data)
-        return tf_idf_data_vector.toarray(), tfidf_vectorizer
+        tf_idf_data_vector = self.vectorizer.fit_transform(data)
+        return tf_idf_data_vector.toarray()
 
     def compute_affinity(self,
                          application_name,
@@ -120,7 +119,7 @@ class TfidfEmbeddingService(AffinityStrategy):
         self.object_weight = object_weight
 
         print("Converting data to dense TF-IDF vectors...")
-        dense_data_array, tfidf_vectorizer = self.get_dense_data_array(labels)
+        dense_data_array = self.get_dense_data_array(labels)
 
         zero_vectors = np.all(dense_data_array == 0, axis=1)
         print(f"Number of zero vectors: {np.sum(zero_vectors)}")
@@ -134,20 +133,25 @@ class TfidfEmbeddingService(AffinityStrategy):
             return None
 
         print("Ponderating TF-IDF embeddings with verb and object weights...")
-        # Adjust TF-IDF values based on verb and object weights
         dense_data_array = Utils.ponderate_tfidf_with_weights(
-            labels,  # batch_data
-            dense_data_array,  # tfidf_matrix
-            tfidf_vectorizer,  # vectorizer
+            labels,
+            dense_data_array,
+            self.vectorizer,
             verb_weight=self.verb_weight,
             object_weight=self.object_weight
         )
 
         print("Performing Agglomerative Clustering...")
-        clustering_model = AgglomerativeClustering(n_clusters=None,
-                                                   linkage=linkage,
-                                                   distance_threshold=distance_threshold,
-                                                   metric=metric)
+        if linkage == "ward":
+            clustering_model = AgglomerativeClustering(n_clusters=None,
+                                                       linkage=linkage,
+                                                       distance_threshold=distance_threshold)
+        else:
+            clustering_model = AgglomerativeClustering(n_clusters=None,
+                                                       linkage=linkage,
+                                                       distance_threshold=distance_threshold,
+                                                       metric=metric)
+
         clustering_model.fit(dense_data_array)
 
         return Utils.generate_pkl(application_name,
