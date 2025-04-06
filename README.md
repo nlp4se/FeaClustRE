@@ -96,13 +96,13 @@ Once approved:
 
 ```
 data/
-├── Stage 1 - Data Collection/
-│   └── raw_data/                    # Raw CSV data
+├── Stage 1 - Feature extraction/
+│   └── input/                    # Raw CSV data
 │
 ├── Stage 2 - Hierarchical Clustering/
 │   ├── input/                       # Input features for clustering
 │   ├── output/                      # .pkl files with dendrograms
-│   └── preprocessed_features_jsons/ # JSON versions of features
+│   └── preprocessed_features_jsons/ # JSON versions of features (cache)
 │
 └── Stage 3 - Topic Modelling/
     ├── input/                       # Stage 2 output as input
