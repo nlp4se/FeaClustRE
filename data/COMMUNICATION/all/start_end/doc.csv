@@ -1,0 +1,84 @@
+Successfully read 46488 rows from .\data\COMMUNICATION\reviews_with_features.csv within the specified date range
+
+Number of features with at least 5 mentions: 865
+Sample of frequent features:
+good app: 1561 mentions
+nice app: 926 mentions
+love app: 716 mentions
+great app: 672 mentions
+use app: 492 mentions
+good browser: 389 mentions
+very good app: 265 mentions
+like app: 264 mentions
+work: 247 mentions
+send message: 220 mentions
+good: 196 mentions
+have problem: 174 mentions
+love: 173 mentions
+thank: 172 mentions
+bad app: 162 mentions
+excellent app: 141 mentions
+very nice app: 138 mentions
+great browser: 129 mentions
+create account: 125 mentions
+have issue: 121 mentions
+
+Successfully saved 865 features to .\data\COMMUNICATION\all\start_end\5
+
+Successfully saved 25 features for com.google.android.contacts to .\data\COMMUNICATION\all\start_end\5_com.google.android.contacts.json
+
+Successfully saved 22 features for com.whatsapp to .\data\COMMUNICATION\all\start_end\5_com.whatsapp.json
+
+Successfully saved 34 features for com.facebook.talk to .\data\COMMUNICATION\all\start_end\5_com.facebook.talk.json
+
+Successfully saved 27 features for org.mozilla.firefox to .\data\COMMUNICATION\all\start_end\5_org.mozilla.firefox.json
+
+Successfully saved 30 features for com.kakao.talk to .\data\COMMUNICATION\all\start_end\5_com.kakao.talk.json
+
+Successfully saved 32 features for jp.naver.line.android to .\data\COMMUNICATION\all\start_end\5_jp.naver.line.android.json
+
+Successfully saved 20 features for com.snapchat.android to .\data\COMMUNICATION\all\start_end\5_com.snapchat.android.json
+
+Successfully saved 36 features for com.discord to .\data\COMMUNICATION\all\start_end\5_com.discord.json
+
+Successfully saved 28 features for com.google.android.gm to .\data\COMMUNICATION\all\start_end\5_com.google.android.gm.json
+
+Successfully saved 35 features for com.brave.browser to .\data\COMMUNICATION\all\start_end\5_com.brave.browser.json
+
+Successfully saved 25 features for org.telegram.messenger to .\data\COMMUNICATION\all\start_end\5_org.telegram.messenger.json
+
+Successfully saved 30 features for com.google.android.apps.messaging to .\data\COMMUNICATION\all\start_end\5_com.google.android.apps.messaging.json
+
+Successfully saved 38 features for com.yahoo.mobile.client.android.mail to .\data\COMMUNICATION\all\start_end\5_com.yahoo.mobile.client.android.mail.json
+
+Successfully saved 30 features for com.google.android.apps.googlevoice to .\data\COMMUNICATION\all\start_end\5_com.google.android.apps.googlevoice.json
+
+Successfully saved 38 features for com.enflick.android.TextNow to .\data\COMMUNICATION\all\start_end\5_com.enflick.android.TextNow.json
+
+Successfully saved 24 features for com.android.chrome to .\data\COMMUNICATION\all\start_end\5_com.android.chrome.json
+
+Successfully saved 32 features for com.tencent.mm to .\data\COMMUNICATION\all\start_end\5_com.tencent.mm.json
+
+Successfully saved 32 features for com.microsoft.emmx to .\data\COMMUNICATION\all\start_end\5_com.microsoft.emmx.json
+
+Successfully saved 30 features for com.facebook.orca to .\data\COMMUNICATION\all\start_end\5_com.facebook.orca.json
+
+Successfully saved 18 features for com.google.android.ims to .\data\COMMUNICATION\all\start_end\5_com.google.android.ims.json
+
+Successfully saved 30 features for com.opera.browser to .\data\COMMUNICATION\all\start_end\5_com.opera.browser.json
+
+Successfully saved 30 features for org.thoughtcrime.securesms to .\data\COMMUNICATION\all\start_end\5_org.thoughtcrime.securesms.json
+
+Successfully saved 25 features for com.google.android.apps.tachyon to .\data\COMMUNICATION\all\start_end\5_com.google.android.apps.tachyon.json
+
+Successfully saved 20 features for com.sec.android.app.sbrowser to .\data\COMMUNICATION\all\start_end\5_com.sec.android.app.sbrowser.json
+
+Successfully saved 25 features for com.viber.voip to .\data\COMMUNICATION\all\start_end\5_com.viber.voip.json
+
+Successfully saved 26 features for com.opera.mini.native to .\data\COMMUNICATION\all\start_end\5_com.opera.mini.native.json
+
+Successfully saved 27 features for com.skype.raider to .\data\COMMUNICATION\all\start_end\5_com.skype.raider.json
+
+Successfully saved 21 features for com.whatsapp.w4b to .\data\COMMUNICATION\all\start_end\5_com.whatsapp.w4b.json
+
+Successfully saved 17 features for com.enflick.android.tn2ndLine to .\data\COMMUNICATION\all\start_end\5_com.enflick.android.tn2ndLine.json
