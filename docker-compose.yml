@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  neo4j:
+    image: neo4j:5.12-community
+    ports: ["7474:7474", "7687:7687"]
+    environment:
+      - NEO4J_AUTH=neo4j/clustering123
+
+  ollama:
+    image: ollama/ollama:latest
+    ports: ["11434:11434"]
+    command: sh -c "ollama serve & sleep 10 && ollama pull llama3.2:3b && wait"
+
+  clustering_service:
+    build: .
+    ports: ["3008:3008"]
+    depends_on: [neo4j, ollama]
+    environment:
+      - NEO4J_URI=bolt://neo4j:7687
+      - OLLAMA_URL=http://ollama:11434
